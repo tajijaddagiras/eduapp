@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSampah - Monochrome Wireframes (LMS Version)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  /* Monochrome Draw.io Style Theme */
+  body {
+    background-color: #F0F0F0;
+    font-family: 'Courier New', Courier, monospace; 
+    padding: 40px;
+    margin: 0;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .controls {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .btn-download {
+    background-color: #333;
+    color: white;
+    border: 2px solid #000;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+  }
+  .btn-download:hover { background-color: #555; }
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+  }
+  .screen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .screen-title {
+    margin-bottom: 12px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  .screen {
+    width: 320px;
+    height: 640px;
+    background-color: #FFFFFF;
+    border: 3px solid #333;
+    border-radius: 0px;
+    padding: 24px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Text Styles */
+  .text-h1 { font-size: 22px; font-weight: bold; color: #333; margin: 0 0 8px 0; }
+  .text-h2 { font-size: 16px; font-weight: bold; color: #333; margin: 0 0 8px 0; }
+  .text-h3 { font-size: 14px; font-weight: bold; color: #333; margin: 0 0 4px 0; }
+  .text-body { font-size: 12px; color: #555; margin: 0 0 8px 0; line-height: 1.4; }
+  .text-small { font-size: 10px; color: #777; margin: 0; }
+  .text-center { text-align: center; }
+  
+  /* Description Box below Wireframe */
+  .screen-desc {
+    margin-top: 16px;
+    width: 320px;
+    font-size: 14px;
+    color: #333;
+    background-color: #E8E8E8;
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px dashed #999;
+    text-align: justify;
+    line-height: 1.6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    box-sizing: border-box;
+  }
+  
+  /* Wireframe primitives */
+  .wf-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 12px;
+  }
+  .wf-icon-circle {
+    width: 28px; height: 28px;
+    border: 2px solid #333; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold;
+  }
+  .wf-icon-square {
+    width: 28px; height: 28px;
+    border: 2px solid #333; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold;
+  }
+  
+  .wf-block {
+    background-color: #F9F9F9;
+    border: 2px solid #999;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .wf-card {
+    border: 2px solid #CCC;
+    background-color: #FFF;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .wf-image {
+    background-color: #EEE;
+    border: 2px dashed #999;
+    border-radius: 8px;
+    width: 100%;
+    height: 140px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: #666; font-size: 14px;
+  }
+  .wf-image-large { height: 200px; }
+  .wf-image-circle {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background-color: #EEE;
+    border: 2px dashed #999;
+    margin: 0 auto 24px auto;
+    display: flex; align-items: center; justify-content: center;
+    color: #666; font-size: 14px;
+  }
+  
+  .wf-input {
+    height: 44px;
+    border: 2px solid #999;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    display: flex; align-items: center;
+    color: #555; font-size: 12px;
+    background-color: #FAFAFA;
+  }
+  .wf-textarea {
+    height: 80px;
+    align-items: flex-start;
+    padding-top: 12px;
+  }
+  .wf-button {
+    height: 48px;
+    background-color: #333;
+    color: white;
+    border: 2px solid #333;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 14px; text-transform: uppercase;
+  }
+  .wf-button-outline {
+    height: 48px;
+    border: 2px solid #333;
+    color: #333;
+    background-color: transparent;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 14px; text-transform: uppercase;
+  }
+  
+  .wf-bottom-nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 60px;
+    border-top: 2px solid #333;
+    background-color: #FFFFFF;
+    display: flex; justify-content: space-around; align-items: center;
+    border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;
+  }
+  .wf-nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: #999; font-size: 10px; font-weight: bold;
+  }
+  .wf-nav-icon {
+    width: 20px; height: 20px;
+    border: 2px solid #999; border-radius: 2px;
+  }
+  .wf-nav-item.active { color: #333; }
+  .wf-nav-item.active .wf-nav-icon { background-color: #333; border-color: #333; }
+  
+  .wf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .wf-box {
+    background-color: #F9F9F9;
+    border: 2px solid #CCC;
+    border-radius: 4px;
+    padding: 12px;
+    text-align: center;
+  }
+  .wf-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px dashed #CCC;
+  }
+  .wf-avatar-small {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 12px;
+  }
+  .wf-badge {
+    padding: 4px 8px; border: 1px solid #333; border-radius: 4px; font-size: 10px; font-weight: bold;
+  }
+  
+  /* Progress Bar */
+  .wf-progress-bg {
+    height: 8px; background-color: #EEE; border: 1px solid #CCC; border-radius: 4px; width: 100%; margin-bottom: 16px;
+  }
+  .wf-progress-fill {
+    height: 100%; background-color: #666; border-radius: 3px;
+  }
+  
+  /* UEQ Chart Styles */
+  .wf-chart-bar {
+    height: 16px;
+    background-color: #333;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Wireframes EduSampah</h1>
+<div class="controls">
+  <button class="btn-download" onclick="downloadAll()">[ DOWNLOAD SEMUA WIREFRAME ]</button>
+  <p style="color: #666; font-size: 12px; margin-top: 8px;">Format Desain Layar Aplikasi</p>
+</div>
+
+<div class="grid">
+
+  <!-- 1. Splash Screen -->
+  <div class="screen-container">
+    <div class="screen-title">01. Splash Screen</div>
+    <div class="screen" style="justify-content: center; align-items: center;" id="screen-splash">
+      <div class="wf-image-circle" style="width: 120px; height: 120px; border: 4px solid #333; background-color: #FFF;">
+        [ LOGO ]
+      </div>
+      <p class="text-h1 text-center">EduSampah</p>
+      
+      <div style="position: absolute; bottom: 60px; display: flex; flex-direction: column; align-items: center;">
+        <div style="width: 24px; height: 24px; border: 3px solid #CCC; border-top-color: #333; border-radius: 50%; margin-bottom: 16px;"></div>
+        <p class="text-small">Loading...</p>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah halaman pertama yang muncul saat aplikasi dibuka. Tujuannya untuk menampilkan logo aplikasi sementara sistem memuat data di latar belakang sebelum masuk ke halaman utama.</div>
+  </div>
+
+  <!-- 2. Onboarding -->
+  <div class="screen-container">
+    <div class="screen-title">02. Onboarding</div>
+    <div class="screen" id="screen-onboarding">
+      <div class="wf-image wf-image-large" style="margin-top: 20px; border-style: solid;">[ ILUSTRASI EDUKASI ]</div>
+      <p class="text-h1 text-center" style="margin-top: 24px;">Mari Belajar Memilah</p>
+      <p class="text-body text-center" style="margin-bottom: 40px;">Tingkatkan pengetahuan Anda tentang pengelolaan sampah melalui modul edukasi interaktif kami.</p>
+      
+      <div style="display: flex; justify-content: center; gap: 8px; margin-top: 20px; margin-bottom: 40px;">
+        <div style="width: 24px; height: 8px; background-color: #333; border-radius: 4px;"></div>
+        <div style="width: 8px; height: 8px; background-color: #CCC; border-radius: 4px;"></div>
+        <div style="width: 8px; height: 8px; background-color: #CCC; border-radius: 4px;"></div>
+      </div>
+      <div class="wf-button">Selanjutnya</div>
+    </div>
+    <div class="screen-desc">Halaman pengenalan singkat untuk pengguna baru. Di sini ada ilustrasi dan teks penjelasan singkat tentang tujuan aplikasi, yaitu belajar memilah sampah. Setelah ini, pengguna bisa lanjut ke halaman login.</div>
+  </div>
+
+  <!-- 3. Login -->
+  <div class="screen-container">
+    <div class="screen-title">03. Login</div>
+    <div class="screen" id="screen-login">
+      <p class="text-h1 text-center" style="margin-top: 40px; margin-bottom: 8px;">Selamat Datang</p>
+      <p class="text-body text-center" style="margin-bottom: 40px;">Masuk ke akun belajar Anda</p>
+      
+      <div class="wf-input">[Icon] Email</div>
+      <div class="wf-input">[Icon] Password</div>
+      <p class="text-body" style="text-align: right; font-weight: bold; margin-bottom: 24px;">Lupa Password?</p>
+      
+      <div class="wf-button">Masuk</div>
+      
+      <p class="text-body text-center" style="margin-top: auto;">Belum punya akun? <b>Daftar di sini</b></p>
+    </div>
+    <div class="screen-desc">Halaman untuk masuk ke dalam aplikasi. Pengguna yang sudah punya akun tinggal memasukkan email dan password mereka di sini untuk bisa mengakses materi dan simulasi.</div>
+  </div>
+
+  <!-- 4. Register -->
+  <div class="screen-container">
+    <div class="screen-title">04. Register</div>
+    <div class="screen" id="screen-register">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Buat Akun</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <div class="wf-input" style="margin-top: 24px;">[Icon] Nama Lengkap</div>
+      <div class="wf-input">[Icon] Email</div>
+      <div class="wf-input">[Icon] Password</div>
+      <div class="wf-input">[Icon] Konfirmasi Password</div>
+      
+      <div class="wf-button" style="margin-top: 32px;">Daftar Akun</div>
+    </div>
+    <div class="screen-desc">Kalau pengguna belum punya akun, mereka akan diarahkan ke halaman ini untuk mendaftar. Data yang diminta cukup sederhana, yaitu nama lengkap, email, dan password untuk membuat profil baru.</div>
+  </div>
+
+  <!-- 5. Home (Progres Belajar) -->
+  <div class="screen-container">
+    <div class="screen-title">05. Home (Progres Belajar)</div>
+    <div class="screen" style="padding-bottom: 60px;" id="screen-home">
+      <div class="wf-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="wf-avatar-small">U</div>
+          <div>
+            <p class="text-h3" style="margin: 0;">Hai, Pengguna!</p>
+            <p class="text-small">Semangat belajar hari ini</p>
+          </div>
+        </div>
+      </div>
+      
+      <p class="text-h3" style="margin-bottom: 8px;">Progres Materi Edukasi</p>
+      <div class="wf-block" style="border: 2px solid #333; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <p class="text-h2" style="margin: 0;">3 / 10 Modul</p>
+          <p class="text-body" style="margin: 0; font-weight: bold;">30% Selesai</p>
+        </div>
+        <div class="wf-progress-bg" style="margin-bottom: 0;">
+          <div class="wf-progress-fill" style="width: 30%; background-color: #333;"></div>
+        </div>
+      </div>
+      
+      <p class="text-h3" style="margin-top: 20px;">Statistik Evaluasi</p>
+      <div class="wf-grid-2">
+        <div class="wf-box" style="border: 2px solid #333; background-color: #EEE;">
+          <p class="text-h2">85</p>
+          <p class="text-small">Rata-rata Skor Kuis</p>
+        </div>
+        <div class="wf-box">
+          <p class="text-h2">5</p>
+          <p class="text-small">Simulasi Diselesaikan</p>
+        </div>
+      </div>
+      
+      <div class="wf-button" style="margin-top: 16px;">Lanjutkan Belajar &rarr;</div>
+      
+      <div class="wf-bottom-nav">
+        <div class="wf-nav-item active"><div class="wf-nav-icon" style="background-color: #333;"></div>Beranda</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Materi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Simulasi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Profil</div>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah halaman beranda (dashboard) aplikasinya. Di sini pengguna bisa melihat progres belajar mereka, misalnya berapa persen materi yang sudah dibaca dan rata-rata nilai evaluasi mereka. Ada juga tombol pintasan untuk langsung melanjutkan proses belajar.</div>
+  </div>
+
+  <!-- 6. Edukasi List -->
+  <div class="screen-container">
+    <div class="screen-title">06. List Materi Edukasi</div>
+    <div class="screen" style="padding-bottom: 60px;" id="screen-edukasi">
+      <div class="wf-header">
+        <p class="text-h2" style="margin: 0;">Modul Edukasi</p>
+        <div class="wf-icon-circle">[s]</div>
+      </div>
+      
+      <div class="wf-input" style="height: 36px; border-radius: 18px;">Cari materi pembelajaran...</div>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+        <div class="wf-badge" style="background-color: #333; color: white;">Semua</div>
+        <div class="wf-badge">Organik</div>
+        <div class="wf-badge">Anorganik</div>
+      </div>
+      
+      <div class="wf-card" style="display: flex; gap: 12px; padding: 12px; border: 2px solid #333; background-color: #FAFAFA;">
+        <div style="width: 60px; height: 60px; background-color: #EEE; border: 1px solid #CCC; border-radius: 4px;"></div>
+        <div style="flex: 1;">
+          <p class="text-small" style="font-weight: bold; margin-bottom: 4px; color: #333;">[ ORGANIK ] - <span style="color: #666;">Sudah dibaca</span></p>
+          <p class="text-h3" style="margin-bottom: 4px;">Pengenalan Kompos</p>
+          <p class="text-body" style="font-size: 10px;">Cara mengolah sisa makanan...</p>
+        </div>
+      </div>
+      
+      <div class="wf-card" style="display: flex; gap: 12px; padding: 12px;">
+        <div style="width: 60px; height: 60px; background-color: #EEE; border: 1px solid #CCC; border-radius: 4px;"></div>
+        <div style="flex: 1;">
+          <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">[ ANORGANIK ]</p>
+          <p class="text-h3" style="margin-bottom: 4px;">Daur Ulang Plastik</p>
+          <p class="text-body" style="font-size: 10px;">Jenis plastik daur ulang...</p>
+        </div>
+      </div>
+
+      <div class="wf-bottom-nav">
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Beranda</div>
+        <div class="wf-nav-item active"><div class="wf-nav-icon" style="background-color: #333;"></div>Materi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Simulasi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Profil</div>
+      </div>
+    </div>
+    <div class="screen-desc">Halaman ini menampilkan semua daftar materi edukasi yang tersedia di aplikasi. Pengguna bisa mencari materi lewat kolom pencarian atau memfilternya berdasarkan kategori Organik atau Anorganik. Ada juga penanda khusus untuk materi yang sudah selesai dibaca.</div>
+  </div>
+
+  <!-- 7. Detail Materi -->
+  <div class="screen-container">
+    <div class="screen-title">07. Detail Materi</div>
+    <div class="screen" id="screen-detail-materi">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h3" style="margin: 0;">Materi</p>
+        <div class="wf-icon-circle">...</div>
+      </div>
+      
+      <div class="wf-image wf-image-large" style="border-style: solid;">[ BANNER GAMBAR ]</div>
+      
+      <div class="wf-badge" style="display: inline-block; margin-bottom: 8px;">[ ORGANIK ]</div>
+      <p class="text-h2">Pengenalan Kompos Rumah Tangga</p>
+      <p class="text-small" style="margin-bottom: 16px;">Estimasi baca: 12 Menit</p>
+      
+      <div style="width: 100%; height: 1px; background-color: #CCC; margin-bottom: 16px;"></div>
+      
+      <p class="text-body" style="text-align: justify;">[ PARAGRAF TEKS PANJANG ] Sampah organik adalah barang yang dianggap sudah tidak terpakai dan dibuang... Nullam in est eget velit facilisis tristique...</p>
+      <p class="text-body" style="text-align: justify;">[ PARAGRAF 2 ] Proin accumsan, lacus a rhoncus tristique, sem eros mollis.</p>
+      
+      <div class="wf-button" style="background-color: transparent; border: 2px solid #333; color: #333;">[ V ] Tandai Telah Selesai Dibaca</div>
+    </div>
+    <div class="screen-desc">Ketika pengguna memilih materi, mereka akan masuk ke halaman ini untuk membacanya secara lengkap. Terdapat gambar, judul, dan isi artikel. Di bagian paling bawah, ada tombol khusus yang bisa ditekan agar sistem mencatat progres belajar pengguna.</div>
+  </div>
+
+  <!-- 8. Kuis List (Evaluasi) -->
+  <div class="screen-container">
+    <div class="screen-title">08. Daftar Evaluasi & Simulasi</div>
+    <div class="screen" style="padding-bottom: 60px;" id="screen-kuis">
+      <div class="wf-header">
+        <p class="text-h2" style="margin: 0;">Evaluasi Pembelajaran</p>
+      </div>
+      
+      <div class="wf-card" style="border: 2px solid #333; background-color: #F9F9F9;">
+        <div class="wf-badge" style="display: inline-block; margin-bottom: 8px;">Modul: Pengenalan Kompos</div>
+        <p class="text-h2">Evaluasi Teori Organik</p>
+        <p class="text-small">10 Soal • Tipe: Pilihan Ganda</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <p class="text-body" style="margin: 0; font-weight: bold; color: #333;">Skor Terakhir: 80</p>
+          <div class="wf-button" style="width: auto; height: 32px; padding: 0 16px; margin: 0; font-size: 12px;">Kerjakan Ulang</div>
+        </div>
+      </div>
+      
+      <div class="wf-card">
+        <div class="wf-badge" style="display: inline-block; margin-bottom: 8px;">Simulasi Interaktif</div>
+        <p class="text-h2">Praktek Pemilahan Sampah</p>
+        <p class="text-small">15 Item • Tipe: Drag & Drop</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <p class="text-body" style="margin: 0;">Belum dicoba</p>
+          <div class="wf-button-outline" style="width: auto; height: 32px; padding: 0 16px; margin: 0; font-size: 12px; border-width: 2px;">Mulai Simulasi</div>
+        </div>
+      </div>
+
+      <div class="wf-bottom-nav">
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Beranda</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Materi</div>
+        <div class="wf-nav-item active"><div class="wf-nav-icon" style="background-color: #333;"></div>Simulasi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Profil</div>
+      </div>
+    </div>
+    <div class="screen-desc">Halaman ini berisi daftar ujian dan simulasi yang tersedia. Pengguna bisa melihat ujian apa saja yang cocok dengan materi yang sudah mereka pelajari. Di sini juga terdapat informasi jumlah soal dan skor terakhir yang pernah mereka dapatkan.</div>
+  </div>
+
+  <!-- 9. Kuis Play - Multiple Choice -->
+  <div class="screen-container">
+    <div class="screen-title">09. Evaluasi (Pilihan Ganda)</div>
+    <div class="screen" id="screen-play-mc">
+      <div class="wf-header" style="margin-bottom: 16px; border: none;">
+        <div class="wf-icon-circle">X</div>
+        <p class="text-h3" style="margin: 0;">Soal 1 dari 10</p>
+        <p class="text-h3" style="margin: 0;">[04:59]</p>
+      </div>
+      
+      <div class="wf-progress-bg">
+        <div class="wf-progress-fill" style="width: 10%;"></div>
+      </div>
+      
+      <div class="wf-image" style="height: 140px; border: 2px solid #333; margin-top: 16px; margin-bottom: 16px;">[ GAMBAR REFERENSI SOAL ]</div>
+      
+      <p class="text-h2" style="margin-bottom: 24px;">Manakah dari berikut ini yang BUKAN contoh sampah organik?</p>
+      
+      <div class="wf-card" style="padding: 12px; display: flex; align-items: center; gap: 12px;">
+        <div class="wf-icon-circle">A</div>
+        <p class="text-body" style="margin: 0; font-weight: bold;">Kulit Pisang</p>
+      </div>
+      
+      <div class="wf-card" style="padding: 12px; display: flex; align-items: center; gap: 12px; border: 2px solid #333; background-color: #EEE;">
+        <div class="wf-icon-circle" style="background-color: #333; color: white;">B</div>
+        <p class="text-body" style="margin: 0; font-weight: bold;">Plastik Kresek</p>
+        <p style="margin: 0 0 0 auto;">[V]</p>
+      </div>
+      
+      <div class="wf-card" style="padding: 12px; display: flex; align-items: center; gap: 12px;">
+        <div class="wf-icon-circle">C</div>
+        <p class="text-body" style="margin: 0; font-weight: bold;">Daun Kering</p>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah tampilan saat pengguna mengerjakan soal teori berbentuk pilihan ganda. Pertanyaannya muncul di atas, dilengkapi gambar pendukung, dan di bawahnya ada opsi jawaban A, B, C, D. Di bagian paling atas juga terdapat indikator batas waktu dan sisa soal.</div>
+  </div>
+
+  <!-- 10. Kuis Play - Drag & Drop (Core Simulation) -->
+  <div class="screen-container">
+    <div class="screen-title">10. Simulasi (Drag & Drop)</div>
+    <div class="screen" id="screen-play-dd">
+      <div class="wf-header" style="margin-bottom: 16px; border: none;">
+        <div class="wf-icon-circle">X</div>
+        <p class="text-h3" style="margin: 0;">Simulasi Item: 2 / 10</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <div class="wf-progress-bg">
+        <div class="wf-progress-fill" style="width: 20%;"></div>
+      </div>
+      
+      <p class="text-h2 text-center" style="margin-bottom: 24px;">Praktek Pemilahan:<br>Seret objek ke tong yang tepat!</p>
+      
+      <!-- Draggable Item -->
+      <div style="width: 120px; height: 120px; border: 2px solid #333; border-radius: 8px; margin: 0 auto 60px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FFF;">
+        <div class="wf-image" style="width: 60px; height: 60px; margin-bottom: 8px;">IMG</div>
+        <p class="text-h3" style="margin: 0;">Sisa Apel</p>
+        <p class="text-small" style="margin-top: 4px;">[ Tahan & Geser ]</p>
+      </div>
+      
+      <!-- Drop Zones -->
+      <div style="display: flex; justify-content: space-between; gap: 16px;">
+        <div style="flex: 1; height: 120px; border: 3px dashed #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAFAFA;">
+          <p class="text-h2" style="margin: 0 0 8px 0;">[ TONG ]</p>
+          <p style="font-weight: bold; font-size: 14px;">ORGANIK</p>
+        </div>
+        <div style="flex: 1; height: 120px; border: 3px dashed #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAFAFA;">
+          <p class="text-h2" style="margin: 0 0 8px 0;">[ TONG ]</p>
+          <p style="font-weight: bold; font-size: 14px;">ANORG</p>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah fitur utama untuk praktek pemilahan sampah. Pengguna diminta untuk menekan gambar sampah yang ada di tengah layar, lalu menggesernya (drag) secara interaktif menggunakan jari ke tong sampah yang benar, apakah ke tong Organik atau Anorganik.</div>
+  </div>
+
+  <!-- 11. Kuis Play - Binary Category -->
+  <div class="screen-container">
+    <div class="screen-title">11. Simulasi (Klasifikasi Cepat)</div>
+    <div class="screen" id="screen-play-bin">
+      <div class="wf-header" style="margin-bottom: 16px; border: none;">
+        <div class="wf-icon-circle">X</div>
+        <p class="text-h3" style="margin: 0;">Item: 3 / 10</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <div class="wf-progress-bg">
+        <div class="wf-progress-fill" style="width: 30%;"></div>
+      </div>
+      
+      <!-- Big Image -->
+      <div class="wf-image wf-image-large" style="height: 180px; border: 2px solid #333;">[ GAMBAR OBJEK RESOLUSI TINGGI ]</div>
+      
+      <p class="text-h1 text-center" style="margin-bottom: 4px;">Botol Kaca</p>
+      <p class="text-body text-center" style="margin-bottom: 32px;">Masuk kategori apakah benda ini?</p>
+      
+      <!-- 2 Big Buttons -->
+      <div style="display: flex; justify-content: space-between; gap: 16px;">
+        <div style="flex: 1; height: 120px; border: 2px solid #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #FFF;">
+          <p class="text-h1" style="margin: 0 0 8px 0;">[ O ]</p>
+          <p style="font-weight: bold; font-size: 14px;">ORGANIK</p>
+        </div>
+        <div style="flex: 1; height: 120px; border: 2px solid #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #EEE; box-shadow: inset 0 0 0 4px #333;"> <!-- Selected State -->
+          <p class="text-h1" style="margin: 0 0 8px 0;">[ A ]</p>
+          <p style="font-weight: bold; font-size: 14px;">ANORGANIK</p>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah variasi simulasi lainnya yang menekankan pada pengenalan visual yang lebih cepat. Pengguna disajikan gambar objek berukuran besar, lalu mereka harus memilahnya dengan cara menekan salah satu dari dua tombol sakelar berukuran besar di bagian bawah layar.</div>
+  </div>
+
+  <!-- 12. Hasil Kuis (No Gamification) -->
+  <div class="screen-container">
+    <div class="screen-title">12. Hasil Evaluasi Akhir</div>
+    <div class="screen" style="justify-content: center;" id="screen-hasil-kuis">
+      <div class="wf-image-circle" style="width: 120px; height: 120px; border: 4px solid #333;">[ ICON CENTANG ]</div>
+      <p class="text-h1 text-center">Evaluasi Selesai</p>
+      <p class="text-body text-center" style="margin-bottom: 32px;">Simulasi Praktek Pemilahan</p>
+      
+      <div class="wf-card" style="text-align: center; border: 2px solid #333; background-color: #F9F9F9;">
+        <p class="text-h3">Nilai Akhir Anda</p>
+        <p style="font-size: 48px; font-weight: bold; margin: 8px 0;">80</p>
+        <div class="wf-badge" style="display: inline-block;">LULUS EVALUASI</div>
+      </div>
+      
+      <div class="wf-grid-2" style="margin-bottom: 32px;">
+        <div class="wf-box" style="border: 2px solid #333;">
+          <p class="text-h2">8</p>
+          <p class="text-small">Jawaban Benar</p>
+        </div>
+        <div class="wf-box" style="border: 2px dashed #999;">
+          <p class="text-h2">2</p>
+          <p class="text-small">Kesalahan Pemilahan</p>
+        </div>
+      </div>
+      
+      <div class="wf-button">Lihat Riwayat Pembahasan</div>
+      <div class="wf-button-outline">Tutup & Kembali</div>
+    </div>
+    <div class="screen-desc">Setelah selesai mengerjakan simulasi atau kuis, halaman ini akan muncul untuk menampilkan hasil akhirnya. Pengguna bisa melihat total skor dari skala 0-100, beserta statistik jumlah jawaban mereka yang benar dan salah. Terdapat tombol untuk melanjutkan ke fitur pembahasan.</div>
+  </div>
+
+  <!-- 13. Riwayat Pembahasan (NEW FEATURE) -->
+  <div class="screen-container">
+    <div class="screen-title">13. Riwayat Pembahasan</div>
+    <div class="screen" id="screen-pembahasan">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Pembahasan Salah</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <p class="text-body" style="margin-bottom: 16px;">Tinjau kembali kesalahan Anda pada sesi simulasi sebelumnya untuk evaluasi perbaikan.</p>
+      
+      <!-- Wrong Item 1 -->
+      <div class="wf-card" style="border: 2px dashed #999; border-left: 4px solid #333; padding: 12px; margin-bottom: 16px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+          <div class="wf-image" style="width: 48px; height: 48px; margin: 0;">IMG</div>
+          <div>
+            <p class="text-h3" style="margin: 0;">Botol Kaca Bekas</p>
+            <p class="text-small" style="color: #666;">Anda menjawab: Organik (SALAH)</p>
+          </div>
+        </div>
+        <div style="background-color: #EEE; padding: 8px; border-radius: 4px;">
+          <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">Jawaban Benar: ANORGANIK</p>
+          <p class="text-body" style="font-size: 10px; margin: 0;">Penjelasan: Kaca tidak dapat diurai oleh mikroorganisme secara alami dalam waktu singkat. Harus dilebur di pabrik daur ulang.</p>
+        </div>
+      </div>
+      
+      <!-- Wrong Item 2 -->
+      <div class="wf-card" style="border: 2px dashed #999; border-left: 4px solid #333; padding: 12px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+          <div class="wf-image" style="width: 48px; height: 48px; margin: 0;">IMG</div>
+          <div>
+            <p class="text-h3" style="margin: 0;">Kulit Jeruk</p>
+            <p class="text-small" style="color: #666;">Anda menjawab: Anorganik (SALAH)</p>
+          </div>
+        </div>
+        <div style="background-color: #EEE; padding: 8px; border-radius: 4px;">
+          <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">Jawaban Benar: ORGANIK</p>
+          <p class="text-body" style="font-size: 10px; margin: 0;">Penjelasan: Semua sisa buah-buahan termasuk kulit jeruk sangat mudah hancur dan cocok dijadikan bahan kompos nabati.</p>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">Halaman ini sangat penting untuk fungsi edukasi aplikasi. Jika di simulasi tadi ada jawaban yang salah, pengguna bisa melihat rinciannya di sini. Aplikasi akan menunjukkan sampah apa yang salah dipilah, kunci jawaban yang benar, dan penjelasan alasannya agar pengguna bisa belajar dari kesalahan.</div>
+  </div>
+
+  <!-- 14. UEQ Form / Evaluasi (NEW FEATURE - Crucial for Thesis Title) -->
+  <div class="screen-container">
+    <div class="screen-title">14. Formulir UEQ (Pengguna)</div>
+    <div class="screen" style="overflow-y: hidden;" id="screen-ueq">
+      <div class="wf-header" style="margin-bottom: 16px;">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Evaluasi Aplikasi (UEQ)</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <p class="text-body" style="text-align: justify; margin-bottom: 24px;">Mohon luangkan waktu Anda menilai kesan penggunaan aplikasi ini. Pertanyaan 1 dari 26.</p>
+      
+      <div class="wf-block" style="border: 2px solid #333; background-color: #FFF; padding: 24px 12px; text-align: center;">
+        <p class="text-h2" style="margin-bottom: 24px;">Bagaimana menurut Anda desain aplikasi EduSampah ini?</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: bold; font-size: 12px;">
+          <div style="width: 80px; text-align: left;">Menyusahkan</div>
+          <div style="width: 80px; text-align: right;">Menyenangkan</div>
+        </div>
+        
+        <!-- 7-Point Likert / Semantic Scale -->
+        <div style="display: flex; justify-content: space-between; position: relative;">
+          <!-- Connecting Line -->
+          <div style="position: absolute; top: 50%; left: 10px; right: 10px; height: 2px; background-color: #CCC; z-index: 1;"></div>
+          
+          <!-- Radio circles -->
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+          <div style="width: 24px; height: 24px; border-radius: 50%; border: 3px solid #333; background-color: #333; z-index: 2; margin-top: -2px;"></div> <!-- Selected: Neutral -->
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+          <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;"></div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #999;">
+          <span>1</span><span>2</span><span>3</span><span style="color:#333; font-weight:bold;">4</span><span>5</span><span>6</span><span>7</span>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 12px; margin-top: auto;">
+        <div class="wf-button-outline" style="flex: 1;">&lt; Kembali</div>
+        <div class="wf-button" style="flex: 2;">Lanjut &gt;</div>
+      </div>
+    </div>
+    <div class="screen-desc">Di dalam aplikasi ini, saya menyediakan halaman khusus untuk kuesioner UEQ agar sesuai dengan judul riset. Pengguna tinggal menekan bulatan pada skala 1 sampai 7 untuk menilai seberapa baik pengalaman mereka menggunakan aplikasi, misalnya apakah menurut mereka aplikasinya 'Menyusahkan' atau 'Menyenangkan'.</div>
+  </div>
+
+  <!-- 15. Profil User (LMS Focused) -->
+  <div class="screen-container">
+    <div class="screen-title">15. Pengaturan Akun (Profil)</div>
+    <div class="screen" style="padding-bottom: 60px;" id="screen-profil">
+      <div class="wf-header" style="justify-content: flex-end;">
+        <div class="wf-icon-square">[cfg]</div>
+      </div>
+      
+      <div class="wf-image-circle" style="border: 2px solid #333;">U</div>
+      <p class="text-h1 text-center">Budi Santoso</p>
+      <p class="text-body text-center" style="margin-bottom: 32px;">budi@email.com • Terdaftar 2026</p>
+      
+      <div style="margin-top: 16px;">
+        <div class="wf-row">
+          <div class="wf-icon-square">[E]</div>
+          <p class="text-h3" style="flex: 1; margin: 0;">Edit Data Diri</p>
+          <div style="font-weight: bold;">&gt;</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-icon-square" style="border: 1px solid #333;">[Q]</div>
+          <p class="text-h3" style="flex: 1; margin: 0;">Isi Kuesioner Evaluasi (UEQ)</p>
+          <div style="font-weight: bold;">&gt;</div>
+        </div>
+        <div class="wf-row">
+          <div class="wf-icon-square" style="border: 1px solid #333;">[H]</div>
+          <p class="text-h3" style="flex: 1; margin: 0;">Riwayat Ujian & Simulasi</p>
+          <div style="font-weight: bold;">&gt;</div>
+        </div>
+        <div class="wf-row" style="border: none;">
+          <div class="wf-icon-square" style="background-color: #333; color: white;">[!]</div>
+          <p class="text-h3" style="flex: 1; margin: 0;">Keluar Sesi (Logout)</p>
+        </div>
+      </div>
+
+      <div class="wf-bottom-nav">
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Beranda</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Materi</div>
+        <div class="wf-nav-item"><div class="wf-nav-icon"></div>Simulasi</div>
+        <div class="wf-nav-item active"><div class="wf-nav-icon" style="background-color:#333;"></div>Profil</div>
+      </div>
+    </div>
+    <div class="screen-desc">Ini adalah halaman profil pengguna. Di sini mereka bisa melihat identitas dasar akun mereka, mengakses menu untuk mengedit data diri, membuka halaman riwayat nilai evaluasi, mengisi form kuesioner UEQ tadi, dan tentunya tombol untuk keluar (logout) dari aplikasi.</div>
+  </div>
+
+  <!-- 16. Admin Dashboard -->
+  <div class="screen-container">
+    <div class="screen-title">16. Dasbor Admin (CMS Utama)</div>
+    <div class="screen" id="screen-admin-dash">
+      <div class="wf-header">
+        <div>
+          <p class="text-h2" style="margin: 0;">Admin Portal</p>
+          <p class="text-small">Manajemen Data & Evaluasi</p>
+        </div>
+        <div class="wf-icon-circle">[!]</div>
+      </div>
+      
+      <div class="wf-grid-2" style="margin-top: 16px;">
+        <div class="wf-box" style="border: 2px solid #333; background-color: #EEE;">
+          <p class="text-h2" style="font-size: 24px;">42</p>
+          <p class="text-small">Siswa Terdaftar</p>
+        </div>
+        <div class="wf-box">
+          <p class="text-h2" style="font-size: 24px;">8</p>
+          <p class="text-small">Modul Edukasi</p>
+        </div>
+        <div class="wf-box">
+          <p class="text-h2" style="font-size: 24px;">12</p>
+          <p class="text-small">Paket Simulasi</p>
+        </div>
+        <div class="wf-box" style="border: 2px solid #333; background-color: #FAFAFA;">
+          <p class="text-h2" style="font-size: 24px;">38</p>
+          <p class="text-small">Responden UEQ</p>
+        </div>
+      </div>
+      
+      <p class="text-h3" style="margin: 24px 0 16px 0;">Modul Navigasi Utama</p>
+      
+      <div class="wf-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+        <div class="wf-icon-square" style="width: 32px; height: 32px;">[M]</div>
+        <div style="flex: 1;">
+          <p class="text-h3" style="margin: 0;">Manajemen Modul Materi</p>
+        </div>
+        <div style="font-weight: bold;">&gt;</div>
+      </div>
+      
+      <div class="wf-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+        <div class="wf-icon-square" style="width: 32px; height: 32px;">[K]</div>
+        <div style="flex: 1;">
+          <p class="text-h3" style="margin: 0;">Manajemen Bank Simulasi</p>
+        </div>
+        <div style="font-weight: bold;">&gt;</div>
+      </div>
+      
+      <div class="wf-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px; border: 2px solid #333; background-color: #EEE;">
+        <div class="wf-icon-square" style="width: 32px; height: 32px; background-color: #333; color: white;">[A]</div>
+        <div style="flex: 1;">
+          <p class="text-h3" style="margin: 0;">Analisis Data UEQ Baru</p>
+        </div>
+        <div style="font-weight: bold;">&gt;</div>
+      </div>
+    </div>
+    <div class="screen-desc">Beralih ke sisi Admin, ini adalah beranda utama untuk pengelola aplikasi. Admin bisa melihat ringkasan data statistik seperti berapa total siswa yang mendaftar, jumlah modul materi yang ada, dan berapa banyak orang yang sudah merespons kuesioner UEQ. Dari sini admin bisa langsung memilih menu navigasi untuk mengelola sistem.</div>
+  </div>
+
+  <!-- 17. Admin Manage Materi -->
+  <div class="screen-container">
+    <div class="screen-title">17. Admin Manage Materi</div>
+    <div class="screen" id="screen-admin-manage-materi">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Daftar Modul</p>
+        <div class="wf-icon-square">[+]</div>
+      </div>
+      
+      <div class="wf-input" style="height: 36px; border-radius: 18px;">Cari materi edukasi...</div>
+      
+      <div class="wf-card" style="padding: 12px; border-left: 4px solid #333;">
+        <div style="display: flex; justify-content: space-between;">
+          <p class="text-h3" style="margin: 0;">Pengenalan Kompos</p>
+          <p class="text-small" style="font-weight: bold;">ORGANIK</p>
+        </div>
+        
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Edit Konten</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 40px; font-size: 12px; border-style: dashed;">[x]</div>
+        </div>
+      </div>
+      
+      <div class="wf-card" style="padding: 12px; border-left: 4px solid #999;">
+        <div style="display: flex; justify-content: space-between;">
+          <p class="text-h3" style="margin: 0;">Daur Ulang Plastik</p>
+          <p class="text-small" style="font-weight: bold;">ANORGANIK</p>
+        </div>
+        
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Edit Konten</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 40px; font-size: 12px; border-style: dashed;">[x]</div>
+        </div>
+      </div>
+      
+      <div class="wf-button" style="margin-top: auto;">+ Susun Modul Baru</div>
+    </div>
+    <div class="screen-desc">Ini adalah halaman daftar materi edukasi khusus untuk panel Admin. Di sini admin punya kendali penuh untuk mengelola konten pembelajaran. Admin bisa mencari materi, mengedit tulisan materi yang sudah ada, menghapusnya jika sudah tidak relevan, atau menambahkan modul pelajaran yang baru.</div>
+  </div>
+
+  <!-- 18. Admin Form Materi -->
+  <div class="screen-container">
+    <div class="screen-title">18. Admin Form Materi</div>
+    <div class="screen" id="screen-admin-form-materi" style="overflow-y: hidden;">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Pembuatan Modul</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <p class="text-h3">Judul Bahasan</p>
+      <div class="wf-input">Input teks judul di sini...</div>
+      
+      <p class="text-h3">Kategori Klasifikasi</p>
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1; padding: 12px; border: 2px solid #333; text-align: center; font-weight: bold; background-color: #EEE;">[O] Organik</div>
+        <div style="flex: 1; padding: 12px; border: 1px solid #999; text-align: center; color: #666;">[O] Anorganik</div>
+      </div>
+      
+      <p class="text-h3">Isi Konten Pelajaran</p>
+      <div class="wf-input wf-textarea">Tulis draf naskah materi lengkap dengan pedoman ilmiah di sini...</div>
+      
+      <p class="text-h3">Unggah Aset Visual</p>
+      <div class="wf-image" style="height: 60px;">[ Upload Foto Header via Cloud ]</div>
+      
+      <div class="wf-button" style="margin-top: 16px;">Simpan (*Publish*)</div>
+    </div>
+    <div class="screen-desc">Jika admin ingin membuat materi baru, mereka akan menggunakan halaman form ini. Tampilannya cukup ringkas dan mudah digunakan; admin hanya perlu mengetik judul materinya, memilih opsi kategorinya (apakah itu Organik atau Anorganik), menyalin naskah isi materinya secara lengkap, dan mengunggah gambar.</div>
+  </div>
+
+  <!-- 19. Admin Manage Kuis -->
+  <div class="screen-container">
+    <div class="screen-title">19. Admin Manajemen Bank Soal</div>
+    <div class="screen" id="screen-admin-kuis">
+      <div class="wf-header">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Bank Simulasi</p>
+        <div class="wf-icon-square">[+]</div>
+      </div>
+      
+      <div class="wf-input" style="height: 36px; border-radius: 18px;">Penelusuran paket evaluasi...</div>
+      
+      <div class="wf-card" style="border-left: 4px solid #333;">
+        <div style="display: flex; justify-content: space-between;">
+          <p class="text-h3" style="margin: 0;">Simulasi Praktik Organik</p>
+          <p class="text-small" style="font-weight: bold;">10 Item Tinjauan</p>
+        </div>
+        <p class="text-body" style="margin: 4px 0 12px 0;">Terhubung ke: Pengenalan Kompos</p>
+        
+        <div style="display: flex; gap: 8px;">
+          <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Kelola Item Uji</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px;">E</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px; border-style: dashed;">X</div>
+        </div>
+      </div>
+      
+      <div class="wf-card" style="border-left: 4px dashed #999;">
+        <div style="display: flex; justify-content: space-between;">
+          <p class="text-h3" style="margin: 0;">Evaluasi Teori Plastik</p>
+          <p class="text-small" style="font-weight: bold;">0 Item (Kosong)</p>
+        </div>
+        <p class="text-body" style="margin: 4px 0 12px 0;">Terhubung ke: Daur Ulang Plastik</p>
+        
+        <div style="display: flex; gap: 8px;">
+          <div class="wf-button" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">+ Suntik Item Uji</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px;">E</div>
+          <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px; border-style: dashed;">X</div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-desc">Halaman ini digunakan admin untuk mengelola semua paket soal evaluasi dan simulasi. Admin bisa melihat daftar ujian yang tersedia, mengetahui berapa jumlah butir soal di dalamnya, dan melihat ke materi mana kuis tersebut terhubung. Dari sini, admin bisa masuk untuk mengedit soalnya.</div>
+  </div>
+
+  <!-- 20. Admin Form Soal -->
+  <div class="screen-container">
+    <div class="screen-title">20. Form Penyusun Instrumen</div>
+    <div class="screen" style="overflow-y: hidden;" id="screen-admin-question">
+      <div class="wf-header" style="padding-bottom: 8px; margin-bottom: 16px;">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Rancang Item Soal</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <p class="text-h3">1. Arsitektur Evaluasi</p>
+      <div class="wf-card" style="padding: 8px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+        <div class="wf-icon-square" style="border-radius: 50%;"></div>
+        <div>
+          <p class="text-h3" style="margin: 0; font-size: 12px;">Pilihan Ganda Textual</p>
+        </div>
+      </div>
+      <div class="wf-card" style="padding: 8px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border: 2px solid #333; background-color: #EEE;">
+        <div class="wf-icon-square" style="border-radius: 50%; background-color: #333; color: white;">v</div>
+        <div>
+          <p class="text-h3" style="margin: 0; font-size: 12px;">Simulasi (Drag Drop / Biner)</p>
+        </div>
+      </div>
+      
+      <p class="text-h3" style="margin-top: 16px;">2. Objek Studi Kasus</p>
+      <div class="wf-input" style="height: 36px; margin-bottom: 8px;">Misal: Botol Kaca Transparan</div>
+      <div class="wf-image" style="height: 60px; margin-bottom: 16px;">[ Foto Resolusi Fokus ]</div>
+      
+      <p class="text-h3">3. Pemetaan Jawaban Mutlak</p>
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <div style="flex: 1; padding: 8px; border-radius: 4px; background-color: #FFF; border: 1px solid #999; text-align: center; font-size: 12px;">Tong Organik</div>
+        <div style="flex: 1; padding: 8px; border-radius: 4px; background-color: #333; color: white; border: 2px solid #333; text-align: center; font-weight: bold; font-size: 12px;">Tong Anorganik</div>
+      </div>
+      
+      <div class="wf-button" style="margin-top: auto;">Injeksi ke Basis Data</div>
+    </div>
+    <div class="screen-desc">Ini adalah halaman khusus bagi admin untuk membuat soal baru. Form ini dibuat dinamis menyesuaikan kebutuhan aplikasinya; admin cukup memilih apakah ingin membuat soal Pilihan Ganda biasa atau Simulasi Drag & Drop. Setelah itu, admin tinggal memasukkan teks soal/gambarnya dan menentukan mana kunci jawaban yang benar sebelum menyimpannya ke database.</div>
+  </div>
+
+  <!-- 21. Admin Analitik UEQ (NEW FEATURE) -->
+  <div class="screen-container">
+    <div class="screen-title">21. Data Analitik UEQ (Skripsi)</div>
+    <div class="screen" id="screen-admin-ueq">
+      <div class="wf-header" style="margin-bottom: 16px;">
+        <div class="wf-icon-circle">&lt;</div>
+        <p class="text-h2" style="margin: 0;">Rekap Kuesioner UX</p>
+        <div style="width: 28px;"></div>
+      </div>
+      
+      <p class="text-body" style="text-align: center; margin-bottom: 24px;">Ringkasan nilai rata-rata dari <br><b>38 Responden (N=38)</b></p>
+      
+      <div class="wf-card" style="border: 2px solid #333; background-color: #FAFAFA;">
+        <p class="text-h3" style="text-align: center; margin-bottom: 16px;">Skala Pengalaman Pengguna</p>
+        
+        <!-- Chart Bars (Draw.io style representation) -->
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
+            <span>Daya Tarik (Attractiveness)</span><span>1.85 (Positif)</span>
+          </div>
+          <div style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
+             <!-- Zero line is at middle (3.5 for 1-7 scale, or 0 for -3 to +3) -->
+             <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;"></div>
+             <!-- Bar extending right from center -->
+             <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 35%; background-color: #333; z-index: 1;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
+            <span>Kejelasan (Perspicuity)</span><span>2.10 (Positif)</span>
+          </div>
+          <div style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
+             <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;"></div>
+             <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 40%; background-color: #333; z-index: 1;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
+            <span>Efisiensi (Efficiency)</span><span>1.75 (Positif)</span>
+          </div>
+          <div style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
+             <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;"></div>
+             <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 30%; background-color: #333; z-index: 1;"></div>
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
+            <span>Ketepatan (Dependability)</span><span>1.20 (Positif)</span>
+          </div>
+          <div style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
+             <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;"></div>
+             <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 22%; background-color: #333; z-index: 1;"></div>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="wf-button" style="margin-top: auto;">[ EXCEL ] Ekspor Data Mentah</div>
+    </div>
+    <div class="screen-desc">Terakhir, ini adalah fitur unggulan untuk mempermudah pengerjaan skripsi. Alih-alih menghitung manual, aplikasi secara otomatis menghitung nilai dari pengguna yang mengisi kuesioner UEQ tadi, lalu menampilkannya dalam bentuk grafik rata-rata (seperti Daya Tarik, Kejelasan, dll). Terdapat juga tombol ekspor jika data mentahnya ingin dimasukkan ke Excel untuk Bab 4.</div>
+  </div>
+
+</div>
+
+<script>
+  async function downloadAll() {
+    const btn = document.querySelector('.btn-download');
+    btn.innerText = '[ SEDANG MEMPROSES... ]';
+    btn.disabled = true;
+    
+    const descriptions = document.querySelectorAll('.screen-desc');
+    const screens = document.querySelectorAll('.screen');
+    
+    for (let i = 0; i < screens.length; i++) {
+      const screen = screens[i];
+      const titleElement = screen.parentElement.querySelector('.screen-title');
+      const title = titleElement.innerText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      
+      try {
+        const canvas = await html2canvas(screen, { 
+          scale: 2,
+          backgroundColor: '#FFFFFF',
+          logging: false
+        });
+        
+        const url = canvas.toDataURL('image/png');
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `wireframe_${title}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        await new Promise(r => setTimeout(r, 800));
+      } catch (error) {
+        console.error("Error generating image for", title, error);
+      }
+    }
+    
+    btn.innerText = '[ SELESAI DIUNDUH ]';
+    
+    setTimeout(() => {
+      btn.innerText = '[ DOWNLOAD SEMUA WIREFRAME ]';
+      btn.disabled = false;
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
