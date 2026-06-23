@@ -1,73 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { collection, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
-// Types for different question formats
-interface DragDropItem {
+interface Level {
   id: string;
   name: string;
-  imageUrl?: string;
-  type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
-  levelId?: string;
-  levelName?: string;
-  gameType: 'DragDrop';
+  gameType: 'DragDrop' | 'Binary' | 'MultipleChoice';
 }
 
-interface BinaryItem {
-  id: string;
-  name: string;
-  imageUrl?: string;
-  type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
-  levelId?: string;
-  levelName?: string;
-  gameType: 'Binary';
-}
-
-interface MultipleChoiceItem {
-  id: string;
-  question: string;
-  imageUrl?: string;
-  optionA: string;
-  optionB: string;
-  optionC: string;
-  optionD: string;
-  correctAnswer: 'A' | 'B' | 'C' | 'D';
-  explanation: string;
-  type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
-  levelId?: string;
-  levelName?: string;
-  gameType: 'MultipleChoice';
-}
-
-type SoalItem = DragDropItem | BinaryItem | MultipleChoiceItem;
-
-export default function ManageSoalScreen({ navigation }: any) {
+export default function ManageLevelScreen({ navigation }: any) {
   const [activeTab, setActiveTab] = useState<'DragDrop' | 'Binary' | 'MultipleChoice'>('DragDrop');
-  const [data, setData] = useState<SoalItem[]>([]);
+  const [data, setData] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchSoal = async (gameType: 'DragDrop' | 'Binary' | 'MultipleChoice') => {
+  const fetchLevel = async (gameType: 'DragDrop' | 'Binary' | 'MultipleChoice') => {
     setLoading(true);
     try {
-      const q = query(collection(db, 'soal'), where('gameType', '==', gameType));
+      const q = query(collection(db, 'level'), where('gameType', '==', gameType));
       const querySnapshot = await getDocs(q);
-      const soalList: SoalItem[] = [];
+      const list: Level[] = [];
       querySnapshot.forEach((docSnap) => {
-        soalList.push({ id: docSnap.id, ...docSnap.data() } as SoalItem);
+        list.push({ id: docSnap.id, ...docSnap.data() } as Level);
       });
-      setData(soalList);
+      setData(list);
     } catch (error) {
-      console.error("Error fetching soal:", error);
+      console.error("Error fetching level:", error);
     } finally {
       setLoading(false);
     }
@@ -75,17 +33,17 @@ export default function ManageSoalScreen({ navigation }: any) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchSoal(activeTab);
+      fetchLevel(activeTab);
     });
     return unsubscribe;
   }, [navigation, activeTab]);
 
   useEffect(() => {
-    fetchSoal(activeTab);
+    fetchLevel(activeTab);
   }, [activeTab]);
 
   const handleDelete = async (id: string) => {
-    Alert.alert('Hapus Item', 'Yakin ingin menghapus item ini?', [
+    Alert.alert('Hapus Level', 'Yakin ingin menghapus level ini?', [
       { text: 'Batal', style: 'cancel' },
       { 
         text: 'Hapus', 
@@ -93,10 +51,10 @@ export default function ManageSoalScreen({ navigation }: any) {
         onPress: async () => {
           setLoading(true);
           try {
-            await deleteDoc(doc(db, 'soal', id));
-            fetchSoal(activeTab);
+            await deleteDoc(doc(db, 'level', id));
+            fetchLevel(activeTab);
           } catch (error) {
-            console.error("Error deleting document: ", error);
+            console.error("Error deleting level:", error);
             setLoading(false);
           }
         }
@@ -105,54 +63,17 @@ export default function ManageSoalScreen({ navigation }: any) {
   };
 
   const navigateToAddForm = () => {
-    navigation.navigate('FormSoal', { gameType: activeTab });
-  };
-
-  const renderCardContent = (item: SoalItem) => {
-    if (item.gameType === 'MultipleChoice') {
-      const mcItem = item as MultipleChoiceItem;
-      return (
-        <>
-          {mcItem.imageUrl ? (
-            <Image source={{ uri: mcItem.imageUrl }} style={styles.cardImage} />
-          ) : null}
-          <Text style={styles.cardTitle} numberOfLines={2}>{mcItem.question}</Text>
-          <Text style={styles.cardCategory}>Jawaban: {mcItem.correctAnswer}</Text>
-          {mcItem.kategoriName && (
-            <Text style={styles.cardCategory}>Kategori: {mcItem.kategoriName} ({mcItem.duration} menit)</Text>
-          )}
-          {mcItem.levelName && (
-            <Text style={styles.cardCategory}>Level: {mcItem.levelName}</Text>
-          )}
-        </>
-      );
-    } else {
-      const simpleItem = item as DragDropItem | BinaryItem;
-      return (
-        <>
-          {simpleItem.imageUrl ? (
-            <Image source={{ uri: simpleItem.imageUrl }} style={styles.cardImage} />
-          ) : null}
-          <Text style={styles.cardTitle}>{simpleItem.name}</Text>
-          {simpleItem.kategoriName && (
-            <Text style={styles.cardCategory}>Kategori: {simpleItem.kategoriName} ({simpleItem.duration} menit)</Text>
-          )}
-          {simpleItem.levelName && (
-            <Text style={styles.cardCategory}>Level: {simpleItem.levelName}</Text>
-          )}
-        </>
-      );
-    }
+    navigation.navigate('FormLevel', { gameType: activeTab });
   };
 
   return (
     <View style={styles.container}>
-      {/* Header - Consistent with ManageMateriScreen */}
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconCircle}>
           <Text style={{ fontWeight: 'bold' }}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Bank Soal Simulasi</Text>
+        <Text style={styles.title}>Kelola Level Soal</Text>
         <View style={{ width: 32 }} />
       </View>
 
@@ -192,12 +113,9 @@ export default function ManageSoalScreen({ navigation }: any) {
           keyExtractor={item => item.id}
           contentContainerStyle={{ padding: 20, paddingBottom: 80 }}
           renderItem={({item}) => (
-            <View style={[styles.card, { 
-              borderLeftWidth: 4, 
-              borderLeftColor: item.type === 'organik' ? '#2e7d32' : '#9ca3af' 
-            }]}>
+            <View style={styles.card}>
               <View style={{ flex: 1 }}>
-                {renderCardContent(item)}
+                <Text style={styles.cardTitle}>{item.name}</Text>
               </View>
               <TouchableOpacity 
                 style={styles.delBtn} 
@@ -209,16 +127,16 @@ export default function ManageSoalScreen({ navigation }: any) {
           )}
           ListEmptyComponent={
             <Text style={styles.emptyText}>
-              Belum ada soal {activeTab === 'DragDrop' ? 'Drag & Drop' : activeTab === 'Binary' ? 'Klasifikasi' : 'Pilihan Ganda'}
+              Belum ada level untuk {activeTab === 'DragDrop' ? 'Drag & Drop' : activeTab === 'Binary' ? 'Klasifikasi' : 'Pilihan Ganda'}
             </Text>
           }
         />
       )}
 
-      {/* FAB - Floating Action Button */}
+      {/* FAB */}
       <TouchableOpacity style={styles.fab} onPress={navigateToAddForm}>
         <Text style={styles.fabText}>
-          + Susun {activeTab === 'DragDrop' ? 'Drag & Drop' : activeTab === 'Binary' ? 'Klasifikasi' : 'Pilihan Ganda'} Baru
+          + Tambah Level {activeTab === 'DragDrop' ? 'Drag & Drop' : activeTab === 'Binary' ? 'Klasifikasi' : 'Pilihan Ganda'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -247,8 +165,6 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   title: { fontSize: 18, fontWeight: 'bold', color: '#111827' },
-  
-  // Tab styles
   tabContainer: { 
     flexDirection: 'row', 
     gap: 10, 
@@ -266,8 +182,6 @@ const styles = StyleSheet.create({
   tabBtnActive: { backgroundColor: '#374151' },
   tabText: { fontSize: 13, fontWeight: '600', color: '#6b7280' },
   tabTextActive: { color: '#fff' },
-  
-  // Card styles - consistent with ManageMateriScreen
   card: { 
     backgroundColor: '#fff', 
     borderRadius: 10, 
@@ -277,17 +191,11 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderLeftWidth: 4,
+    borderLeftColor: '#1d4ed8'
   },
-  cardImage: { 
-    width: '100%', 
-    height: 100, 
-    borderRadius: 6, 
-    marginBottom: 12, 
-    resizeMode: 'cover' 
-  },
-  cardTitle: { fontSize: 15, fontWeight: 'bold', marginBottom: 6, color: '#111827' },
-  cardCategory: { color: '#6b7280', fontSize: 11, marginTop: 3 },
+  cardTitle: { fontSize: 15, fontWeight: 'bold', color: '#111827' },
   delBtn: { 
     width: 44, 
     borderWidth: 1.5, 
@@ -300,8 +208,6 @@ const styles = StyleSheet.create({
   },
   delBtnText: { fontSize: 14, color: '#dc2626' },
   emptyText: { textAlign: 'center', marginTop: 30, color: '#6b7280' },
-  
-  // FAB - Floating Action Button
   fab: { 
     position: 'absolute', 
     bottom: 20, 

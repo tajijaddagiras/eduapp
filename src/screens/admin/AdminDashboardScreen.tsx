@@ -14,6 +14,8 @@ interface Stats {
 const menuItems = [
   { icon: '[M]', label: 'Manajemen Modul Materi', nav: 'ManageMateri' },
   { icon: '[K]', label: 'Manajemen Bank Simulasi', nav: 'ManageSoal' },
+  { icon: '[C]', label: 'Kelola Kategori Materi', nav: 'ManageKategori' },
+  { icon: '[L]', label: 'Kelola Level Soal', nav: 'ManageLevel' },
   { icon: '[A]', label: 'Analisis Data UEQ', nav: 'UEQAnalitik', highlight: true },
 ];
 

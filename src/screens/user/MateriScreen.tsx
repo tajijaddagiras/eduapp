@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, FlatList, ActivityIndicator,
-  TextInput, TouchableOpacity, Image
+  TextInput, TouchableOpacity, Image, Dimensions
 } from 'react-native';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Materi {
   id: string;
@@ -12,9 +13,12 @@ interface Materi {
   category: string;
   status: string;
   imageUrl?: string;
+  description?: string;
 }
 
 const FILTERS = ['Semua', 'Organik', 'Anorganik'];
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = (width - 60) / 2; // 20px padding left + 20px padding right + 20px gap
 
 export default function MateriScreen({ navigation }: any) {
   const [data, setData] = useState<Materi[]>([]);
@@ -49,21 +53,32 @@ export default function MateriScreen({ navigation }: any) {
   }, [data, activeFilter, search]);
 
   const renderItem = ({ item }: { item: Materi }) => (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DetailMateri', { materi: item })}>
-      {item.imageUrl ? (
-        <Image source={{ uri: item.imageUrl }} style={styles.cardThumbnail} />
-      ) : (
-        <View style={styles.cardThumbnail} />
-      )}
-      <View style={styles.cardContent}>
-        <View style={styles.cardTop}>
-          <Text style={[
-            styles.categoryBadge,
-            item.category === 'Anorganik' ? styles.badgeAnorganik : styles.badgeOrganik
-          ]}>[ {item.category.toUpperCase()} ]</Text>
+    <TouchableOpacity 
+      style={styles.card} 
+      onPress={() => navigation.navigate('DetailMateri', { materi: item })}
+      activeOpacity={0.7}
+    >
+      {/* Circular Image */}
+      <View style={styles.imageContainer}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.circularImage} />
+        ) : (
+          <View style={[styles.circularImage, styles.placeholderImage]}>
+            <Ionicons name="leaf-outline" size={40} color="#10b981" />
+          </View>
+        )}
+      </View>
+
+      {/* Card Info */}
+      <View style={styles.cardInfo}>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Nama:</Text>
+          <Text style={styles.infoValue} numberOfLines={1}>{item.title}</Text>
         </View>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Text style={styles.cardDesc}>Tap untuk membaca selengkapnya...</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Dari:</Text>
+          <Text style={styles.infoValue} numberOfLines={1}>{item.category}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -72,19 +87,20 @@ export default function MateriScreen({ navigation }: any) {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Modul Edukasi</Text>
-        <View style={styles.searchIcon}>
-          <Text>🔍</Text>
-        </View>
+        <Text style={styles.headerTitle}>Materi Edukasi</Text>
       </View>
 
       {/* Search */}
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Cari materi pembelajaran..."
-        value={search}
-        onChangeText={setSearch}
-      />
+      <View style={styles.searchContainer}>
+        <Ionicons name="search-outline" size={20} color="#9ca3af" style={styles.searchIconLeft} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Cari materi pembelajaran..."
+          placeholderTextColor="#9ca3af"
+          value={search}
+          onChangeText={setSearch}
+        />
+      </View>
 
       {/* Filter Badges */}
       <View style={styles.filterRow}>
@@ -100,15 +116,22 @@ export default function MateriScreen({ navigation }: any) {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#2e7d32" style={{ marginTop: 30 }} />
+        <ActivityIndicator size="large" color="#10b981" style={{ marginTop: 30 }} />
       ) : (
         <FlatList
+          key="two-column-list"
           data={filtered}
           keyExtractor={item => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 80 }}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <Text style={styles.empty}>Belum ada materi tersedia.</Text>
+            <View style={styles.emptyContainer}>
+              <Ionicons name="document-text-outline" size={64} color="#d1d5db" />
+              <Text style={styles.empty}>Belum ada materi tersedia</Text>
+            </View>
           }
         />
       )}
@@ -117,24 +140,123 @@ export default function MateriScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb', paddingHorizontal: 20 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 50, marginBottom: 16, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#e5e7eb' },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#111827' },
-  searchIcon: { width: 36, height: 36, borderWidth: 1.5, borderColor: '#333', borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
-  searchInput: { backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#d1d5db', borderRadius: 24, paddingHorizontal: 16, paddingVertical: 10, fontSize: 13, marginBottom: 14 },
-  filterRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
-  filterBadge: { paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1.5, borderColor: '#374151', borderRadius: 6 },
-  filterBadgeActive: { backgroundColor: '#2e7d32', borderColor: '#2e7d32' },
-  filterText: { fontSize: 12, fontWeight: 'bold', color: '#374151' },
-  filterTextActive: { color: '#fff' },
-  card: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 10, marginBottom: 12, overflow: 'hidden', borderWidth: 1.5, borderColor: '#e5e7eb', padding: 12, gap: 12 },
-  cardThumbnail: { width: 60, height: 60, backgroundColor: '#e5e7eb', borderRadius: 6 },
-  cardContent: { flex: 1 },
-  cardTop: { flexDirection: 'row', marginBottom: 4 },
-  categoryBadge: { fontSize: 10, fontWeight: 'bold', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-  badgeOrganik: { color: '#065f46', backgroundColor: '#d1fae5' },
-  badgeAnorganik: { color: '#7f1d1d', backgroundColor: '#fee2e2' },
-  cardTitle: { fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 4 },
-  cardDesc: { fontSize: 11, color: '#6b7280' },
-  empty: { textAlign: 'center', marginTop: 40, color: '#6b7280' }
+  container: { 
+    flex: 1, 
+    backgroundColor: '#f9fafb', 
+    paddingHorizontal: 20 
+  },
+  header: { 
+    marginTop: 50, 
+    marginBottom: 20,
+  },
+  headerTitle: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    color: '#111827',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  searchIconLeft: {
+    marginRight: 8,
+  },
+  searchInput: { 
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: '#111827',
+  },
+  filterRow: { 
+    flexDirection: 'row', 
+    gap: 10, 
+    marginBottom: 20 
+  },
+  filterBadge: { 
+    paddingHorizontal: 16, 
+    paddingVertical: 8, 
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: '#e5e7eb',
+  },
+  filterBadgeActive: { 
+    backgroundColor: '#10b981', 
+    borderColor: '#10b981' 
+  },
+  filterText: { 
+    fontSize: 13, 
+    fontWeight: '600', 
+    color: '#6b7280' 
+  },
+  filterTextActive: { 
+    color: '#fff' 
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  card: {
+    width: CARD_WIDTH,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  imageContainer: {
+    marginBottom: 12,
+  },
+  circularImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: '#fbbf24',
+  },
+  placeholderImage: {
+    backgroundColor: '#ecfdf5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardInfo: {
+    width: '100%',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+    alignItems: 'center',
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#d4a574',
+    fontWeight: '600',
+    marginRight: 6,
+  },
+  infoValue: {
+    fontSize: 12,
+    color: '#d4a574',
+    flex: 1,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 60,
+  },
+  empty: { 
+    textAlign: 'center', 
+    marginTop: 16, 
+    color: '#9ca3af',
+    fontSize: 14,
+  }
 });

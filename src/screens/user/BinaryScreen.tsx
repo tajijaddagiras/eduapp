@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, PanResponder, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
@@ -10,7 +10,7 @@ interface Item {
   type: string;
 }
 
-export default function DragAndDropScreen({ route, navigation }: any) {
+export default function BinaryScreen({ route, navigation }: any) {
   const { user } = useAuth();
   const { kategoriId, kategoriName, levelId, levelName } = route.params || {};
   
@@ -20,23 +20,21 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   const [score, setScore] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const pan = useRef(new Animated.ValueXY()).current;
+  const [disableButtons, setDisableButtons] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
         let q = query(
           collection(db, 'soal'), 
-          where('gameType', '==', 'DragDrop')
+          where('gameType', '==', 'Binary')
         );
         
         // Add kategori and level filters if provided
         if (kategoriId && levelId) {
           q = query(
             collection(db, 'soal'),
-            where('gameType', '==', 'DragDrop'),
+            where('gameType', '==', 'Binary'),
             where('kategoriId', '==', kategoriId),
             where('levelId', '==', levelId)
           );
@@ -57,8 +55,10 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     fetchItems();
   }, [kategoriId, levelId]);
 
-  const handleAnswer = async (isCorrect: boolean, userAnswer: string) => {
+  const handleAnswer = async (userAnswer: string) => {
+    setDisableButtons(true);
     const item = items[currentIndex];
+    const isCorrect = item.type === userAnswer;
     
     if (!isCorrect) {
       setWrongAnswers(prev => [...prev, {
@@ -75,9 +75,10 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     setFeedback(isCorrect ? '✓ Benar!' : '✗ Salah!');
     setTimeout(async () => {
       setFeedback(null);
+      setDisableButtons(false);
+      
       if (currentIndex < items.length - 1) {
         setCurrentIndex(currentIndex + 1);
-        pan.setValue({ x: 0, y: 0 });
       } else {
         // Game finished — save progress and navigate to result
         const finalScore = Math.round((newScore / items.length) * 100);
@@ -85,7 +86,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           if (user) {
             await addDoc(collection(db, 'progress'), {
               userId: user.uid,
-              type: 'simulasi',
+              type: 'klasifikasi',
               score: finalScore,
               correctCount: newScore,
               totalItems: items.length,
@@ -101,50 +102,17 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           wrongAnswers: wrongAnswers.concat(isCorrect ? [] : [{
             name: item.name, userAnswer, correctAnswer: item.type
           }]),
-          evaluasiName: 'Simulasi Praktek Pemilahan',
+          evaluasiName: 'Klasifikasi Cepat',
         });
       }
     }, 800);
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        // User started dragging
-        setIsDragging(true);
-      },
-      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
-      onPanResponderRelease: (_, gesture) => {
-        setIsDragging(false);
-        if (items.length === 0) return;
-        const item = items[currentIndex];
-
-        if (gesture.dx < -80) {
-          // Swiped left → Organik
-          Animated.spring(pan, { toValue: { x: -300, y: gesture.dy }, useNativeDriver: false }).start(() => {
-            pan.setValue({ x: 0, y: 0 });
-            handleAnswer(item.type === 'organik', 'organik');
-          });
-        } else if (gesture.dx > 80) {
-          // Swiped right → Anorganik
-          Animated.spring(pan, { toValue: { x: 300, y: gesture.dy }, useNativeDriver: false }).start(() => {
-            pan.setValue({ x: 0, y: 0 });
-            handleAnswer(item.type === 'anorganik', 'anorganik');
-          });
-        } else {
-          // Snap back
-          Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
-        }
-      },
-    })
-  ).current;
-
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#2e7d32" />
-        <Text style={styles.loadingText}>Menyiapkan Simulasi...</Text>
+        <ActivityIndicator size="large" color="#1d4ed8" />
+        <Text style={styles.loadingText}>Menyiapkan Klasifikasi...</Text>
       </View>
     );
   }
@@ -156,10 +124,10 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerIcon}>
             <Text style={{ fontWeight: 'bold' }}>X</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Simulasi Item: 0 / 0</Text>
+          <Text style={styles.headerTitle}>Klasifikasi: 0 / 0</Text>
           <View style={{ width: 32 }} />
         </View>
-        <Text style={styles.emptyText}>Belum ada soal simulasi.</Text>
+        <Text style={styles.emptyText}>Belum ada soal klasifikasi.</Text>
       </View>
     );
   }
@@ -174,7 +142,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           <Text style={{ fontWeight: 'bold' }}>X</Text>
         </TouchableOpacity>
         <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={styles.headerTitle}>Simulasi Item: {currentIndex + 1} / {items.length}</Text>
+          <Text style={styles.headerTitle}>Klasifikasi: {currentIndex + 1} / {items.length}</Text>
           {kategoriName && levelName && (
             <Text style={styles.headerSubtitle}>{kategoriName} - {levelName}</Text>
           )}
@@ -188,65 +156,43 @@ export default function DragAndDropScreen({ route, navigation }: any) {
       </View>
 
       {/* Instruction */}
-      <Text style={styles.instruction}>Praktek Pemilahan:{'\n'}Seret objek ke tong yang tepat!</Text>
+      <Text style={styles.instruction}>Klasifikasi Cepat:{'\n'}Pilih kategori yang tepat!</Text>
 
       {/* Feedback overlay */}
       {feedback && (
-        <View style={[styles.feedbackBadge, { backgroundColor: feedback.includes('Benar') ? '#2e7d32' : '#dc2626' }]}>
+        <View style={[styles.feedbackBadge, { backgroundColor: feedback.includes('Benar') ? '#1d4ed8' : '#dc2626' }]}>
           <Text style={styles.feedbackText}>{feedback}</Text>
         </View>
       )}
 
-      {/* Draggable Item */}
-      <Animated.View
-        style={[
-          styles.itemCard, 
-          { 
-            transform: [{ translateX: pan.x }, { translateY: pan.y }],
-            opacity: isDragging ? 0.8 : 1,
-            elevation: isDragging ? 10 : 6,
-            shadowOpacity: isDragging ? 0.3 : 0.15,
-          }
-        ]}
-        {...panResponder.panHandlers}
-      >
+      {/* Item Display */}
+      <View style={styles.itemCard}>
         <View style={styles.itemImage} />
         <Text style={styles.itemName}>{items[currentIndex]?.name}</Text>
-        <Text style={styles.itemHint}>
-          {isDragging ? '[ Sedang Digeser... ]' : '[ Tahan & Geser ]'}
-        </Text>
-      </Animated.View>
+        <Text style={styles.itemHint}>Pilih kategori yang benar</Text>
+      </View>
 
-      {/* Drop Zones with Highlight */}
-      <View style={styles.dropZones}>
-        <Animated.View 
-          style={[
-            styles.dropZone, 
-            { 
-              borderColor: '#2e7d32', 
-              backgroundColor: isDragging && pan.x._value < -20 ? '#dcfce7' : '#f0fdf4',
-              borderWidth: isDragging && pan.x._value < -20 ? 4 : 3,
-            }
-          ]}
+      {/* Binary Choice Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.choiceBtn, styles.btnOrganik]}
+          onPress={() => handleAnswer('organik')}
+          disabled={disableButtons}
         >
-          <Text style={styles.dropZoneIcon}>[ TONG ]</Text>
-          <Text style={[styles.dropZoneLabel, { color: '#2e7d32' }]}>ORGANIK</Text>
-          <Text style={styles.dropZoneHint}>← Geser Kiri</Text>
-        </Animated.View>
-        <Animated.View 
-          style={[
-            styles.dropZone, 
-            { 
-              borderColor: '#dc2626', 
-              backgroundColor: isDragging && pan.x._value > 20 ? '#fee2e2' : '#fef2f2',
-              borderWidth: isDragging && pan.x._value > 20 ? 4 : 3,
-            }
-          ]}
+          <Text style={styles.btnIcon}>🌱</Text>
+          <Text style={styles.btnText}>ORGANIK</Text>
+          <Text style={styles.btnSubtext}>Sampah alami</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.choiceBtn, styles.btnAnorganik]}
+          onPress={() => handleAnswer('anorganik')}
+          disabled={disableButtons}
         >
-          <Text style={styles.dropZoneIcon}>[ TONG ]</Text>
-          <Text style={[styles.dropZoneLabel, { color: '#dc2626' }]}>ANORGANIK</Text>
-          <Text style={styles.dropZoneHint}>Geser Kanan →</Text>
-        </Animated.View>
+          <Text style={styles.btnIcon}>♻️</Text>
+          <Text style={styles.btnText}>ANORGANIK</Text>
+          <Text style={styles.btnSubtext}>Sampah buatan</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -261,18 +207,20 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#374151' },
   headerSubtitle: { fontSize: 11, color: '#6b7280', marginTop: 2 },
   progressBg: { height: 8, backgroundColor: '#e5e7eb', marginHorizontal: 20, borderRadius: 4, marginBottom: 20 },
-  progressFill: { height: 8, backgroundColor: '#2e7d32', borderRadius: 4 },
+  progressFill: { height: 8, backgroundColor: '#1d4ed8', borderRadius: 4 },
   instruction: { textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#111827', lineHeight: 26, marginBottom: 30, paddingHorizontal: 20 },
   feedbackBadge: { alignSelf: 'center', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginBottom: 10 },
   feedbackText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  itemCard: { width: 140, height: 140, backgroundColor: '#fff', borderWidth: 2, borderColor: '#374151', borderRadius: 16, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6, marginBottom: 40 },
-  itemImage: { width: 50, height: 50, backgroundColor: '#e5e7eb', borderRadius: 8, marginBottom: 8 },
-  itemName: { fontSize: 14, fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 8 },
-  itemHint: { fontSize: 10, color: '#9ca3af', marginTop: 4 },
-  dropZones: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, gap: 16 },
-  dropZone: { flex: 1, height: 120, borderWidth: 3, borderStyle: 'dashed', borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-  dropZoneIcon: { fontSize: 18, fontWeight: 'bold', marginBottom: 6, color: '#374151' },
-  dropZoneLabel: { fontWeight: 'bold', fontSize: 14 },
-  dropZoneHint: { fontSize: 10, color: '#9ca3af', marginTop: 4 },
+  itemCard: { width: 160, height: 160, backgroundColor: '#fff', borderWidth: 2, borderColor: '#374151', borderRadius: 16, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6, marginBottom: 40 },
+  itemImage: { width: 60, height: 60, backgroundColor: '#e5e7eb', borderRadius: 8, marginBottom: 12 },
+  itemName: { fontSize: 16, fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 12 },
+  itemHint: { fontSize: 11, color: '#9ca3af', marginTop: 6 },
+  buttonContainer: { flexDirection: 'row', paddingHorizontal: 20, gap: 16 },
+  choiceBtn: { flex: 1, paddingVertical: 24, borderRadius: 16, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6 },
+  btnOrganik: { backgroundColor: '#2e7d32' },
+  btnAnorganik: { backgroundColor: '#dc2626' },
+  btnIcon: { fontSize: 32, marginBottom: 8 },
+  btnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, marginBottom: 4 },
+  btnSubtext: { color: '#fff', fontSize: 11, opacity: 0.9 },
   emptyText: { textAlign: 'center', marginTop: 40, color: '#6b7280' },
 });

@@ -21,6 +21,8 @@ import DetailMateriScreen from '../screens/user/DetailMateriScreen';
 import SimulasiScreen from '../screens/user/SimulasiScreen';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import DragAndDropScreen from '../screens/user/DragAndDropScreen';
+import BinaryScreen from '../screens/user/BinaryScreen';
+import MultipleChoiceScreen from '../screens/user/MultipleChoiceScreen';
 import HasilEvaluasiScreen from '../screens/user/HasilEvaluasiScreen';
 import PembahasanScreen from '../screens/user/PembahasanScreen';
 import UEQFormScreen from '../screens/user/UEQFormScreen';
@@ -29,6 +31,11 @@ import UEQFormScreen from '../screens/user/UEQFormScreen';
 import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
 import ManageMateriScreen from '../screens/admin/ManageMateriScreen';
 import ManageSoalScreen from '../screens/admin/ManageSoalScreen';
+import FormSoalScreen from '../screens/admin/FormSoalScreen';
+import ManageKategoriScreen from '../screens/admin/ManageKategoriScreen';
+import FormKategoriScreen from '../screens/admin/FormKategoriScreen';
+import ManageLevelScreen from '../screens/admin/ManageLevelScreen';
+import FormLevelScreen from '../screens/admin/FormLevelScreen';
 import UEQAnalitikScreen from '../screens/admin/UEQAnalitikScreen';
 
 const Stack = createNativeStackNavigator();
@@ -42,104 +49,198 @@ function UserTabs() {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25, 
-          left: 15,
-          right: 15,
-          elevation: 10,
-          backgroundColor: '#fff',
-          borderRadius: 35, 
-          height: 75,
+          bottom: 20,
+          left: 5,
+          right: 5,
+          height: 70,
+          backgroundColor: '#ffffff',
+          borderRadius: 40,
+          elevation: 8,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: 0.15,
-          shadowRadius: 20,
-          borderWidth: 0,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
+          paddingHorizontal: 0,
+          paddingTop: 8,
+          paddingBottom: 8,
         },
       }}
     >
+      {/* Tab 1: Beranda */}
       <Tab.Screen
         name="Beranda"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? "home" : "home-outline"} size={24} color={focused ? '#1d4ed8' : '#9ca3af'} />
-              <Text numberOfLines={1} style={{ color: focused ? '#1d4ed8' : '#9ca3af', fontSize: 9, marginTop: 4, fontWeight: focused ? 'bold' : 'normal' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
+              <Ionicons
+                name={focused ? 'home' : 'home-outline'}
+                size={24}
+                color={focused ? '#1d4ed8' : '#9ca3af'}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: focused ? '#1d4ed8' : '#9ca3af',
+                  fontSize: 10,
+                  marginTop: 3,
+                  fontWeight: focused ? '600' : '400',
+                  textAlign: 'center',
+                  width: 70,
+                }}
+              >
                 Beranda
               </Text>
-              {focused && <View style={{ height: 2, width: 30, backgroundColor: '#1d4ed8', marginTop: 3 }} />}
             </View>
-          )
+          ),
         }}
       />
+
+      {/* Tab 2: Materi */}
       <Tab.Screen
         name="Materi"
         component={MateriScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? "book" : "book-outline"} size={24} color={focused ? '#1d4ed8' : '#9ca3af'} />
-              <Text numberOfLines={1} style={{ color: focused ? '#1d4ed8' : '#9ca3af', fontSize: 9, marginTop: 4, fontWeight: focused ? 'bold' : 'normal' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
+              <Ionicons
+                name={focused ? 'book' : 'book-outline'}
+                size={24}
+                color={focused ? '#1d4ed8' : '#9ca3af'}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: focused ? '#1d4ed8' : '#9ca3af',
+                  fontSize: 10,
+                  marginTop: 3,
+                  fontWeight: focused ? '600' : '400',
+                  textAlign: 'center',
+                  width: 70,
+                }}
+              >
                 Materi
               </Text>
-              {focused && <View style={{ height: 2, width: 35, backgroundColor: '#1d4ed8', marginTop: 3 }} />}
             </View>
-          )
+          ),
         }}
       />
+
+      {/* Tab 3: Kuesioner (Center Button) */}
       <Tab.Screen
         name="Kuesioner"
         component={UEQFormScreen}
         options={{
           tabBarButton: (props) => (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top: -30 }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              {/* Floating Circle Button */}
               <TouchableOpacity
-                activeOpacity={0.8}
+                activeOpacity={0.85}
                 onPress={props.onPress}
                 style={{
-                  width: 60, height: 60, borderRadius: 30, backgroundColor: '#1d4ed8',
-                  justifyContent: 'center', alignItems: 'center',
-                  shadowColor: '#1d4ed8', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.4, shadowRadius: 10, elevation: 8
+                  position: 'absolute',
+                  top: -48,
+                  width: 70,
+                  height: 70,
+                  borderRadius: 35,
+                  backgroundColor: '#1d4ed8',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  shadowColor: '#1d4ed8',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 8,
                 }}
               >
-                {/* Desain persis Figma (gamepad), tapi untuk fungsi Kuesioner */}
-                <Ionicons name="game-controller" size={30} color="#fff" />
+                <Ionicons name="clipboard-outline" size={32} color="#ffffff" />
               </TouchableOpacity>
-              <Text numberOfLines={1} style={{ color: '#1d4ed8', fontSize: 10, marginTop: 8, fontWeight: 'bold' }}>
-                Kuesioner
-              </Text>
+
+              {/* Label at Bottom - Same level as other tabs */}
+              <View style={{ 
+                position: 'absolute',
+                bottom: 0,
+                width: 70,
+                height: 54,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+                <View style={{ height: 24 }} />
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: '#1d4ed8',
+                    fontSize: 10,
+                    fontWeight: '600',
+                    textAlign: 'center',
+                    marginTop: 3,
+                  }}
+                >
+                  Kuesioner
+                </Text>
+              </View>
             </View>
-          )
+          ),
         }}
       />
+
+      {/* Tab 4: Simulasi */}
       <Tab.Screen
         name="Simulasi"
         component={SimulasiScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? "cube" : "cube-outline"} size={24} color={focused ? '#1d4ed8' : '#9ca3af'} />
-              <Text numberOfLines={1} style={{ color: focused ? '#1d4ed8' : '#9ca3af', fontSize: 9, marginTop: 4, fontWeight: focused ? 'bold' : 'normal' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
+              <Ionicons
+                name={focused ? 'game-controller' : 'game-controller-outline'}
+                size={24}
+                color={focused ? '#1d4ed8' : '#9ca3af'}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: focused ? '#1d4ed8' : '#9ca3af',
+                  fontSize: 10,
+                  marginTop: 3,
+                  fontWeight: focused ? '600' : '400',
+                  textAlign: 'center',
+                  width: 70,
+                }}
+              >
                 Simulasi
               </Text>
-              {focused && <View style={{ height: 2, width: 40, backgroundColor: '#1d4ed8', marginTop: 3 }} />}
             </View>
-          )
+          ),
         }}
       />
+
+      {/* Tab 5: Profil */}
       <Tab.Screen
         name="Profil"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? "person" : "person-outline"} size={24} color={focused ? '#1d4ed8' : '#9ca3af'} />
-              <Text numberOfLines={1} style={{ color: focused ? '#1d4ed8' : '#9ca3af', fontSize: 9, marginTop: 4, fontWeight: focused ? 'bold' : 'normal' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
+              <Ionicons
+                name={focused ? 'person' : 'person-outline'}
+                size={24}
+                color={focused ? '#1d4ed8' : '#9ca3af'}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: focused ? '#1d4ed8' : '#9ca3af',
+                  fontSize: 10,
+                  marginTop: 3,
+                  fontWeight: focused ? '600' : '400',
+                  textAlign: 'center',
+                  width: 70,
+                }}
+              >
                 Profil
               </Text>
-              {focused && <View style={{ height: 2, width: 30, backgroundColor: '#1d4ed8', marginTop: 3 }} />}
             </View>
-          )
+          ),
         }}
       />
     </Tab.Navigator>
@@ -182,6 +283,11 @@ function MainNavigator() {
           <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} />
           <Stack.Screen name="ManageMateri" component={ManageMateriScreen} />
           <Stack.Screen name="ManageSoal" component={ManageSoalScreen} />
+          <Stack.Screen name="FormSoal" component={FormSoalScreen} />
+          <Stack.Screen name="ManageKategori" component={ManageKategoriScreen} />
+          <Stack.Screen name="FormKategori" component={FormKategoriScreen} />
+          <Stack.Screen name="ManageLevel" component={ManageLevelScreen} />
+          <Stack.Screen name="FormLevel" component={FormLevelScreen} />
           <Stack.Screen name="UEQAnalitik" component={UEQAnalitikScreen} />
         </>
       ) : (
@@ -190,6 +296,8 @@ function MainNavigator() {
           <Stack.Screen name="UserTabs" component={UserTabs} />
           <Stack.Screen name="DetailMateri" component={DetailMateriScreen} />
           <Stack.Screen name="DragAndDrop" component={DragAndDropScreen} />
+          <Stack.Screen name="Binary" component={BinaryScreen} />
+          <Stack.Screen name="MultipleChoice" component={MultipleChoiceScreen} />
           <Stack.Screen name="HasilEvaluasi" component={HasilEvaluasiScreen} />
           <Stack.Screen name="Pembahasan" component={PembahasanScreen} />
           <Stack.Screen name="UEQForm" component={UEQFormScreen} />
