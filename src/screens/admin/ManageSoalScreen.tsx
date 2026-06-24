@@ -9,9 +9,6 @@ interface DragDropItem {
   name: string;
   imageUrl?: string;
   type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
   levelId?: string;
   levelName?: string;
   gameType: 'DragDrop';
@@ -22,9 +19,6 @@ interface BinaryItem {
   name: string;
   imageUrl?: string;
   type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
   levelId?: string;
   levelName?: string;
   gameType: 'Binary';
@@ -41,9 +35,6 @@ interface MultipleChoiceItem {
   correctAnswer: 'A' | 'B' | 'C' | 'D';
   explanation: string;
   type: 'organik' | 'anorganik';
-  kategoriId?: string;
-  kategoriName?: string;
-  duration?: number;
   levelId?: string;
   levelName?: string;
   gameType: 'MultipleChoice';
@@ -104,6 +95,13 @@ export default function ManageSoalScreen({ navigation }: any) {
     ]);
   };
 
+  const handleEdit = (item: SoalItem) => {
+    navigation.navigate('FormSoal', { 
+      gameType: activeTab,
+      editItem: item 
+    });
+  };
+
   const navigateToAddForm = () => {
     navigation.navigate('FormSoal', { gameType: activeTab });
   };
@@ -117,12 +115,9 @@ export default function ManageSoalScreen({ navigation }: any) {
             <Image source={{ uri: mcItem.imageUrl }} style={styles.cardImage} />
           ) : null}
           <Text style={styles.cardTitle} numberOfLines={2}>{mcItem.question}</Text>
-          <Text style={styles.cardCategory}>Jawaban: {mcItem.correctAnswer}</Text>
-          {mcItem.kategoriName && (
-            <Text style={styles.cardCategory}>Kategori: {mcItem.kategoriName} ({mcItem.duration} menit)</Text>
-          )}
+          <Text style={styles.cardSubtext}>Jawaban: {mcItem.correctAnswer}</Text>
           {mcItem.levelName && (
-            <Text style={styles.cardCategory}>Level: {mcItem.levelName}</Text>
+            <Text style={styles.cardSubtext}>Level: {mcItem.levelName}</Text>
           )}
         </>
       );
@@ -134,11 +129,8 @@ export default function ManageSoalScreen({ navigation }: any) {
             <Image source={{ uri: simpleItem.imageUrl }} style={styles.cardImage} />
           ) : null}
           <Text style={styles.cardTitle}>{simpleItem.name}</Text>
-          {simpleItem.kategoriName && (
-            <Text style={styles.cardCategory}>Kategori: {simpleItem.kategoriName} ({simpleItem.duration} menit)</Text>
-          )}
           {simpleItem.levelName && (
-            <Text style={styles.cardCategory}>Level: {simpleItem.levelName}</Text>
+            <Text style={styles.cardSubtext}>Level: {simpleItem.levelName}</Text>
           )}
         </>
       );
@@ -199,12 +191,22 @@ export default function ManageSoalScreen({ navigation }: any) {
               <View style={{ flex: 1 }}>
                 {renderCardContent(item)}
               </View>
-              <TouchableOpacity 
-                style={styles.delBtn} 
-                onPress={() => handleDelete(item.id)}
-              >
-                <Text style={styles.delBtnText}>[x]</Text>
-              </TouchableOpacity>
+              
+              {/* Action Buttons */}
+              <View style={styles.actionButtons}>
+                <TouchableOpacity 
+                  style={styles.editBtn} 
+                  onPress={() => handleEdit(item)}
+                >
+                  <Text style={styles.editBtnText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.delBtn} 
+                  onPress={() => handleDelete(item.id)}
+                >
+                  <Text style={styles.delBtnText}>[x]</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
           ListEmptyComponent={
@@ -267,7 +269,7 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 13, fontWeight: '600', color: '#6b7280' },
   tabTextActive: { color: '#fff' },
   
-  // Card styles - consistent with ManageMateriScreen
+  // Card styles - improved responsiveness
   card: { 
     backgroundColor: '#fff', 
     borderRadius: 10, 
@@ -276,30 +278,73 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: '#e5e7eb',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2
   },
   cardImage: { 
     width: '100%', 
     height: 100, 
     borderRadius: 6, 
     marginBottom: 12, 
-    resizeMode: 'cover' 
+    resizeMode: 'cover',
+    backgroundColor: '#f3f4f6'
   },
-  cardTitle: { fontSize: 15, fontWeight: 'bold', marginBottom: 6, color: '#111827' },
-  cardCategory: { color: '#6b7280', fontSize: 11, marginTop: 3 },
+  cardTitle: { 
+    fontSize: 15, 
+    fontWeight: 'bold', 
+    marginBottom: 6, 
+    color: '#111827',
+    lineHeight: 20
+  },
+  cardSubtext: { 
+    color: '#6b7280', 
+    fontSize: 11, 
+    marginTop: 3,
+    lineHeight: 16
+  },
+  
+  // Action buttons - improved layout
+  actionButtons: {
+    flexDirection: 'column',
+    gap: 8,
+    marginLeft: 12,
+    justifyContent: 'flex-start'
+  },
+  editBtn: { 
+    borderWidth: 1.5, 
+    borderColor: '#374151', 
+    borderRadius: 6, 
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    minWidth: 50,
+    alignItems: 'center'
+  },
+  editBtnText: { 
+    fontSize: 12, 
+    fontWeight: 'bold', 
+    color: '#374151' 
+  },
   delBtn: { 
-    width: 44, 
+    width: 50, 
     borderWidth: 1.5, 
     borderColor: '#9ca3af', 
     borderStyle: 'dashed', 
     borderRadius: 6, 
     alignItems: 'center', 
     justifyContent: 'center',
-    height: 44
+    paddingVertical: 8
   },
-  delBtnText: { fontSize: 14, color: '#dc2626' },
-  emptyText: { textAlign: 'center', marginTop: 30, color: '#6b7280' },
+  delBtnText: { fontSize: 14, color: '#dc2626', fontWeight: 'bold' },
+  emptyText: { 
+    textAlign: 'center', 
+    marginTop: 40, 
+    color: '#6b7280',
+    fontSize: 14
+  },
   
   // FAB - Floating Action Button
   fab: { 
@@ -310,7 +355,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#374151', 
     padding: 16, 
     borderRadius: 12, 
-    alignItems: 'center' 
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8
   },
   fabText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
 });

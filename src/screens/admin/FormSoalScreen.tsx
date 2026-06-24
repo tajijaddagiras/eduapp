@@ -4,22 +4,18 @@ import {
   ActivityIndicator, Alert, ScrollView, Image, Modal, FlatList
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-interface Kategori {
-  id: string;
-  name: string;
-  duration: number;
-}
-
 interface Level {
   id: string;
   name: string;
   gameType: string;
+  durasi?: number;
+  nilaiPerSoal?: number;
 }
 
 const uploadToCloudinary = async (uri: string): Promise<string> => {
@@ -38,26 +34,20 @@ const uploadToCloudinary = async (uri: string): Promise<string> => {
 };
 
 export default function FormSoalScreen({ route, navigation }: any) {
-  const { gameType } = route.params; // 'DragDrop', 'Binary', or 'MultipleChoice'
+  const { gameType, editItem } = route.params;
+  const isEditMode = !!editItem;
   
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   
-  // Dropdown data
-  const [kategoriList, setKategoriList] = useState<Kategori[]>([]);
   const [levelList, setLevelList] = useState<Level[]>([]);
-  const [showKategoriModal, setShowKategoriModal] = useState(false);
   const [showLevelModal, setShowLevelModal] = useState(false);
   
-  // Selected values
-  const [selectedKategori, setSelectedKategori] = useState<Kategori | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
   
-  // Common fields
   const [formName, setFormName] = useState('');
   const [formImageUri, setFormImageUri] = useState<string | null>(null);
   
-  // Multiple Choice fields
   const [formQuestion, setFormQuestion] = useState('');
   const [formOptionA, setFormOptionA] = useState('');
   const [formOptionB, setFormOptionB] = useState('');
@@ -66,24 +56,24 @@ export default function FormSoalScreen({ route, navigation }: any) {
   const [formCorrectAnswer, setFormCorrectAnswer] = useState<'A' | 'B' | 'C' | 'D'>('A');
   const [formExplanation, setFormExplanation] = useState('');
 
-  // Fetch kategori and level on mount
   useEffect(() => {
-    fetchKategori();
     fetchLevel();
-  }, []);
-
-  const fetchKategori = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'kategori'));
-      const list: Kategori[] = [];
-      querySnapshot.forEach((docSnap) => {
-        list.push({ id: docSnap.id, ...docSnap.data() } as Kategori);
-      });
-      setKategoriList(list);
-    } catch (error) {
-      console.error("Error fetching kategori:", error);
+    
+    if (isEditMode) {
+      if (gameType === 'MultipleChoice') {
+        setFormQuestion(editItem.question || '');
+        setFormOptionA(editItem.optionA || '');
+        setFormOptionB(editItem.optionB || '');
+        setFormOptionC(editItem.optionC || '');
+        setFormOptionD(editItem.optionD || '');
+        setFormCorrectAnswer(editItem.correctAnswer || 'A');
+        setFormExplanation(editItem.explanation || '');
+      } else {
+        setFormName(editItem.name || '');
+      }
+      setFormImageUri(editItem.imageUrl || null);
     }
-  };
+  }, []);
 
   const fetchLevel = async () => {
     try {
@@ -91,7 +81,12 @@ export default function FormSoalScreen({ route, navigation }: any) {
       const querySnapshot = await getDocs(q);
       const list: Level[] = [];
       querySnapshot.forEach((docSnap) => {
-        list.push({ id: docSnap.id, ...docSnap.data() } as Level);
+        const lv = { id: docSnap.id, ...docSnap.data() } as Level;
+        list.push(lv);
+        
+        if (isEditMode && editItem.levelId === lv.id) {
+          setSelectedLevel(lv);
+        }
       });
       setLevelList(list);
     } catch (error) {
@@ -113,12 +108,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
   };
 
   const handleSave = async () => {
-    // Validation
-    if (!selectedKategori) {
-      Alert.alert('Error', 'Pilih kategori terlebih dahulu!');
-      return;
-    }
-    
     if (!selectedLevel) {
       Alert.alert('Error', 'Pilih level terlebih dahulu!');
       return;
@@ -130,13 +119,18 @@ export default function FormSoalScreen({ route, navigation }: any) {
     try {
       let finalImageUrl = formImageUri;
       
-      // Upload image if exists and is local file
       if (formImageUri && !formImageUri.startsWith('http')) {
         finalImageUrl = await uploadToCloudinary(formImageUri);
       }
 
+      const baseData = {
+        levelId: selectedLevel.id,
+        levelName: selectedLevel.name,
+        gameType: gameType,
+        imageUrl: finalImageUrl || '',
+      };
+
       if (gameType === 'DragDrop' || gameType === 'Binary') {
-        // Validation
         if (!formName.trim()) {
           Alert.alert('Error', 'Nama objek tidak boleh kosong!');
           setLoading(false);
@@ -144,20 +138,21 @@ export default function FormSoalScreen({ route, navigation }: any) {
           return;
         }
 
-        await addDoc(collection(db, 'soal'), {
+        const soalData = {
+          ...baseData,
           name: formName,
-          imageUrl: finalImageUrl || '',
-          type: selectedKategori.name.toLowerCase(), // organik/anorganik from kategori name
-          kategoriId: selectedKategori.id,
-          kategoriName: selectedKategori.name,
-          duration: selectedKategori.duration,
-          levelId: selectedLevel.id,
-          levelName: selectedLevel.name,
-          gameType: gameType,
-          createdAt: new Date()
-        });
+          type: gameType === 'DragDrop' ? 'organik' : 'organik',
+        };
+
+        if (isEditMode) {
+          await updateDoc(doc(db, 'soal', editItem.id), soalData);
+        } else {
+          await addDoc(collection(db, 'soal'), {
+            ...soalData,
+            createdAt: new Date()
+          });
+        }
       } else if (gameType === 'MultipleChoice') {
-        // Validation
         if (!formQuestion.trim() || !formOptionA.trim() || !formOptionB.trim() || 
             !formOptionC.trim() || !formOptionD.trim() || !formExplanation.trim()) {
           Alert.alert('Error', 'Semua field harus diisi!');
@@ -166,32 +161,33 @@ export default function FormSoalScreen({ route, navigation }: any) {
           return;
         }
 
-        await addDoc(collection(db, 'soal'), {
+        const soalData = {
+          ...baseData,
           question: formQuestion,
-          imageUrl: finalImageUrl || '',
           optionA: formOptionA,
           optionB: formOptionB,
           optionC: formOptionC,
           optionD: formOptionD,
           correctAnswer: formCorrectAnswer,
           explanation: formExplanation,
-          type: selectedKategori.name.toLowerCase(), // organik/anorganik from kategori name
-          kategoriId: selectedKategori.id,
-          kategoriName: selectedKategori.name,
-          duration: selectedKategori.duration,
-          levelId: selectedLevel.id,
-          levelName: selectedLevel.name,
-          gameType: 'MultipleChoice',
-          createdAt: new Date()
-        });
+        };
+
+        if (isEditMode) {
+          await updateDoc(doc(db, 'soal', editItem.id), soalData);
+        } else {
+          await addDoc(collection(db, 'soal'), {
+            ...soalData,
+            createdAt: new Date()
+          });
+        }
       }
 
-      Alert.alert('Sukses', 'Soal berhasil ditambahkan', [
+      Alert.alert('Sukses', `Soal berhasil ${isEditMode ? 'diupdate' : 'ditambahkan'}`, [
         { text: 'OK', onPress: () => navigation.goBack() }
       ]);
     } catch (error) {
-      console.error("Error adding document: ", error);
-      Alert.alert('Error', 'Gagal menambahkan soal. Pastikan koneksi internet stabil.');
+      console.error("Error saving document: ", error);
+      Alert.alert('Error', `Gagal ${isEditMode ? 'mengupdate' : 'menambahkan'} soal. Pastikan koneksi internet stabil.`);
     } finally {
       setLoading(false);
       setUploading(false);
@@ -199,9 +195,10 @@ export default function FormSoalScreen({ route, navigation }: any) {
   };
 
   const getTitle = () => {
-    if (gameType === 'DragDrop') return 'Tambah Drag & Drop';
-    if (gameType === 'Binary') return 'Tambah Klasifikasi';
-    return 'Tambah Pilihan Ganda';
+    const action = isEditMode ? 'Edit' : 'Tambah';
+    if (gameType === 'DragDrop') return `${action} Drag & Drop`;
+    if (gameType === 'Binary') return `${action} Klasifikasi`;
+    return `${action} Pilihan Ganda`;
   };
 
   return (
@@ -216,22 +213,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Dropdown Kategori */}
-        <Text style={styles.fieldLabel}>Kategori Materi</Text>
-        <TouchableOpacity 
-          style={styles.dropdownBtn} 
-          onPress={() => setShowKategoriModal(true)}
-        >
-          <Text style={selectedKategori ? styles.dropdownTextSelected : styles.dropdownTextPlaceholder}>
-            {selectedKategori ? `${selectedKategori.name} (${selectedKategori.duration} menit)` : 'Pilih Kategori ▼'}
-          </Text>
-        </TouchableOpacity>
-        {selectedKategori && (
-          <Text style={styles.fieldHint}>
-            Durasi: {selectedKategori.duration} menit (otomatis dari kategori)
-          </Text>
-        )}
-
         {/* Dropdown Level */}
         <Text style={styles.fieldLabel}>Level Soal</Text>
         <TouchableOpacity 
@@ -242,6 +223,11 @@ export default function FormSoalScreen({ route, navigation }: any) {
             {selectedLevel ? selectedLevel.name : 'Pilih Level ▼'}
           </Text>
         </TouchableOpacity>
+        {selectedLevel && selectedLevel.durasi && selectedLevel.nilaiPerSoal && (
+          <Text style={styles.fieldHint}>
+            ⏱ {selectedLevel.durasi} menit • ⭐ {selectedLevel.nilaiPerSoal} poin/soal
+          </Text>
+        )}
 
         {gameType === 'MultipleChoice' ? (
           // Multiple Choice Form
@@ -324,10 +310,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
               multiline
               textAlignVertical="top"
             />
-
-            <Text style={styles.fieldHint}>
-              Kategori dan durasi sudah ditentukan di atas
-            </Text>
           </>
         ) : (
           // Drag & Drop / Binary Form
@@ -351,10 +333,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
                 </>
               )}
             </TouchableOpacity>
-
-            <Text style={styles.fieldHint}>
-              Kategori dan durasi sudah ditentukan di atas
-            </Text>
           </>
         )}
 
@@ -363,7 +341,7 @@ export default function FormSoalScreen({ route, navigation }: any) {
           {uploading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.saveBtnText}>Simpan Soal</Text>
+            <Text style={styles.saveBtnText}>{isEditMode ? 'Update Soal' : 'Simpan Soal'}</Text>
           )}
         </TouchableOpacity>
 
@@ -371,40 +349,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
           <Text style={styles.cancelBtnText}>Batal</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      {/* Modal Kategori */}
-      <Modal visible={showKategoriModal} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Pilih Kategori</Text>
-            <FlatList
-              data={kategoriList}
-              keyExtractor={item => item.id}
-              renderItem={({item}) => (
-                <TouchableOpacity 
-                  style={styles.modalItem}
-                  onPress={() => {
-                    setSelectedKategori(item);
-                    setShowKategoriModal(false);
-                  }}
-                >
-                  <Text style={styles.modalItemText}>{item.name}</Text>
-                  <Text style={styles.modalItemSubtext}>{item.duration} menit</Text>
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                <Text style={styles.emptyText}>Belum ada kategori. Tambahkan di menu Kelola Kategori</Text>
-              }
-            />
-            <TouchableOpacity 
-              style={styles.modalCloseBtn} 
-              onPress={() => setShowKategoriModal(false)}
-            >
-              <Text style={styles.modalCloseText}>Tutup</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       {/* Modal Level */}
       <Modal visible={showLevelModal} animationType="slide" transparent={true}>

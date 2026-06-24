@@ -12,7 +12,7 @@ interface Item {
 
 export default function BinaryScreen({ route, navigation }: any) {
   const { user } = useAuth();
-  const { kategoriId, kategoriName, levelId, levelName } = route.params || {};
+  const { levelId, levelName, nilaiPerSoal } = route.params || {};
   
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,12 +30,10 @@ export default function BinaryScreen({ route, navigation }: any) {
           where('gameType', '==', 'Binary')
         );
         
-        // Add kategori and level filters if provided
-        if (kategoriId && levelId) {
+        if (levelId) {
           q = query(
             collection(db, 'soal'),
             where('gameType', '==', 'Binary'),
-            where('kategoriId', '==', kategoriId),
             where('levelId', '==', levelId)
           );
         }
@@ -53,7 +51,7 @@ export default function BinaryScreen({ route, navigation }: any) {
       }
     };
     fetchItems();
-  }, [kategoriId, levelId]);
+  }, [levelId]);
 
   const handleAnswer = async (userAnswer: string) => {
     setDisableButtons(true);
@@ -71,7 +69,6 @@ export default function BinaryScreen({ route, navigation }: any) {
     const newScore = isCorrect ? score + 1 : score;
     if (isCorrect) setScore(newScore);
 
-    // Show feedback briefly
     setFeedback(isCorrect ? '✓ Benar!' : '✗ Salah!');
     setTimeout(async () => {
       setFeedback(null);
@@ -80,8 +77,18 @@ export default function BinaryScreen({ route, navigation }: any) {
       if (currentIndex < items.length - 1) {
         setCurrentIndex(currentIndex + 1);
       } else {
-        // Game finished — save progress and navigate to result
-        const finalScore = Math.round((newScore / items.length) * 100);
+        const totalItems = items.length;
+        const poinPerSoal = nilaiPerSoal || 10;
+        
+        if (totalItems === 0) {
+          navigation.replace('UserTabs');
+          return;
+        }
+        
+        const totalScore = newScore * poinPerSoal;
+        const maxScore = totalItems * poinPerSoal;
+        const finalScore = Math.round((totalScore / maxScore) * 100);
+        
         try {
           if (user) {
             await addDoc(collection(db, 'progress'), {
@@ -89,7 +96,7 @@ export default function BinaryScreen({ route, navigation }: any) {
               type: 'klasifikasi',
               score: finalScore,
               correctCount: newScore,
-              totalItems: items.length,
+              totalItems: totalItems,
               completedAt: new Date(),
             });
           }
@@ -97,7 +104,7 @@ export default function BinaryScreen({ route, navigation }: any) {
 
         navigation.replace('HasilEvaluasi', {
           score: finalScore,
-          totalItems: items.length,
+          totalItems: totalItems,
           correctCount: newScore,
           wrongAnswers: wrongAnswers.concat(isCorrect ? [] : [{
             name: item.name, userAnswer, correctAnswer: item.type
@@ -143,8 +150,8 @@ export default function BinaryScreen({ route, navigation }: any) {
         </TouchableOpacity>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={styles.headerTitle}>Klasifikasi: {currentIndex + 1} / {items.length}</Text>
-          {kategoriName && levelName && (
-            <Text style={styles.headerSubtitle}>{kategoriName} - {levelName}</Text>
+          {levelName && (
+            <Text style={styles.headerSubtitle}>{levelName}</Text>
           )}
         </View>
         <View style={{ width: 32 }} />

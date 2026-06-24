@@ -11,6 +11,8 @@ export default function FormLevelScreen({ route, navigation }: any) {
   
   const [loading, setLoading] = useState(false);
   const [formName, setFormName] = useState('');
+  const [durasi, setDurasi] = useState('');
+  const [nilaiPerSoal, setNilaiPerSoal] = useState('');
 
   const getTitle = () => {
     if (gameType === 'DragDrop') return 'Tambah Level Drag & Drop';
@@ -24,12 +26,24 @@ export default function FormLevelScreen({ route, navigation }: any) {
       return;
     }
 
+    if (!durasi.trim() || isNaN(Number(durasi)) || Number(durasi) <= 0) {
+      Alert.alert('Error', 'Durasi harus berupa angka positif!');
+      return;
+    }
+
+    if (!nilaiPerSoal.trim() || isNaN(Number(nilaiPerSoal)) || Number(nilaiPerSoal) <= 0) {
+      Alert.alert('Error', 'Nilai per soal harus berupa angka positif!');
+      return;
+    }
+
     setLoading(true);
     
     try {
       await addDoc(collection(db, 'level'), {
         name: formName,
         gameType: gameType,
+        durasi: Number(durasi),
+        nilaiPerSoal: Number(nilaiPerSoal),
         createdAt: new Date()
       });
 
@@ -65,6 +79,30 @@ export default function FormLevelScreen({ route, navigation }: any) {
         />
         <Text style={styles.fieldHint}>
           Nama level untuk soal {gameType === 'DragDrop' ? 'Drag & Drop' : gameType === 'Binary' ? 'Klasifikasi' : 'Pilihan Ganda'}
+        </Text>
+
+        <Text style={styles.fieldLabel}>Durasi (Menit)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Contoh: 10"
+          keyboardType="numeric"
+          value={durasi}
+          onChangeText={setDurasi}
+        />
+        <Text style={styles.fieldHint}>
+          Durasi waktu pengerjaan dalam menit
+        </Text>
+
+        <Text style={styles.fieldLabel}>Nilai per Soal</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Contoh: 20"
+          keyboardType="numeric"
+          value={nilaiPerSoal}
+          onChangeText={setNilaiPerSoal}
+        />
+        <Text style={styles.fieldHint}>
+          Poin yang didapat untuk setiap jawaban benar
         </Text>
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={loading}>

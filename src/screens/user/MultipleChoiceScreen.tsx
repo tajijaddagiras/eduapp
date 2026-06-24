@@ -19,7 +19,7 @@ interface Question {
 
 export default function MultipleChoiceScreen({ route, navigation }: any) {
   const { user } = useAuth();
-  const { kategoriId, kategoriName, levelId, levelName } = route.params || {};
+  const { levelId, levelName, duration, nilaiPerSoal } = route.params || {};
   
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,6 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   
-  // Timer state
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
 
@@ -41,12 +40,10 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
           where('gameType', '==', 'MultipleChoice')
         );
         
-        // Add kategori and level filters if provided
-        if (kategoriId && levelId) {
+        if (levelId) {
           q = query(
             collection(db, 'soal'),
             where('gameType', '==', 'MultipleChoice'),
-            where('kategoriId', '==', kategoriId),
             where('levelId', '==', levelId)
           );
         }
@@ -65,16 +62,15 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
             optionD: data.optionD,
             correctAnswer: data.correctAnswer,
             explanation: data.explanation,
-            duration: data.duration || 30,
+            duration: data.duration || duration || 30,
           });
         });
         setQuestions(fetched);
         
-        // Set timer based on total duration
         if (fetched.length > 0) {
-          const duration = fetched[0].duration * 60; // Convert minutes to seconds
-          setTimeRemaining(duration);
-          setTotalDuration(duration);
+          const dur = duration ? duration * 60 : 1800;
+          setTimeRemaining(dur);
+          setTotalDuration(dur);
         }
       } catch (e) {
         console.error(e);
@@ -83,11 +79,11 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
       }
     };
     fetchQuestions();
-  }, [kategoriId, levelId]);
+  }, [levelId, duration]);
 
-  // Timer countdown
+  // Timer countdown - TIMER TETAP JALAN SAAT SHOW EXPLANATION
   useEffect(() => {
-    if (timeRemaining <= 0 || showExplanation) return;
+    if (timeRemaining <= 0) return;
     
     const timer = setInterval(() => {
       setTimeRemaining(prev => {
@@ -101,11 +97,20 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeRemaining, showExplanation, currentIndex]);
+  }, [timeRemaining, currentIndex]);
 
   const handleTimeUp = async () => {
-    // Time's up - mark all remaining as wrong and navigate to results
-    const finalScore = Math.round((score / questions.length) * 100);
+    const totalQuestions = questions.length;
+    const poinPerSoal = nilaiPerSoal || 10;
+    
+    if (totalQuestions === 0) {
+      navigation.replace('UserTabs');
+      return;
+    }
+    
+    const totalScore = score * poinPerSoal;
+    const maxScore = totalQuestions * poinPerSoal;
+    const finalScore = Math.round((totalScore / maxScore) * 100);
     
     try {
       if (user) {
@@ -114,7 +119,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
           type: 'pilihan-ganda',
           score: finalScore,
           correctCount: score,
-          totalItems: questions.length,
+          totalItems: totalQuestions,
           completedAt: new Date(),
         });
       }
@@ -122,7 +127,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
 
     navigation.replace('HasilEvaluasi', {
       score: finalScore,
-      totalItems: questions.length,
+      totalItems: totalQuestions,
       correctCount: score,
       wrongAnswers,
       evaluasiName: 'Evaluasi Pilihan Ganda',
@@ -151,14 +156,22 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   };
 
   const handleNext = async () => {
-    setSelectedAnswer(null);
-    setShowExplanation(false);
+    // Cek dulu apakah ini soal terakhir
+    const isLastQuestion = currentIndex >= questions.length - 1;
     
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      // Quiz finished — save progress and navigate to result
-      const finalScore = Math.round((score / questions.length) * 100);
+    if (isLastQuestion) {
+      // SOAL TERAKHIR - Langsung navigate tanpa reset state (hindari flickering)
+      const totalQuestions = questions.length;
+      const poinPerSoal = nilaiPerSoal || 10;
+      
+      if (totalQuestions === 0) {
+        navigation.replace('UserTabs');
+        return;
+      }
+      
+      const totalScore = score * poinPerSoal;
+      const maxScore = totalQuestions * poinPerSoal;
+      const finalScore = Math.round((totalScore / maxScore) * 100);
       
       try {
         if (user) {
@@ -167,7 +180,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
             type: 'pilihan-ganda',
             score: finalScore,
             correctCount: score,
-            totalItems: questions.length,
+            totalItems: totalQuestions,
             completedAt: new Date(),
           });
         }
@@ -175,11 +188,16 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
 
       navigation.replace('HasilEvaluasi', {
         score: finalScore,
-        totalItems: questions.length,
+        totalItems: totalQuestions,
         correctCount: score,
         wrongAnswers,
         evaluasiName: 'Evaluasi Pilihan Ganda',
       });
+    } else {
+      // BUKAN SOAL TERAKHIR - Reset state dan lanjut ke soal berikutnya
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -226,8 +244,8 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
         </TouchableOpacity>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={styles.headerTitle}>Soal {currentIndex + 1} / {questions.length}</Text>
-          {kategoriName && levelName && (
-            <Text style={styles.headerSubtitle}>{kategoriName} - {levelName}</Text>
+          {levelName && (
+            <Text style={styles.headerSubtitle}>{levelName}</Text>
           )}
         </View>
         <View style={styles.timerBox}>

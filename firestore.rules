@@ -56,7 +56,27 @@ service cloud.firestore {
     }
 
     // =========================================================
-    // 4. Collection 'ueq_responses' (Hasil Kuesioner UEQ)
+    // 4. Collection 'kategori' (Kategori Materi)
+    // =========================================================
+    match /kategori/{document=**} {
+      // Semua user login bisa baca kategori
+      allow read: if isAuthenticated();
+      // Hanya admin yang bisa CRUD kategori
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // 5. Collection 'level' (Level Soal)
+    // =========================================================
+    match /level/{document=**} {
+      // Semua user login bisa baca level
+      allow read: if isAuthenticated();
+      // Hanya admin yang bisa CRUD level
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // 6. Collection 'ueq_responses' (Hasil Kuesioner UEQ)
     // =========================================================
     match /ueq_responses/{document=**} {
       // Admin bisa membaca semua data UEQ untuk analitik
@@ -68,7 +88,7 @@ service cloud.firestore {
     }
 
     // =========================================================
-    // 5. Collection 'progress' (Riwayat & Skor Belajar)
+    // 7. Collection 'progress' (Riwayat & Skor Belajar)
     // =========================================================
     match /progress/{progressId} {
       // User bisa baca progressnya sendiri, admin baca semua

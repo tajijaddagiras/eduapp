@@ -32,8 +32,6 @@ import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
 import ManageMateriScreen from '../screens/admin/ManageMateriScreen';
 import ManageSoalScreen from '../screens/admin/ManageSoalScreen';
 import FormSoalScreen from '../screens/admin/FormSoalScreen';
-import ManageKategoriScreen from '../screens/admin/ManageKategoriScreen';
-import FormKategoriScreen from '../screens/admin/FormKategoriScreen';
 import ManageLevelScreen from '../screens/admin/ManageLevelScreen';
 import FormLevelScreen from '../screens/admin/FormLevelScreen';
 import UEQAnalitikScreen from '../screens/admin/UEQAnalitikScreen';
@@ -284,8 +282,6 @@ function MainNavigator() {
           <Stack.Screen name="ManageMateri" component={ManageMateriScreen} />
           <Stack.Screen name="ManageSoal" component={ManageSoalScreen} />
           <Stack.Screen name="FormSoal" component={FormSoalScreen} />
-          <Stack.Screen name="ManageKategori" component={ManageKategoriScreen} />
-          <Stack.Screen name="FormKategori" component={FormKategoriScreen} />
           <Stack.Screen name="ManageLevel" component={ManageLevelScreen} />
           <Stack.Screen name="FormLevel" component={FormLevelScreen} />
           <Stack.Screen name="UEQAnalitik" component={UEQAnalitikScreen} />

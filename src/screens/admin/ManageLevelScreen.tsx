@@ -7,6 +7,8 @@ interface Level {
   id: string;
   name: string;
   gameType: 'DragDrop' | 'Binary' | 'MultipleChoice';
+  durasi?: number;
+  nilaiPerSoal?: number;
 }
 
 export default function ManageLevelScreen({ navigation }: any) {
@@ -116,6 +118,14 @@ export default function ManageLevelScreen({ navigation }: any) {
             <View style={styles.card}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.name}</Text>
+                <View style={styles.cardMeta}>
+                  {item.durasi && (
+                    <Text style={styles.cardMetaText}>⏱ {item.durasi} menit</Text>
+                  )}
+                  {item.nilaiPerSoal && (
+                    <Text style={styles.cardMetaText}>⭐ {item.nilaiPerSoal} poin/soal</Text>
+                  )}
+                </View>
               </View>
               <TouchableOpacity 
                 style={styles.delBtn} 
@@ -196,6 +206,8 @@ const styles = StyleSheet.create({
     borderLeftColor: '#1d4ed8'
   },
   cardTitle: { fontSize: 15, fontWeight: 'bold', color: '#111827' },
+  cardMeta: { flexDirection: 'row', gap: 12, marginTop: 6 },
+  cardMetaText: { fontSize: 12, color: '#6b7280' },
   delBtn: { 
     width: 44, 
     borderWidth: 1.5, 
