@@ -27,9 +27,9 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   const [hoveringZone, setHoveringZone] = useState<'organik' | 'anorganik' | null>(null);
 
   const pan = useRef(new Animated.ValueXY()).current;
-  const organikZoneRef = useRef<View | null>(null);
-  const anorganikZoneRef = useRef<View | null>(null);
-  const itemRef = useRef<View | null>(null);
+  const organikZoneRef = useRef<any>(null);
+  const anorganikZoneRef = useRef<any>(null);
+  const itemRef = useRef<any>(null);
   
   const itemsRef = useRef(items);
   const currentIndexRef = useRef(currentIndex);
@@ -168,13 +168,13 @@ export default function DragAndDropScreen({ route, navigation }: any) {
         return;
       }
 
-      organikZoneRef.current.measureInWindow((ox, oy, owidth, oheight) => {
+      organikZoneRef.current.measureInWindow((ox: number, oy: number, owidth: number, oheight: number) => {
         if (!anorganikZoneRef.current) {
           resolve(null);
           return;
         }
 
-        anorganikZoneRef.current.measureInWindow((ax, ay, awidth, aheight) => {
+        anorganikZoneRef.current.measureInWindow((ax: number, ay: number, awidth: number, aheight: number) => {
           const padding = 50;
           
           const inOrganik = pageX >= ox - padding &&
@@ -209,7 +209,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
       onPanResponderMove: (_, gesture) => {
         pan.setValue({ x: gesture.dx, y: gesture.dy });
         
-        itemRef.current?.measureInWindow((ix, iy, iwidth, iheight) => {
+        itemRef.current?.measureInWindow((ix: number, iy: number, iwidth: number, iheight: number) => {
           const itemCenterX = ix + iwidth / 2;
           const itemCenterY = iy + iheight / 2;
           
@@ -239,7 +239,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
             return;
           }
 
-          itemRef.current.measureInWindow((ix, iy, iwidth, iheight) => {
+          itemRef.current.measureInWindow((ix: number, iy: number, iwidth: number, iheight: number) => {
             const itemCenterX = ix + iwidth / 2;
             const itemCenterY = iy + iheight / 2;
             
@@ -491,12 +491,10 @@ const styles = StyleSheet.create({
     borderRadius: 12, 
     alignItems: 'center', 
     justifyContent: 'center',
-    transition: 'all 0.2s ease',
   },
   trashIcon: { 
     fontSize: 48, 
     marginBottom: 8,
-    transition: 'transform 0.2s ease',
   },
   trashIconOpen: {
     transform: [{ scale: 1.2 }],

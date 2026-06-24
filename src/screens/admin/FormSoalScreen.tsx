@@ -55,6 +55,9 @@ export default function FormSoalScreen({ route, navigation }: any) {
   const [formOptionD, setFormOptionD] = useState('');
   const [formCorrectAnswer, setFormCorrectAnswer] = useState<'A' | 'B' | 'C' | 'D'>('A');
   const [formExplanation, setFormExplanation] = useState('');
+  
+  // Untuk Drag & Drop dan Binary: pilih tipe sampah (organik/anorganik)
+  const [formType, setFormType] = useState<'organik' | 'anorganik'>('organik');
 
   useEffect(() => {
     fetchLevel();
@@ -70,6 +73,7 @@ export default function FormSoalScreen({ route, navigation }: any) {
         setFormExplanation(editItem.explanation || '');
       } else {
         setFormName(editItem.name || '');
+        setFormType(editItem.type || 'organik'); // Set tipe saat edit
       }
       setFormImageUri(editItem.imageUrl || null);
     }
@@ -141,7 +145,7 @@ export default function FormSoalScreen({ route, navigation }: any) {
         const soalData = {
           ...baseData,
           name: formName,
-          type: gameType === 'DragDrop' ? 'organik' : 'organik',
+          type: formType, // Gunakan formType yang dipilih user
         };
 
         if (isEditMode) {
@@ -322,6 +326,29 @@ export default function FormSoalScreen({ route, navigation }: any) {
               onChangeText={setFormName}
             />
 
+            <Text style={styles.fieldLabel}>Tipe Sampah (Jawaban Benar)</Text>
+            <View style={styles.answerRow}>
+              <TouchableOpacity
+                style={[styles.typeBtn, styles.typeBtnOrganik, formType === 'organik' && styles.typeBtnActive]}
+                onPress={() => setFormType('organik')}
+              >
+                <Text style={[styles.typeText, formType === 'organik' && styles.typeTextActive]}>
+                  🌿 Organik
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeBtn, styles.typeBtnAnorganik, formType === 'anorganik' && styles.typeBtnActive]}
+                onPress={() => setFormType('anorganik')}
+              >
+                <Text style={[styles.typeText, formType === 'anorganik' && styles.typeTextActive]}>
+                  ♻️ Anorganik
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.fieldHint}>
+              Pilih tipe yang benar untuk objek ini
+            </Text>
+
             <Text style={styles.fieldLabel}>Unggah Gambar (Opsional)</Text>
             <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
               {formImageUri ? (
@@ -473,6 +500,33 @@ const styles = StyleSheet.create({
   answerBtnActive: { backgroundColor: '#374151', borderColor: '#374151' },
   answerText: { fontSize: 16, fontWeight: 'bold', color: '#374151' },
   answerTextActive: { color: '#fff' },
+  typeBtn: {
+    flex: 1,
+    paddingVertical: 16,
+    borderWidth: 2,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  typeBtnOrganik: {
+    borderColor: '#2e7d32',
+    backgroundColor: '#f0fdf4',
+  },
+  typeBtnAnorganik: {
+    borderColor: '#9ca3af',
+    backgroundColor: '#f9fafb',
+  },
+  typeBtnActive: {
+    backgroundColor: '#374151',
+    borderColor: '#374151',
+  },
+  typeText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#374151',
+  },
+  typeTextActive: {
+    color: '#fff',
+  },
   dropdownBtn: {
     borderWidth: 1.5,
     borderColor: '#d1d5db',
