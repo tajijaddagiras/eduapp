@@ -139,7 +139,7 @@ export default function BinaryScreen({ route, navigation }: any) {
     );
   }
 
-  const progress = ((currentIndex) / items.length) * 100;
+  const progress = ((currentIndex + 1) / items.length) * 100;
 
   return (
     <View style={styles.container}>

@@ -33,17 +33,21 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   
   const itemsRef = useRef(items);
   const currentIndexRef = useRef(currentIndex);
+  const scoreRef = useRef(score);
+  const wrongAnswersRef = useRef(wrongAnswers);
   
   useEffect(() => {
     itemsRef.current = items;
     currentIndexRef.current = currentIndex;
-  }, [items, currentIndex]);
+    scoreRef.current = score;
+    wrongAnswersRef.current = wrongAnswers;
+  }, [items, currentIndex, score, wrongAnswers]);
 
   useEffect(() => {
     if (!gameStarted) return;
     
     if (timeLeft <= 0) {
-      finishGame();
+      finishGame(score, wrongAnswers);
       return;
     }
 
@@ -54,9 +58,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     return () => clearInterval(timer);
   }, [timeLeft, gameStarted]);
 
-  const finishGame = async () => {
+  const finishGame = async (finalScoreValue: number, finalWrongAnswers: any[]) => {
     const totalItems = itemsRef.current.length || items.length;
-    const currentScore = score;
     const poinPerSoal = nilaiPerSoal || 10;
     
     if (totalItems === 0) {
@@ -64,7 +67,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
       return;
     }
     
-    const totalScore = currentScore * poinPerSoal;
+    const totalScore = finalScoreValue * poinPerSoal;
     const maxScore = totalItems * poinPerSoal;
     const finalScore = Math.round((totalScore / maxScore) * 100);
     
@@ -74,7 +77,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           userId: user.uid,
           type: 'simulasi',
           score: finalScore,
-          correctCount: currentScore,
+          correctCount: finalScoreValue,
           totalItems: totalItems,
           completedAt: new Date(),
         });
@@ -84,8 +87,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     navigation.replace('HasilEvaluasi', {
       score: finalScore,
       totalItems: totalItems,
-      correctCount: currentScore,
-      wrongAnswers: wrongAnswers,
+      correctCount: finalScoreValue,
+      wrongAnswers: finalWrongAnswers,
       evaluasiName: 'Simulasi Praktek Pemilahan',
     });
   };
@@ -131,6 +134,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   const handleAnswer = async (isCorrect: boolean, userAnswer: string) => {
     const currentItems = itemsRef.current;
     const currentIdx = currentIndexRef.current;
+    const currentScore = scoreRef.current;
+    const currentWrongAnswers = wrongAnswersRef.current;
     
     if (currentItems.length === 0 || currentIdx >= currentItems.length) {
       return;
@@ -138,15 +143,17 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     
     const item = currentItems[currentIdx];
     
+    const newWrongAnswer = {
+      name: item.name,
+      userAnswer: userAnswer,
+      correctAnswer: item.type,
+    };
+
     if (!isCorrect) {
-      setWrongAnswers(prev => [...prev, {
-        name: item.name,
-        userAnswer: userAnswer,
-        correctAnswer: item.type,
-      }]);
+      setWrongAnswers(prev => [...prev, newWrongAnswer]);
     }
 
-    const newScore = isCorrect ? score + 1 : score;
+    const newScore = isCorrect ? currentScore + 1 : currentScore;
     if (isCorrect) setScore(newScore);
 
     setFeedback(isCorrect ? '✓ Benar!' : '✗ Salah!');
@@ -156,7 +163,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
         setCurrentIndex(currentIdx + 1);
         pan.setValue({ x: 0, y: 0 });
       } else {
-        await finishGame();
+        const finalWrongAnswers = isCorrect ? currentWrongAnswers : [...currentWrongAnswers, newWrongAnswer];
+        await finishGame(newScore, finalWrongAnswers);
       }
     }, 800);
   };
@@ -315,7 +323,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     );
   }
 
-  const progress = ((currentIndex) / items.length) * 100;
+  const progress = ((currentIndex + 1) / items.length) * 100;
   const currentItem = items[currentIndex];
 
   return (
