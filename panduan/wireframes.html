@@ -78,20 +78,9 @@
   .text-small { font-size: 10px; color: #777; margin: 0; }
   .text-center { text-align: center; }
   
-  /* Description Box below Wireframe */
+  /* Description Box below Wireframe - HIDDEN AS REQUESTED */
   .screen-desc {
-    margin-top: 16px;
-    width: 320px;
-    font-size: 14px;
-    color: #333;
-    background-color: #E8E8E8;
-    padding: 16px;
-    border-radius: 4px;
-    border: 1px dashed #999;
-    text-align: justify;
-    line-height: 1.6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    box-sizing: border-box;
+    display: none;
   }
   
   /* Wireframe primitives */
@@ -258,9 +247,8 @@
   <p style="color: #666; font-size: 12px; margin-top: 8px;">Format Desain Layar Aplikasi</p>
 </div>
 
-<div class="grid">
-
-  <!-- 1. Splash Screen -->
+<div class="grid" id="grid-part-1">
+<!-- 1. Splash Screen -->
   <div class="screen-container">
     <div class="screen-title">01. Splash Screen</div>
     <div class="screen" style="justify-content: center; align-items: center;" id="screen-splash">
@@ -277,7 +265,7 @@
     <div class="screen-desc">Ini adalah halaman pertama yang muncul saat aplikasi dibuka. Tujuannya untuk menampilkan logo aplikasi sementara sistem memuat data di latar belakang sebelum masuk ke halaman utama.</div>
   </div>
 
-  <!-- 2. Onboarding -->
+<!-- 2. Onboarding -->
   <div class="screen-container">
     <div class="screen-title">02. Onboarding</div>
     <div class="screen" id="screen-onboarding">
@@ -295,7 +283,7 @@
     <div class="screen-desc">Halaman pengenalan singkat untuk pengguna baru. Di sini ada ilustrasi dan teks penjelasan singkat tentang tujuan aplikasi, yaitu belajar memilah sampah. Setelah ini, pengguna bisa lanjut ke halaman login.</div>
   </div>
 
-  <!-- 3. Login -->
+<!-- 3. Login -->
   <div class="screen-container">
     <div class="screen-title">03. Login</div>
     <div class="screen" id="screen-login">
@@ -313,7 +301,7 @@
     <div class="screen-desc">Halaman untuk masuk ke dalam aplikasi. Pengguna yang sudah punya akun tinggal memasukkan email dan password mereka di sini untuk bisa mengakses materi dan simulasi.</div>
   </div>
 
-  <!-- 4. Register -->
+<!-- 4. Register -->
   <div class="screen-container">
     <div class="screen-title">04. Register</div>
     <div class="screen" id="screen-register">
@@ -333,7 +321,7 @@
     <div class="screen-desc">Kalau pengguna belum punya akun, mereka akan diarahkan ke halaman ini untuk mendaftar. Data yang diminta cukup sederhana, yaitu nama lengkap, email, dan password untuk membuat profil baru.</div>
   </div>
 
-  <!-- 5. Home (Progres Belajar) -->
+<!-- 5. Home (Progres Belajar) -->
   <div class="screen-container">
     <div class="screen-title">05. Home (Progres Belajar)</div>
     <div class="screen" style="padding-bottom: 60px;" id="screen-home">
@@ -382,7 +370,7 @@
     <div class="screen-desc">Ini adalah halaman beranda (dashboard) aplikasinya. Di sini pengguna bisa melihat progres belajar mereka, misalnya berapa persen materi yang sudah dibaca dan rata-rata nilai evaluasi mereka. Ada juga tombol pintasan untuk langsung melanjutkan proses belajar.</div>
   </div>
 
-  <!-- 6. Edukasi List -->
+<!-- 6. Edukasi List -->
   <div class="screen-container">
     <div class="screen-title">06. List Materi Edukasi</div>
     <div class="screen" style="padding-bottom: 60px;" id="screen-edukasi">
@@ -427,7 +415,7 @@
     <div class="screen-desc">Halaman ini menampilkan semua daftar materi edukasi yang tersedia di aplikasi. Pengguna bisa mencari materi lewat kolom pencarian atau memfilternya berdasarkan kategori Organik atau Anorganik. Ada juga penanda khusus untuk materi yang sudah selesai dibaca.</div>
   </div>
 
-  <!-- 7. Detail Materi -->
+<!-- 7. Detail Materi -->
   <div class="screen-container">
     <div class="screen-title">07. Detail Materi</div>
     <div class="screen" id="screen-detail-materi">
@@ -453,7 +441,7 @@
     <div class="screen-desc">Ketika pengguna memilih materi, mereka akan masuk ke halaman ini untuk membacanya secara lengkap. Terdapat gambar, judul, dan isi artikel. Di bagian paling bawah, ada tombol khusus yang bisa ditekan agar sistem mencatat progres belajar pengguna.</div>
   </div>
 
-  <!-- 8. Kuis List (Evaluasi) -->
+<!-- 8. Kuis List (Evaluasi) -->
   <div class="screen-container">
     <div class="screen-title">08. Daftar Evaluasi & Simulasi</div>
     <div class="screen" style="padding-bottom: 60px;" id="screen-kuis">
@@ -492,8 +480,10 @@
     </div>
     <div class="screen-desc">Halaman ini berisi daftar ujian dan simulasi yang tersedia. Pengguna bisa melihat ujian apa saja yang cocok dengan materi yang sudah mereka pelajari. Di sini juga terdapat informasi jumlah soal dan skor terakhir yang pernah mereka dapatkan.</div>
   </div>
-
-  <!-- 9. Kuis Play - Multiple Choice -->
+</div>
+<br><hr><br>
+<div class="grid" id="grid-part-2">
+<!-- 9. Kuis Play - Multiple Choice -->
   <div class="screen-container">
     <div class="screen-title">09. Evaluasi (Pilihan Ganda)</div>
     <div class="screen" id="screen-play-mc">
@@ -530,7 +520,7 @@
     <div class="screen-desc">Ini adalah tampilan saat pengguna mengerjakan soal teori berbentuk pilihan ganda. Pertanyaannya muncul di atas, dilengkapi gambar pendukung, dan di bawahnya ada opsi jawaban A, B, C, D. Di bagian paling atas juga terdapat indikator batas waktu dan sisa soal.</div>
   </div>
 
-  <!-- 10. Kuis Play - Drag & Drop (Core Simulation) -->
+<!-- 10. Kuis Play - Drag & Drop (Core Simulation) -->
   <div class="screen-container">
     <div class="screen-title">10. Simulasi (Drag & Drop)</div>
     <div class="screen" id="screen-play-dd">
@@ -568,7 +558,7 @@
     <div class="screen-desc">Ini adalah fitur utama untuk praktek pemilahan sampah. Pengguna diminta untuk menekan gambar sampah yang ada di tengah layar, lalu menggesernya (drag) secara interaktif menggunakan jari ke tong sampah yang benar, apakah ke tong Organik atau Anorganik.</div>
   </div>
 
-  <!-- 11. Kuis Play - Binary Category -->
+<!-- 11. Kuis Play - Binary Category -->
   <div class="screen-container">
     <div class="screen-title">11. Simulasi (Klasifikasi Cepat)</div>
     <div class="screen" id="screen-play-bin">
@@ -603,7 +593,7 @@
     <div class="screen-desc">Ini adalah variasi simulasi lainnya yang menekankan pada pengenalan visual yang lebih cepat. Pengguna disajikan gambar objek berukuran besar, lalu mereka harus memilahnya dengan cara menekan salah satu dari dua tombol sakelar berukuran besar di bagian bawah layar.</div>
   </div>
 
-  <!-- 12. Hasil Kuis (No Gamification) -->
+<!-- 12. Hasil Kuis (No Gamification) -->
   <div class="screen-container">
     <div class="screen-title">12. Hasil Evaluasi Akhir</div>
     <div class="screen" style="justify-content: center;" id="screen-hasil-kuis">
@@ -634,7 +624,7 @@
     <div class="screen-desc">Setelah selesai mengerjakan simulasi atau kuis, halaman ini akan muncul untuk menampilkan hasil akhirnya. Pengguna bisa melihat total skor dari skala 0-100, beserta statistik jumlah jawaban mereka yang benar dan salah. Terdapat tombol untuk melanjutkan ke fitur pembahasan.</div>
   </div>
 
-  <!-- 13. Riwayat Pembahasan (NEW FEATURE) -->
+<!-- 13. Riwayat Pembahasan (NEW FEATURE) -->
   <div class="screen-container">
     <div class="screen-title">13. Riwayat Pembahasan</div>
     <div class="screen" id="screen-pembahasan">
@@ -679,7 +669,7 @@
     <div class="screen-desc">Halaman ini sangat penting untuk fungsi edukasi aplikasi. Jika di simulasi tadi ada jawaban yang salah, pengguna bisa melihat rinciannya di sini. Aplikasi akan menunjukkan sampah apa yang salah dipilah, kunci jawaban yang benar, dan penjelasan alasannya agar pengguna bisa belajar dari kesalahan.</div>
   </div>
 
-  <!-- 14. UEQ Form / Evaluasi (NEW FEATURE - Crucial for Thesis Title) -->
+<!-- 14. UEQ Form / Evaluasi (NEW FEATURE - Crucial for Thesis Title) -->
   <div class="screen-container">
     <div class="screen-title">14. Formulir UEQ (Pengguna)</div>
     <div class="screen" style="overflow-y: hidden;" id="screen-ueq">
@@ -727,7 +717,7 @@
     <div class="screen-desc">Di dalam aplikasi ini, saya menyediakan halaman khusus untuk kuesioner UEQ agar sesuai dengan judul riset. Pengguna tinggal menekan bulatan pada skala 1 sampai 7 untuk menilai seberapa baik pengalaman mereka menggunakan aplikasi, misalnya apakah menurut mereka aplikasinya 'Menyusahkan' atau 'Menyenangkan'.</div>
   </div>
 
-  <!-- 15. Profil User (LMS Focused) -->
+<!-- 15. Profil User (LMS Focused) -->
   <div class="screen-container">
     <div class="screen-title">15. Pengaturan Akun (Profil)</div>
     <div class="screen" style="padding-bottom: 60px;" id="screen-profil">
@@ -771,7 +761,7 @@
     <div class="screen-desc">Ini adalah halaman profil pengguna. Di sini mereka bisa melihat identitas dasar akun mereka, mengakses menu untuk mengedit data diri, membuka halaman riwayat nilai evaluasi, mengisi form kuesioner UEQ tadi, dan tentunya tombol untuk keluar (logout) dari aplikasi.</div>
   </div>
 
-  <!-- 16. Admin Dashboard -->
+<!-- 16. Admin Dashboard -->
   <div class="screen-container">
     <div class="screen-title">16. Dasbor Admin (CMS Utama)</div>
     <div class="screen" id="screen-admin-dash">
@@ -830,8 +820,10 @@
     </div>
     <div class="screen-desc">Beralih ke sisi Admin, ini adalah beranda utama untuk pengelola aplikasi. Admin bisa melihat ringkasan data statistik seperti berapa total siswa yang mendaftar, jumlah modul materi yang ada, dan berapa banyak orang yang sudah merespons kuesioner UEQ. Dari sini admin bisa langsung memilih menu navigasi untuk mengelola sistem.</div>
   </div>
-
-  <!-- 17. Admin Manage Materi -->
+</div>
+<br><hr><br>
+<div class="grid" id="grid-part-3">
+<!-- 17. Admin Manage Materi -->
   <div class="screen-container">
     <div class="screen-title">17. Admin Manage Materi</div>
     <div class="screen" id="screen-admin-manage-materi">
@@ -872,7 +864,7 @@
     <div class="screen-desc">Ini adalah halaman daftar materi edukasi khusus untuk panel Admin. Di sini admin punya kendali penuh untuk mengelola konten pembelajaran. Admin bisa mencari materi, mengedit tulisan materi yang sudah ada, menghapusnya jika sudah tidak relevan, atau menambahkan modul pelajaran yang baru.</div>
   </div>
 
-  <!-- 18. Admin Form Materi -->
+<!-- 18. Admin Form Materi -->
   <div class="screen-container">
     <div class="screen-title">18. Admin Form Materi</div>
     <div class="screen" id="screen-admin-form-materi" style="overflow-y: hidden;">
@@ -902,7 +894,7 @@
     <div class="screen-desc">Jika admin ingin membuat materi baru, mereka akan menggunakan halaman form ini. Tampilannya cukup ringkas dan mudah digunakan; admin hanya perlu mengetik judul materinya, memilih opsi kategorinya (apakah itu Organik atau Anorganik), menyalin naskah isi materinya secara lengkap, dan mengunggah gambar.</div>
   </div>
 
-  <!-- 19. Admin Manage Kuis -->
+<!-- 19. Admin Manage Kuis -->
   <div class="screen-container">
     <div class="screen-title">19. Admin Manajemen Bank Soal</div>
     <div class="screen" id="screen-admin-kuis">
@@ -945,7 +937,7 @@
     <div class="screen-desc">Halaman ini digunakan admin untuk mengelola semua paket soal evaluasi dan simulasi. Admin bisa melihat daftar ujian yang tersedia, mengetahui berapa jumlah butir soal di dalamnya, dan melihat ke materi mana kuis tersebut terhubung. Dari sini, admin bisa masuk untuk mengedit soalnya.</div>
   </div>
 
-  <!-- 20. Admin Form Soal -->
+<!-- 20. Admin Form Soal -->
   <div class="screen-container">
     <div class="screen-title">20. Form Penyusun Instrumen</div>
     <div class="screen" style="overflow-y: hidden;" id="screen-admin-question">
@@ -984,7 +976,7 @@
     <div class="screen-desc">Ini adalah halaman khusus bagi admin untuk membuat soal baru. Form ini dibuat dinamis menyesuaikan kebutuhan aplikasinya; admin cukup memilih apakah ingin membuat soal Pilihan Ganda biasa atau Simulasi Drag & Drop. Setelah itu, admin tinggal memasukkan teks soal/gambarnya dan menentukan mana kunci jawaban yang benar sebelum menyimpannya ke database.</div>
   </div>
 
-  <!-- 21. Admin Analitik UEQ (NEW FEATURE) -->
+<!-- 21. Admin Analitik UEQ (NEW FEATURE) -->
   <div class="screen-container">
     <div class="screen-title">21. Data Analitik UEQ (Skripsi)</div>
     <div class="screen" id="screen-admin-ueq">
@@ -1048,27 +1040,22 @@
     </div>
     <div class="screen-desc">Terakhir, ini adalah fitur unggulan untuk mempermudah pengerjaan skripsi. Alih-alih menghitung manual, aplikasi secara otomatis menghitung nilai dari pengguna yang mengisi kuesioner UEQ tadi, lalu menampilkannya dalam bentuk grafik rata-rata (seperti Daya Tarik, Kejelasan, dll). Terdapat juga tombol ekspor jika data mentahnya ingin dimasukkan ke Excel untuk Bab 4.</div>
   </div>
-
 </div>
-
+<br><hr><br>
 <script>
   async function downloadAll() {
     const btn = document.querySelector('.btn-download');
     btn.innerText = '[ SEDANG MEMPROSES... ]';
     btn.disabled = true;
     
-    const descriptions = document.querySelectorAll('.screen-desc');
-    const screens = document.querySelectorAll('.screen');
+    // Ambil semua elemen grid utama yang menampung wireframe
+    const grids = document.querySelectorAll('.grid');
     
-    for (let i = 0; i < screens.length; i++) {
-      const screen = screens[i];
-      const titleElement = screen.parentElement.querySelector('.screen-title');
-      const title = titleElement.innerText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-      
+    for (let i = 0; i < grids.length; i++) {
       try {
-        const canvas = await html2canvas(screen, { 
+        const canvas = await html2canvas(grids[i], { 
           scale: 2,
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#F0F0F0',
           logging: false
         });
         
@@ -1076,14 +1063,15 @@
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = `wireframe_${title}.png`;
+        a.download = `wireframe_edusampah_part_${i + 1}.png`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         
-        await new Promise(r => setTimeout(r, 800));
+        // Wait a bit before processing the next image
+        await new Promise(r => setTimeout(r, 1000));
       } catch (error) {
-        console.error("Error generating image for", title, error);
+        console.error("Error generating image part " + (i+1), error);
       }
     }
     
@@ -1095,6 +1083,5 @@
     }, 3000);
   }
 </script>
-
 </body>
 </html>
