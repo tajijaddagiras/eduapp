@@ -131,16 +131,16 @@ function UserTabs() {
         options={{
           tabBarButton: (props) => (
             <View style={{ flex: 1, alignItems: 'center' }}>
-              {/* Floating Circle Button */}
+              {/* Floating Circle Button - Posisi lebih rendah */}
               <TouchableOpacity
                 activeOpacity={0.85}
                 onPress={props.onPress}
                 style={{
                   position: 'absolute',
-                  top: -48,
-                  width: 70,
-                  height: 70,
-                  borderRadius: 35,
+                  top: -38, // Dari -48 ke -38 (turun 10px)
+                  width: 64, // Dari 70 ke 64
+                  height: 64, // Dari 70 ke 64
+                  borderRadius: 32, // Dari 35 ke 32
                   backgroundColor: '#1d4ed8',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -151,7 +151,7 @@ function UserTabs() {
                   elevation: 8,
                 }}
               >
-                <Ionicons name="clipboard-outline" size={32} color="#ffffff" />
+                <Ionicons name="clipboard-outline" size={28} color="#ffffff" /> {/* Dari 32 ke 28 */}
               </TouchableOpacity>
 
               {/* Label at Bottom - Same level as other tabs */}
