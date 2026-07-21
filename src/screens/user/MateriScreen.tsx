@@ -108,7 +108,7 @@ export default function MateriScreen({ navigation }: any) {
           )}
         </View>
 
-        {/* Card Info - Simple layout */}
+        {/* Card Info - Left aligned */}
         <View style={styles.cardInfo}>
           <Text style={[styles.cardTitle, { color: cardColor.text }]} numberOfLines={2}>
             {item.title}
@@ -397,12 +397,12 @@ const styles = StyleSheet.create({
   },
   cardInfo: {
     width: '100%',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Left aligned
   },
   cardTitle: {
     fontSize: 15,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'left', // Left aligned
     marginBottom: 6,
     lineHeight: 20,
   },
@@ -411,6 +411,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.5,
     opacity: 0.8,
+    textAlign: 'left', // Left aligned
   },
   emptyContainer: {
     alignItems: 'center',

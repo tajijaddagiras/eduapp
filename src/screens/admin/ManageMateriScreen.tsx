@@ -15,6 +15,16 @@ interface Materi {
   content?: string;
   readTime?: string;
   imageUrl?: string;
+  sections?: ContentSection[]; // New: multiple content sections
+  caraPenanganan?: string[]; // New: handling steps
+  dampakLingkungan?: string; // New: environmental impact
+}
+
+interface ContentSection {
+  subtitle: string;
+  content: string;
+  isNumbered?: boolean;
+  numberedItems?: string[]; // Array of numbered items
 }
 
 const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -44,10 +54,14 @@ export default function ManageMateriScreen({ navigation }: any) {
   // Form state
   const [formTitle, setFormTitle] = useState('');
   const [formCategory, setFormCategory] = useState('Organik');
-  const [formContent, setFormContent] = useState('');
-  const [formReadTime, setFormReadTime] = useState('5');
+  const [formContent, setFormContent] = useState(''); // Legacy content
   const [formImageUri, setFormImageUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  
+  // New: content sections (paragraf dengan sub-judul ATAU numbered list)
+  const [formSections, setFormSections] = useState<ContentSection[]>([
+    { subtitle: '', content: '', isNumbered: false, numberedItems: [] }
+  ]);
 
   const fetchMateri = async () => {
     setLoading(true);
@@ -64,14 +78,35 @@ export default function ManageMateriScreen({ navigation }: any) {
 
   const openAdd = () => {
     setEditItem(null);
-    setFormTitle(''); setFormCategory('Organik'); setFormContent(''); setFormReadTime('5'); setFormImageUri(null);
+    setFormTitle(''); 
+    setFormCategory('Organik'); 
+    setFormContent(''); 
+    setFormImageUri(null);
+    setFormSections([{ subtitle: '', content: '', isNumbered: false, numberedItems: [] }]);
     setModalVisible(true);
   };
 
   const openEdit = (item: Materi) => {
     setEditItem(item);
-    setFormTitle(item.title); setFormCategory(item.category);
-    setFormContent(item.content || ''); setFormReadTime(item.readTime || '5'); setFormImageUri(item.imageUrl || null);
+    setFormTitle(item.title); 
+    setFormCategory(item.category);
+    setFormContent(item.content || ''); 
+    setFormImageUri(item.imageUrl || null);
+    
+    // Load sections if available, otherwise convert legacy content to first section
+    if (item.sections && item.sections.length > 0) {
+      setFormSections(item.sections.map(s => ({
+        subtitle: s.subtitle || '',
+        content: s.content || '',
+        isNumbered: s.isNumbered || false,
+        numberedItems: s.numberedItems || []
+      })));
+    } else if (item.content) {
+      setFormSections([{ subtitle: '', content: item.content, isNumbered: false, numberedItems: [] }]);
+    } else {
+      setFormSections([{ subtitle: '', content: '', isNumbered: false, numberedItems: [] }]);
+    }
+    
     setModalVisible(true);
   };
 
@@ -100,17 +135,25 @@ export default function ManageMateriScreen({ navigation }: any) {
         finalImageUrl = await uploadToCloudinary(formImageUri);
       }
 
+      // Prepare sections data - filter out empty sections
+      const filteredSections = formSections.filter(s => s.content.trim() !== '');
+
       if (editItem) {
         await updateDoc(doc(db, 'materi', editItem.id), {
-          title: formTitle, category: formCategory,
-          content: formContent, readTime: formReadTime,
+          title: formTitle, 
+          category: formCategory,
+          content: filteredSections.length > 0 ? filteredSections[0].content : '',
+          sections: filteredSections,
           imageUrl: finalImageUrl,
         });
       } else {
         await addDoc(collection(db, 'materi'), {
-          title: formTitle, category: formCategory,
-          content: formContent, readTime: `${formReadTime} Menit`,
-          status: 'Published', createdAt: new Date(),
+          title: formTitle, 
+          category: formCategory,
+          content: filteredSections.length > 0 ? filteredSections[0].content : '',
+          sections: filteredSections,
+          status: 'Published', 
+          createdAt: new Date(),
           imageUrl: finalImageUrl,
         });
       }
@@ -211,19 +254,140 @@ export default function ManageMateriScreen({ navigation }: any) {
                 ))}
               </View>
 
-              <Text style={styles.fieldLabel}>Estimasi Waktu Baca (menit)</Text>
-              <TextInput style={styles.input} placeholder="5" keyboardType="numeric" value={formReadTime} onChangeText={setFormReadTime} />
-
-              <Text style={styles.fieldLabel}>Isi Konten Pelajaran</Text>
-              <TextInput
-                style={[styles.input, styles.textarea]}
-                placeholder="Tulis draf naskah materi lengkap di sini..."
-                value={formContent}
-                onChangeText={setFormContent}
-                multiline
-                numberOfLines={6}
-                textAlignVertical="top"
-              />
+              <Text style={styles.fieldLabel}>Isi Konten Pelajaran (Paragraf dengan Sub-judul)</Text>
+              <Text style={styles.fieldHint}>💡 Tambahkan beberapa paragraf dengan sub-judul untuk strukturisasi konten yang lebih baik</Text>
+              
+              {formSections.map((section, index) => (
+                <View key={index} style={styles.sectionBox}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionLabel}>Paragraf {index + 1}</Text>
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                      {/* Toggle Numbered List */}
+                      <TouchableOpacity 
+                        onPress={() => {
+                          const newSections = [...formSections];
+                          const willBeNumbered = !newSections[index].isNumbered;
+                          newSections[index].isNumbered = willBeNumbered;
+                          
+                          // Jika baru di-toggle ke numbered, inisialisasi dengan 1 item kosong
+                          if (willBeNumbered && (!newSections[index].numberedItems || newSections[index].numberedItems!.length === 0)) {
+                            newSections[index].numberedItems = [''];
+                          }
+                          
+                          setFormSections(newSections);
+                        }}
+                        style={[styles.toggleNumberBtn, section.isNumbered && styles.toggleNumberBtnActive]}
+                      >
+                        <Text style={[styles.toggleNumberText, section.isNumbered && styles.toggleNumberTextActive]}>
+                          {section.isNumbered ? '🔢 Penomoran' : '📝 Paragraf'}
+                        </Text>
+                      </TouchableOpacity>
+                      
+                      {formSections.length > 1 && (
+                        <TouchableOpacity 
+                          onPress={() => {
+                            const newSections = formSections.filter((_, i) => i !== index);
+                            setFormSections(newSections);
+                          }}
+                          style={styles.removeSectionBtn}
+                        >
+                          <Text style={styles.removeSectionText}>Hapus</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </View>
+                  
+                  <TextInput
+                    style={styles.input}
+                    placeholder={`Sub-judul ${section.isNumbered ? '(Contoh: Cara Penanganan)' : '(opsional - Contoh: Pengertian Limbah B3)'}`}
+                    value={section.subtitle}
+                    onChangeText={(text) => {
+                      const newSections = [...formSections];
+                      newSections[index].subtitle = text;
+                      setFormSections(newSections);
+                    }}
+                  />
+                  
+                  {/* Render based on mode */}
+                  {section.isNumbered ? (
+                    // Mode Penomoran - Render multiple numbered inputs
+                    <View style={{ marginTop: 8 }}>
+                      {(section.numberedItems || ['']).map((item, itemIndex) => (
+                        <View key={itemIndex} style={styles.numberedInputBox}>
+                          <View style={styles.numberedInputHeader}>
+                            <View style={styles.listNumberBadge}>
+                              <Text style={styles.listNumberText}>{itemIndex + 1}</Text>
+                            </View>
+                            {(section.numberedItems?.length || 0) > 1 && (
+                              <TouchableOpacity 
+                                onPress={() => {
+                                  const newSections = [...formSections];
+                                  newSections[index].numberedItems = newSections[index].numberedItems!.filter((_, i) => i !== itemIndex);
+                                  setFormSections(newSections);
+                                }}
+                                style={styles.removeNumberItemBtn}
+                              >
+                                <Text style={styles.removeNumberItemText}>✕</Text>
+                              </TouchableOpacity>
+                            )}
+                          </View>
+                          <TextInput
+                            style={[styles.input, styles.numberedInput]}
+                            placeholder={`Langkah ${itemIndex + 1}...`}
+                            value={item}
+                            onChangeText={(text) => {
+                              const newSections = [...formSections];
+                              if (!newSections[index].numberedItems) newSections[index].numberedItems = [];
+                              newSections[index].numberedItems![itemIndex] = text;
+                              setFormSections(newSections);
+                            }}
+                            multiline
+                            numberOfLines={2}
+                            textAlignVertical="top"
+                          />
+                        </View>
+                      ))}
+                      
+                      {/* Button Tambah Item */}
+                      <TouchableOpacity 
+                        style={styles.addNumberItemBtn}
+                        onPress={() => {
+                          const newSections = [...formSections];
+                          if (!newSections[index].numberedItems) newSections[index].numberedItems = [];
+                          newSections[index].numberedItems!.push('');
+                          setFormSections(newSections);
+                        }}
+                      >
+                        <Text style={styles.addNumberItemText}>+ Tambah Langkah</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    // Mode Paragraf - Textarea biasa
+                    <TextInput
+                      style={[styles.input, styles.textarea, { marginTop: 8 }]}
+                      placeholder="Tulis isi paragraf di sini..."
+                      value={section.content}
+                      onChangeText={(text) => {
+                        const newSections = [...formSections];
+                        newSections[index].content = text;
+                        setFormSections(newSections);
+                      }}
+                      multiline
+                      numberOfLines={6}
+                      textAlignVertical="top"
+                    />
+                  )}
+                </View>
+              ))}
+              
+              <TouchableOpacity 
+                style={styles.addSectionBtn}
+                onPress={() => {
+                  setFormSections([...formSections, { subtitle: '', content: '', isNumbered: false, numberedItems: [] }]);
+                }}
+              >
+                <Text style={styles.addSectionText}>+ Tambah Paragraf Baru</Text>
+              </TouchableOpacity>
 
               <Text style={styles.fieldLabel}>Unggah Aset Visual</Text>
               <TouchableOpacity style={styles.uploadBox} onPress={pickImage}>
@@ -282,8 +446,214 @@ const styles = StyleSheet.create({
   modalHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#111827' },
   fieldLabel: { fontSize: 13, fontWeight: 'bold', color: '#374151', marginBottom: 6, marginTop: 16 },
+  fieldHint: { fontSize: 11, color: '#6b7280', marginBottom: 12, fontStyle: 'italic' },
   input: { borderWidth: 1.5, borderColor: '#d1d5db', borderRadius: 10, padding: 14, backgroundColor: '#fafafa', fontSize: 14 },
   textarea: { height: 120, textAlignVertical: 'top' },
+  
+  // Section Box for multiple content sections
+  sectionBox: {
+    backgroundColor: '#f9fafb',
+    borderWidth: 1.5,
+    borderColor: '#e5e7eb',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  sectionLabel: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#374151',
+  },
+  removeSectionBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: '#fee2e2',
+    borderRadius: 6,
+  },
+  removeSectionText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#dc2626',
+  },
+  toggleNumberBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: '#d1d5db',
+  },
+  toggleNumberBtnActive: {
+    backgroundColor: '#fffbeb',
+    borderColor: '#fbbf24',
+  },
+  toggleNumberText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  toggleNumberTextActive: {
+    color: '#92400e',
+  },
+  numberedHint: {
+    fontSize: 11,
+    color: '#92400e',
+    marginTop: 8,
+    fontStyle: 'italic',
+    backgroundColor: '#fffbeb',
+    padding: 8,
+    borderRadius: 6,
+  },
+  
+  // Numbered Input Boxes
+  numberedInputBox: {
+    marginBottom: 12,
+  },
+  numberedInputHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+  },
+  listNumberBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#fbbf24',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  listNumberText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  removeNumberItemBtn: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#fee2e2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 'auto',
+  },
+  removeNumberItemText: {
+    fontSize: 14,
+    color: '#dc2626',
+    fontWeight: 'bold',
+  },
+  numberedInput: {
+    minHeight: 60,
+    backgroundColor: '#fffbeb',
+    borderColor: '#fbbf24',
+  },
+  addNumberItemBtn: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: '#fbbf24',
+    borderRadius: 10,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 4,
+    backgroundColor: '#fffbeb',
+  },
+  addNumberItemText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#92400e',
+  },
+  
+  addSectionBtn: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: '#9ca3af',
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  addSectionText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  
+  // List Item Box for Cara Penanganan
+  listItemBox: {
+    backgroundColor: '#fffbeb', // Light yellow background
+    borderWidth: 1.5,
+    borderColor: '#fbbf24',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+  },
+  listItemHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 8,
+  },
+  listNumberBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#fbbf24',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  listNumberText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  listItemLabel: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#92400e',
+    flex: 1,
+  },
+  removeItemBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: '#fee2e2',
+    borderRadius: 6,
+  },
+  removeItemText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#dc2626',
+  },
+  textareaSmall: { 
+    height: 80, 
+    textAlignVertical: 'top' 
+  },
+  addListItemBtn: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: '#fbbf24',
+    borderRadius: 10,
+    padding: 14,
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 16,
+    backgroundColor: '#fffbeb',
+  },
+  addListItemText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#92400e',
+  },
   catRow: { flexDirection: 'row', gap: 12 },
   catOpt: { flex: 1, padding: 14, borderWidth: 1.5, borderColor: '#9ca3af', borderRadius: 10, alignItems: 'center' },
   catOptActive: { backgroundColor: '#374151', borderColor: '#374151' },
