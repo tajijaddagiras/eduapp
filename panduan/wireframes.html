@@ -48,10 +48,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px;
-    background-color: #F0F0F0;
-    box-sizing: border-box;
-    width: 368px; /* 320 + 24 + 24 */
   }
   .screen-title {
     margin-bottom: 12px;
@@ -1181,27 +1177,31 @@
     btn.innerText = '[ SEDANG MEMPROSES... ]';
     btn.disabled = true;
     
-    // Ambil semua elemen screen-container yang menampung wireframe
-    const screens = document.querySelectorAll('.screen-container');
+    // Ambil elemen screen secara langsung (tanpa container)
+    const screens = document.querySelectorAll('.screen');
     
     for (let i = 0; i < screens.length; i++) {
       try {
-        const title = screens[i].querySelector('.screen-title');
-        const desc = screens[i].querySelector('.screen-desc');
+        // Buat wrapper sementara untuk memberi padding aman (agar border tidak terpotong)
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = '24px';
+        wrapper.style.backgroundColor = '#F0F0F0';
+        wrapper.style.display = 'inline-block';
+        wrapper.style.borderRadius = '8px'; // Opsional agar ujung gambar tidak tajam
         
-        // Sembunyikan teks penjelasan agar tidak ikut ter-download
-        if (title) title.style.display = 'none';
-        if (desc) desc.style.display = 'none';
+        // Pindahkan screen ke dalam wrapper sementara
+        screens[i].parentNode.insertBefore(wrapper, screens[i]);
+        wrapper.appendChild(screens[i]);
 
-        const canvas = await html2canvas(screens[i], { 
+        const canvas = await html2canvas(wrapper, { 
           scale: 2,
           backgroundColor: '#F0F0F0',
           logging: false
         });
         
-        // Kembalikan teks seperti semula setelah di-capture
-        if (title) title.style.display = '';
-        if (desc) desc.style.display = '';
+        // Kembalikan screen ke tempat aslinya & hapus wrapper
+        wrapper.parentNode.insertBefore(screens[i], wrapper);
+        wrapper.parentNode.removeChild(wrapper);
         
         const url = canvas.toDataURL('image/png');
         
@@ -1212,8 +1212,8 @@
         a.click();
         document.body.removeChild(a);
         
-        // Wait a bit before processing the next image
-        await new Promise(r => setTimeout(r, 800));
+        // Tunggu sejenak sebelum render gambar berikutnya
+        await new Promise(r => setTimeout(r, 600));
       } catch (error) {
         console.error("Error generating image part " + (i+1), error);
       }
