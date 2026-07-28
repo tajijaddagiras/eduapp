@@ -328,36 +328,211 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9fafb' },
-  loadingText: { marginTop: 12, color: '#6b7280' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingTop: 50, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#e5e7eb' },
-  headerIcon: { width: 32, height: 32, borderWidth: 2, borderColor: '#333', borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#374151' },
-  headerSubtitle: { fontSize: 11, color: '#6b7280', marginTop: 2 },
-  timerBox: { backgroundColor: '#dc2626', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
-  timerText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
-  progressBg: { height: 6, backgroundColor: '#e5e7eb' },
-  progressFill: { height: 6, backgroundColor: '#dc2626' },
-  scrollContent: { padding: 20, paddingBottom: 100 },
-  questionCard: { backgroundColor: '#fff', borderRadius: 12, padding: 20, marginBottom: 24, borderWidth: 1.5, borderColor: '#e5e7eb', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 4 },
-  questionText: { fontSize: 16, fontWeight: 'bold', color: '#111827', lineHeight: 24, marginBottom: 12 },
-  questionImage: { width: '100%', height: 180, borderRadius: 8, marginTop: 12 },
-  optionsContainer: { gap: 12, marginBottom: 24 },
-  optionBtn: { backgroundColor: '#fff', borderWidth: 2, borderColor: '#d1d5db', borderRadius: 12, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  optionBadge: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#f3f4f6', justifyContent: 'center', alignItems: 'center' },
-  optionBadgeText: { fontSize: 14, fontWeight: 'bold', color: '#374151' },
-  optionText: { flex: 1, fontSize: 14, color: '#374151', lineHeight: 20 },
-  optionCorrect: { borderColor: '#2e7d32', backgroundColor: '#dcfce7' },
-  optionTextCorrect: { color: '#2e7d32', fontWeight: '600' },
-  optionWrong: { borderColor: '#dc2626', backgroundColor: '#fee2e2' },
-  optionTextWrong: { color: '#dc2626', fontWeight: '600' },
-  explanationCard: { backgroundColor: '#fff', borderRadius: 12, padding: 20, borderWidth: 2 },
-  explanationCorrect: { borderColor: '#2e7d32', backgroundColor: '#f0fdf4' },
-  explanationWrong: { borderColor: '#dc2626', backgroundColor: '#fef2f2' },
-  explanationTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 12, color: '#111827' },
-  explanationText: { fontSize: 14, color: '#374151', lineHeight: 22, marginBottom: 20 },
-  nextBtn: { backgroundColor: '#374151', paddingVertical: 14, borderRadius: 10, alignItems: 'center' },
-  nextBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
-  emptyText: { textAlign: 'center', marginTop: 40, color: '#6b7280' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fcf9ee' // background
+  },
+  center: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#fcf9ee' 
+  },
+  loadingText: { 
+    marginTop: 12, 
+    color: '#424843', // on-surface-variant
+    fontSize: 15,
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: 20, 
+    paddingTop: 50, 
+    backgroundColor: '#fcf9ee',
+  },
+  headerIcon: { 
+    width: 40, 
+    height: 40, 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  headerTitle: { 
+    fontSize: 15, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
+  headerSubtitle: { 
+    fontSize: 12, 
+    color: '#424843', // on-surface-variant
+    marginTop: 2 
+  },
+  timerBox: { 
+    backgroundColor: '#142e1d', // primary-container
+    paddingHorizontal: 14, 
+    paddingVertical: 8, 
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  timerText: { 
+    color: '#cbead0', // primary-fixed
+    fontWeight: '800', 
+    fontSize: 14 
+  },
+  progressBg: { 
+    height: 6, 
+    backgroundColor: '#e5e2d8' // outline-variant lighter
+  },
+  progressFill: { 
+    height: 6, 
+    backgroundColor: '#fe7d5e' // secondary-container
+  },
+  scrollContent: { 
+    padding: 20, 
+    paddingBottom: 100 
+  },
+  questionCard: { 
+    backgroundColor: '#ffffff', 
+    borderRadius: 20, 
+    padding: 24, 
+    marginBottom: 24, 
+    borderWidth: 3, 
+    borderColor: '#01190a', // primary
+    // Neo-shadow
+    shadowColor: '#000', 
+    shadowOffset: { width: 4, height: 4 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 6,
+  },
+  questionText: { 
+    fontSize: 17, 
+    fontWeight: '700', 
+    color: '#1c1c15', // on-background
+    lineHeight: 26, 
+    marginBottom: 12 
+  },
+  questionImage: { 
+    width: '100%', 
+    height: 180, 
+    borderRadius: 12, 
+    marginTop: 12,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  optionsContainer: { 
+    gap: 12, 
+    marginBottom: 24 
+  },
+  optionBtn: { 
+    backgroundColor: '#ffffff', 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    borderRadius: 16, 
+    padding: 18, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: 14 
+  },
+  optionBadge: { 
+    width: 36, 
+    height: 36, 
+    borderRadius: 18, 
+    backgroundColor: '#f1eee3', // surface-container
+    justifyContent: 'center', 
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  optionBadgeText: { 
+    fontSize: 15, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
+  optionText: { 
+    flex: 1, 
+    fontSize: 15, 
+    color: '#1c1c15', // on-background
+    lineHeight: 22,
+    fontWeight: '600',
+  },
+  optionCorrect: { 
+    borderColor: '#b0ceb5', // primary-fixed
+    backgroundColor: '#dcfce7',
+    borderWidth: 3,
+  },
+  optionTextCorrect: { 
+    color: '#01190a', // primary
+    fontWeight: '800' 
+  },
+  optionWrong: { 
+    borderColor: '#fe7d5e', // secondary-container
+    backgroundColor: '#fee2e2',
+    borderWidth: 3,
+  },
+  optionTextWrong: { 
+    color: '#711601', // on-secondary-container
+    fontWeight: '800' 
+  },
+  explanationCard: { 
+    backgroundColor: '#ffffff', 
+    borderRadius: 20, 
+    padding: 24, 
+    borderWidth: 3,
+    // Neo-shadow
+    shadowColor: '#000', 
+    shadowOffset: { width: 4, height: 4 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 6,
+  },
+  explanationCorrect: { 
+    borderColor: '#b0ceb5', // primary-fixed
+    backgroundColor: '#f0fdf4' 
+  },
+  explanationWrong: { 
+    borderColor: '#fe7d5e', // secondary-container
+    backgroundColor: '#fef2f2' 
+  },
+  explanationTitle: { 
+    fontSize: 18, 
+    fontWeight: '800', 
+    marginBottom: 12, 
+    color: '#1c1c15' // on-background
+  },
+  explanationText: { 
+    fontSize: 15, 
+    color: '#424843', // on-surface-variant
+    lineHeight: 24, 
+    marginBottom: 20 
+  },
+  nextBtn: { 
+    backgroundColor: '#142e1d', // primary-container
+    paddingVertical: 16, 
+    borderRadius: 16, 
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+    // Neo-shadow
+    shadowColor: '#000', 
+    shadowOffset: { width: 3, height: 3 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 6,
+  },
+  nextBtnText: { 
+    color: '#cbead0', // primary-fixed
+    fontWeight: '800', 
+    fontSize: 16 
+  },
+  emptyText: { 
+    textAlign: 'center', 
+    marginTop: 40, 
+    color: '#9ca3af' 
+  },
 });

@@ -66,15 +66,8 @@ export default function RegisterScreen({ navigation }: any) {
           <Ionicons name="chevron-back" size={24} color="#01190a" />
         </TouchableOpacity>
 
-        {/* Logo Section */}
+        {/* Logo Section - Removed */}
         <View style={styles.logoContainer}>
-          <View style={styles.logoCard}>
-            <Image 
-              source={require('../../../assets/icon.png')} 
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
           <Text style={styles.welcomeText}>Daftar Akun Baru</Text>
           <Text style={styles.subtitleText}>Mulai perjalanan belajar Anda</Text>
         </View>
@@ -227,27 +220,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  logoCard: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#f1eee3', // surface-container
-    borderWidth: 4,
-    borderColor: '#01190a', // primary
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 5, height: 5 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 8,
-  },
-  logo: {
-    width: 65,
-    height: 65,
-  },
   welcomeText: {
     fontSize: 26, // headline-lg
     fontWeight: '800',
@@ -261,19 +233,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   
-  // Form Card
   formCard: {
-    backgroundColor: '#f1eee3', // surface-container
-    borderRadius: 24, // rounded-3xl
-    borderWidth: 3,
-    borderColor: '#01190a', // primary
+    backgroundColor: '#f1eee3',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#01190a',
     padding: 24,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
   },
   
   // Input Fields
@@ -308,24 +273,17 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   
-  // Register Button
   registerButton: {
-    backgroundColor: '#142e1d', // primary-container
-    borderRadius: 16,
+    backgroundColor: '#142e1d',
+    borderRadius: 14,
     borderWidth: 2,
-    borderColor: '#01190a', // primary
-    height: 56,
+    borderColor: '#01190a',
+    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     marginTop: 8,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
   },
   registerButtonDisabled: {
     opacity: 0.6,

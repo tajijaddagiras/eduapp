@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, FlatList, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
@@ -68,17 +69,8 @@ export default function SimulasiScreen({ navigation }: any) {
     return 'Pilihan Ganda';
   };
 
-  const getTabIcon = () => {
-    if (activeTab === 'DragDrop') return '🎯';
-    if (activeTab === 'Binary') return '⚡';
-    return '📝';
-  };
 
-  const getTabColor = () => {
-    if (activeTab === 'DragDrop') return '#2e7d32';
-    if (activeTab === 'Binary') return '#1d4ed8';
-    return '#dc2626';
-  };
+
 
   return (
     <View style={styles.container}>
@@ -93,61 +85,74 @@ export default function SimulasiScreen({ navigation }: any) {
           style={[styles.tabBtn, activeTab === 'DragDrop' && styles.tabBtnActive]}
           onPress={() => setActiveTab('DragDrop')}
         >
-          <Text style={[styles.tabText, activeTab === 'DragDrop' && styles.tabTextActive]}>
-            🎯 Drag & Drop
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Ionicons name="game-controller-outline" size={14} color={activeTab === 'DragDrop' ? '#01190a' : '#424843'} style={{ marginRight: 4 }} />
+            <Text style={[styles.tabText, activeTab === 'DragDrop' && styles.tabTextActive]}>
+              Drag & Drop
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tabBtn, activeTab === 'Binary' && styles.tabBtnActive]}
           onPress={() => setActiveTab('Binary')}
         >
-          <Text style={[styles.tabText, activeTab === 'Binary' && styles.tabTextActive]}>
-            ⚡ Klasifikasi
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Ionicons name="flash-outline" size={14} color={activeTab === 'Binary' ? '#01190a' : '#424843'} style={{ marginRight: 4 }} />
+            <Text style={[styles.tabText, activeTab === 'Binary' && styles.tabTextActive]}>
+              Klasifikasi
+            </Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tabBtn, activeTab === 'MultipleChoice' && styles.tabBtnActive]}
           onPress={() => setActiveTab('MultipleChoice')}
         >
-          <Text style={[styles.tabText, activeTab === 'MultipleChoice' && styles.tabTextActive]}>
-            📝 Pilihan Ganda
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Ionicons name="create-outline" size={14} color={activeTab === 'MultipleChoice' ? '#01190a' : '#424843'} style={{ marginRight: 4 }} />
+            <Text style={[styles.tabText, activeTab === 'MultipleChoice' && styles.tabTextActive]}>
+              Pilihan Ganda
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
 
       {/* Content */}
       <ScrollView style={styles.levelScroll} showsVerticalScrollIndicator={false}>
         {loading ? (
-          <ActivityIndicator size="large" color={getTabColor()} style={{ marginTop: 40 }} />
+          <ActivityIndicator size="large" color="#01190a" style={{ marginTop: 40 }} />
         ) : (
           <>
             {levelList.map((level) => (
               <TouchableOpacity
                 key={level.id}
-                style={[styles.levelCard, { borderLeftColor: getTabColor() }]}
+                style={styles.levelCard}
                 onPress={() => handleLevelPress(level)}
               >
                 <View style={{ flex: 1 }}>
                   <Text style={styles.levelName}>{level.name}</Text>
                   <View style={styles.levelMeta}>
                     {level.durasi && (
-                      <Text style={styles.levelMetaText}>⏱ {level.durasi} menit</Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Ionicons name="time-outline" size={14} color="#424843" style={{ marginRight: 4 }} />
+                        <Text style={styles.levelMetaText}>{level.durasi} menit</Text>
+                      </View>
                     )}
                     {level.nilaiPerSoal && (
-                      <Text style={styles.levelMetaText}>⭐ {level.nilaiPerSoal} poin/soal</Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Ionicons name="star-outline" size={14} color="#424843" style={{ marginRight: 4 }} />
+                        <Text style={styles.levelMetaText}>{level.nilaiPerSoal} poin/soal</Text>
+                      </View>
                     )}
                   </View>
                 </View>
-                <View style={[styles.levelBtn, { backgroundColor: getTabColor() }]}>
+                <View style={styles.levelBtn}>
                   <Text style={styles.levelBtnText}>Mulai</Text>
                 </View>
               </TouchableOpacity>
             ))}
 
             {levelList.length === 0 && (
-              <Text style={styles.emptyText}>
-                Belum ada level untuk {getTabTitle()}.{'\n'}Hubungi admin untuk menambahkan level.
-              </Text>
+              <Text style={styles.emptyText}>Belum ada level untuk {getTabTitle()}. Hubungi admin untuk menambahkan level.</Text>
             )}
 
             <View style={{ height: 80 }} />
@@ -159,71 +164,101 @@ export default function SimulasiScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb', paddingHorizontal: 20 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#faf8f3', // cream - konsisten dengan HomeScreen
+    paddingHorizontal: 20 
+  },
   header: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    justifyContent: 'space-between', 
+    justifyContent: 'center', 
     marginTop: 50, 
-    marginBottom: 20, 
-    paddingBottom: 16, 
-    borderBottomWidth: 1, 
-    borderBottomColor: '#e5e7eb' 
+    marginBottom: 24,
   },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#111827' },
+  headerTitle: { 
+    fontSize: 24, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
   tabContainer: { 
     flexDirection: 'row', 
     gap: 10, 
-    marginBottom: 20,
+    marginBottom: 24,
+    backgroundColor: '#f1eee3',
+    borderRadius: 16,
+    padding: 6,
+    borderWidth: 2,
+    borderColor: '#01190a',
   },
   tabBtn: { 
     flex: 1, 
-    paddingVertical: 10, 
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    borderWidth: 1.5,
-    borderColor: '#e5e7eb',
+    paddingVertical: 12, 
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    backgroundColor: 'transparent',
     alignItems: 'center',
   },
   tabBtnActive: { 
-    backgroundColor: '#1d4ed8',
-    borderColor: '#1d4ed8',
+    backgroundColor: '#fcf9ee',
+    borderWidth: 2,
+    borderColor: '#01190a',
   },
-  tabText: { fontSize: 12, fontWeight: '600', color: '#6b7280' },
-  tabTextActive: { color: '#fff', fontWeight: 'bold' },
+  tabText: { 
+    fontSize: 12, 
+    fontWeight: '600', 
+    color: '#424843' // on-surface-variant
+  },
+  tabTextActive: { 
+    color: '#01190a', // primary
+    fontWeight: '800' 
+  },
   levelScroll: { flex: 1 },
   levelCard: {
-    backgroundColor: '#fff',
-    borderWidth: 1.5,
-    borderColor: '#e5e7eb',
-    borderLeftWidth: 4,
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#01190a',
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    gap: 16,
   },
-  levelName: { fontSize: 16, fontWeight: 'bold', color: '#111827', marginBottom: 6 },
-  levelMeta: { flexDirection: 'row', gap: 12 },
-  levelMetaText: { fontSize: 12, color: '#6b7280' },
+  levelName: { 
+    fontSize: 17, 
+    fontWeight: '800', 
+    color: '#1c1c15', // on-background
+    marginBottom: 8 
+  },
+  levelMeta: { 
+    flexDirection: 'row', 
+    gap: 16,
+    flexWrap: 'wrap',
+  },
+  levelMetaText: { 
+    fontSize: 13, 
+    color: '#424843', // on-surface-variant
+    fontWeight: '600',
+  },
   levelBtn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#01190a',
+    backgroundColor: '#142e1d',
   },
-  levelBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
+  levelBtnText: { 
+    color: '#cbead0', 
+    fontWeight: '800', 
+    fontSize: 14 
+  },
   emptyText: { 
     textAlign: 'center', 
     color: '#9ca3af', 
-    fontSize: 14, 
-    marginTop: 40,
-    lineHeight: 22,
+    fontSize: 15, 
+    marginTop: 60,
+    lineHeight: 24,
   },
 });

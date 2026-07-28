@@ -1,11 +1,14 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth, db } from '../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 interface UserData {
   role?: 'admin' | 'user';
   name?: string;
+  photoUrl?: string;
+  phone?: string;
+  bio?: string;
 }
 
 interface AuthState {
@@ -26,33 +29,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    let unsubscribeDoc: (() => void) | undefined;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        // Fetch role data first without changing the user state yet
-        try {
-          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          let finalUserData: UserData = { role: 'user' }; // default
-          
-          if (userDoc.exists()) {
-            finalUserData = userDoc.data() as UserData;
+        unsubscribeDoc = onSnapshot(
+          doc(db, 'users', currentUser.uid),
+          (userDoc) => {
+            let finalUserData: UserData = { role: 'user' };
+            if (userDoc.exists()) {
+              finalUserData = userDoc.data() as UserData;
+            }
+            setAuthState({
+              user: currentUser,
+              userData: finalUserData,
+              isLoading: false,
+            });
+          },
+          (error) => {
+            console.error("Error fetching user data:", error);
+            setAuthState({
+              user: currentUser,
+              userData: { role: 'user' },
+              isLoading: false,
+            });
           }
-          
-          // Update everything at once to prevent flickers
-          setAuthState({
-            user: currentUser,
-            userData: finalUserData,
-            isLoading: false,
-          });
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setAuthState({
-            user: currentUser,
-            userData: { role: 'user' },
-            isLoading: false,
-          });
-        }
+        );
       } else {
-        // Not logged in
+        if (unsubscribeDoc) unsubscribeDoc();
         setAuthState({
           user: null,
           userData: null,
@@ -60,7 +64,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
     });
-    return unsubscribe;
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeDoc) unsubscribeDoc();
+    };
   }, []);
 
   return (

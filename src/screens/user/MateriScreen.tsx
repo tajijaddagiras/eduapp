@@ -62,9 +62,9 @@ export default function MateriScreen({ navigation }: any) {
       result = result.filter(m => m.title.toLowerCase().includes(search.toLowerCase()));
     }
     
-    // Pisahkan modul baru (upload dalam 7 hari terakhir) dan modul regular
+    // Pisahkan modul baru (upload dalam 3 jam terakhir) dan modul regular
     const now = new Date().getTime();
-    const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+    const threeHoursAgo = now - (3 * 60 * 60 * 1000);
     
     const newMods: Materi[] = [];
     const regularMods: Materi[] = [];
@@ -72,7 +72,7 @@ export default function MateriScreen({ navigation }: any) {
     result.forEach(m => {
       if (m.createdAt) {
         const createdTime = m.createdAt.toDate ? m.createdAt.toDate().getTime() : new Date(m.createdAt).getTime();
-        if (createdTime >= sevenDaysAgo) {
+        if (createdTime >= threeHoursAgo) {
           newMods.push(m);
         } else {
           regularMods.push(m);
@@ -87,9 +87,22 @@ export default function MateriScreen({ navigation }: any) {
     setFiltered(result);
   }, [data, activeFilter, search]);
 
+  const getDefaultDesc = (category: string) => {
+    if (category === 'Organik') return 'Pelajari cara mengolah sampah organik menjadi kompos yang bermanfaat.';
+    if (category === 'Anorganik') return 'Pelajari cara memilah dan mendaur ulang sampah anorganik dengan benar.';
+    return 'Pelajari materi edukasi pengelolaan sampah secara lengkap.';
+  };
+
+  const isNewModule = (item: Materi) => {
+    if (!item.createdAt) return false;
+    const createdTime = item.createdAt.toDate ? item.createdAt.toDate().getTime() : new Date(item.createdAt).getTime();
+    return createdTime >= (new Date().getTime() - 3 * 60 * 60 * 1000);
+  };
+
   const renderItem = ({ item, index }: { item: Materi; index: number }) => {
     const colorIndex = index % CARD_COLORS.length;
     const cardColor = CARD_COLORS[colorIndex];
+    const isNew = isNewModule(item);
     
     return (
       <TouchableOpacity 
@@ -97,7 +110,15 @@ export default function MateriScreen({ navigation }: any) {
         onPress={() => navigation.navigate('DetailMateri', { materi: item })}
         activeOpacity={0.7}
       >
-        {/* Square Image with white background and border */}
+        {/* NEW dot badge */}
+        {isNew && (
+          <View style={styles.newDotBadge}>
+            <View style={styles.newDot} />
+            <Text style={styles.newDotText}>BARU</Text>
+          </View>
+        )}
+
+        {/* Square Image */}
         <View style={styles.imageContainer}>
           {item.imageUrl ? (
             <Image source={{ uri: item.imageUrl }} style={styles.squareImage} />
@@ -108,14 +129,21 @@ export default function MateriScreen({ navigation }: any) {
           )}
         </View>
 
-        {/* Card Info - Left aligned */}
+        {/* Card Info */}
         <View style={styles.cardInfo}>
           <Text style={[styles.cardTitle, { color: cardColor.text }]} numberOfLines={2}>
             {item.title}
           </Text>
-          <Text style={[styles.cardCategory, { color: cardColor.text }]}>
-            {item.category.toUpperCase()}
-          </Text>
+          <View style={styles.cardCategoryRow}>
+            <Ionicons
+              name={item.category === 'Organik' ? 'leaf-outline' : 'sync-outline'}
+              size={12}
+              color={cardColor.text}
+            />
+            <Text style={[styles.cardCategory, { color: cardColor.text }]}>
+              {item.category.toUpperCase()}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -130,6 +158,7 @@ export default function MateriScreen({ navigation }: any) {
       >
         {/* Badge MODUL BARU */}
         <View style={styles.newBadge}>
+          <View style={styles.newBadgeDot} />
           <Text style={styles.newBadgeText}>MODUL BARU</Text>
         </View>
         
@@ -137,17 +166,31 @@ export default function MateriScreen({ navigation }: any) {
           <View style={styles.newModuleLeft}>
             <Text style={styles.newModuleTitle}>{item.title}</Text>
             <Text style={styles.newModuleDesc} numberOfLines={2}>
-              {item.description || 'Pelajari cara menangani limbah...'}
+              {item.description && item.description.trim() !== ''
+                ? item.description
+                : getDefaultDesc(item.category)}
             </Text>
+            <View style={styles.newModuleCategoryRow}>
+              <Ionicons
+                name={item.category === 'Organik' ? 'leaf-outline' : 'sync-outline'}
+                size={12}
+                color="#d1fae5"
+              />
+              <Text style={styles.newModuleCategoryText}>{item.category}</Text>
+            </View>
           </View>
           
-          {/* Circular Image Right */}
+          {/* Image Right */}
           <View style={styles.newModuleImageContainer}>
             {item.imageUrl ? (
               <Image source={{ uri: item.imageUrl }} style={styles.newModuleImage} />
             ) : (
               <View style={[styles.newModuleImage, styles.newModulePlaceholder]}>
-                <Ionicons name="flask" size={36} color="#8b5cf6" />
+                <Ionicons
+                  name={item.category === 'Organik' ? 'leaf' : 'flask'}
+                  size={36}
+                  color={item.category === 'Organik' ? '#16a34a' : '#8b5cf6'}
+                />
               </View>
             )}
           </View>
@@ -307,18 +350,27 @@ const styles = StyleSheet.create({
     borderColor: '#000',
   },
   newBadge: {
-    backgroundColor: '#1f2937',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#ef4444',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
     alignSelf: 'flex-start',
     marginBottom: 12,
   },
+  newBadgeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#fff',
+  },
   newBadgeText: {
     color: '#fff',
     fontSize: 10,
     fontWeight: 'bold',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
   newModuleContent: {
     flexDirection: 'row',
@@ -327,17 +379,30 @@ const styles = StyleSheet.create({
   },
   newModuleLeft: {
     flex: 1,
+    gap: 6,
   },
   newModuleTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   newModuleDesc: {
     fontSize: 13,
-    color: '#f0fdf4',
+    color: '#d1fae5',
     lineHeight: 18,
+  },
+  newModuleCategoryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 4,
+  },
+  newModuleCategoryText: {
+    fontSize: 11,
+    color: '#d1fae5',
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   newModuleImageContainer: {
     width: 80,
@@ -411,7 +476,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.5,
     opacity: 0.8,
-    textAlign: 'left', // Left aligned
+  },
+  cardCategoryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    opacity: 0.8,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -423,5 +493,31 @@ const styles = StyleSheet.create({
     marginTop: 16, 
     color: '#9ca3af',
     fontSize: 14,
-  }
+  },
+  // NEW dot badge for grid cards
+  newDotBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#ef4444',
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  newDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: '#fff',
+  },
+  newDotText: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: 0.5,
+  },
 });

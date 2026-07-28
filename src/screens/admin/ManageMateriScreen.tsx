@@ -602,21 +602,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     gap: 8,
   },
-  listNumberBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#fbbf24',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#000',
-  },
-  listNumberText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#111827',
-  },
   listItemLabel: {
     fontSize: 13,
     fontWeight: 'bold',

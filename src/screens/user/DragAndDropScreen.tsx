@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated, PanResponder, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
@@ -411,9 +412,12 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           ]}
         >
           {/* Trash Bin Icon */}
-          <Text style={[styles.trashIcon, hoveringZone === 'organik' && styles.trashIconOpen]}>
-            {hoveringZone === 'organik' ? '🗑️' : '🗑'}
-          </Text>
+          <Ionicons 
+            name={hoveringZone === 'organik' ? 'trash' : 'trash-outline'} 
+            size={48} 
+            color="#2e7d32" 
+            style={[styles.trashIcon, hoveringZone === 'organik' && styles.trashIconOpen]}
+          />
           <Text style={[styles.dropZoneLabel, { color: '#2e7d32' }]}>ORGANIK</Text>
           <Text style={[styles.dropZoneHint, hoveringZone === 'organik' && { fontWeight: 'bold', color: '#2e7d32' }]}>
             {hoveringZone === 'organik' ? '✓ Lepas di sini!' : 'Seret ke sini'}
@@ -434,9 +438,12 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           ]}
         >
           {/* Trash Bin Icon */}
-          <Text style={[styles.trashIcon, hoveringZone === 'anorganik' && styles.trashIconOpen]}>
-            {hoveringZone === 'anorganik' ? '🗑️' : '🗑'}
-          </Text>
+          <Ionicons 
+            name={hoveringZone === 'anorganik' ? 'trash' : 'trash-outline'} 
+            size={48} 
+            color="#dc2626" 
+            style={[styles.trashIcon, hoveringZone === 'anorganik' && styles.trashIconOpen]}
+          />
           <Text style={[styles.dropZoneLabel, { color: '#dc2626' }]}>ANORGANIK</Text>
           <Text style={[styles.dropZoneHint, hoveringZone === 'anorganik' && { fontWeight: 'bold', color: '#dc2626' }]}>
             {hoveringZone === 'anorganik' ? '✓ Lepas di sini!' : 'Seret ke sini'}
@@ -448,67 +455,195 @@ export default function DragAndDropScreen({ route, navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9fafb' },
-  loadingText: { marginTop: 12, color: '#6b7280' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingTop: 50 },
-  headerIcon: { width: 32, height: 32, borderWidth: 2, borderColor: '#333', borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#374151' },
-  headerSubtitle: { fontSize: 11, color: '#6b7280', marginTop: 2 },
-  timerBox: { 
-    paddingHorizontal: 12, 
-    paddingVertical: 6, 
-    backgroundColor: '#f0fdf4', 
-    borderRadius: 8, 
-    borderWidth: 1.5, 
-    borderColor: '#2e7d32' 
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fcf9ee' // background
   },
-  timerText: { fontSize: 12, fontWeight: 'bold', color: '#2e7d32' },
-  progressBg: { height: 8, backgroundColor: '#e5e7eb', marginHorizontal: 20, borderRadius: 4, marginBottom: 20 },
-  progressFill: { height: 8, backgroundColor: '#2e7d32', borderRadius: 4 },
-  instruction: { textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#111827', lineHeight: 26, marginBottom: 30, paddingHorizontal: 20 },
-  feedbackBadge: { alignSelf: 'center', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginBottom: 10 },
-  feedbackText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  itemCard: { width: 180, height: 180, backgroundColor: '#fff', borderWidth: 2, borderColor: '#374151', borderRadius: 16, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6, marginBottom: 40, padding: 12 },
-  itemImageReal: { 
-    width: 100, 
-    height: 100, 
+  center: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#fcf9ee' 
+  },
+  loadingText: { 
+    marginTop: 12, 
+    color: '#424843' // on-surface-variant
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: 20, 
+    paddingTop: 50 
+  },
+  headerIcon: { 
+    width: 40, 
+    height: 40, 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  headerTitle: { 
+    fontSize: 15, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
+  headerSubtitle: { 
+    fontSize: 12, 
+    color: '#424843', // on-surface-variant
+    marginTop: 2 
+  },
+  timerBox: { 
+    paddingHorizontal: 14, 
+    paddingVertical: 8, 
+    backgroundColor: '#f1eee3', // surface-container
     borderRadius: 12, 
-    marginBottom: 8,
-    backgroundColor: '#f3f4f6'
+    borderWidth: 2, 
+    borderColor: '#01190a' // primary
+  },
+  timerText: { 
+    fontSize: 13, 
+    fontWeight: '800', 
+    color: '#01190a' // primary
+  },
+  progressBg: { 
+    height: 8, 
+    backgroundColor: '#e5e2d8', // outline-variant lighter
+    marginHorizontal: 20, 
+    borderRadius: 4, 
+    marginBottom: 20 
+  },
+  progressFill: { 
+    height: 8, 
+    backgroundColor: '#b0ceb5', // primary-fixed
+    borderRadius: 4 
+  },
+  instruction: { 
+    textAlign: 'center', 
+    fontSize: 19, 
+    fontWeight: '800', 
+    color: '#1c1c15', // on-background
+    lineHeight: 28, 
+    marginBottom: 24, 
+    paddingHorizontal: 20 
+  },
+  feedbackBadge: { 
+    alignSelf: 'center', 
+    paddingHorizontal: 24, 
+    paddingVertical: 12, 
+    borderRadius: 20, 
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  feedbackText: { 
+    color: '#fff', 
+    fontWeight: '800', 
+    fontSize: 17 
+  },
+  itemCard: { 
+    width: 200, 
+    height: 200, 
+    backgroundColor: '#ffffff', 
+    borderWidth: 3, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    alignSelf: 'center', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.15, 
+    shadowRadius: 8, 
+    elevation: 6, 
+    marginBottom: 40, 
+    padding: 16 
+  },
+  itemImageReal: { 
+    width: 120, 
+    height: 120, 
+    borderRadius: 16, 
+    marginBottom: 12,
+    backgroundColor: '#f1eee3', // surface-container
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
   },
   itemImagePlaceholder: { 
-    width: 100, 
-    height: 100, 
-    backgroundColor: '#f3f4f6', 
-    borderRadius: 12, 
-    marginBottom: 8,
+    width: 120, 
+    height: 120, 
+    backgroundColor: '#f1eee3', // surface-container
+    borderRadius: 16, 
+    marginBottom: 12,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
   },
-  placeholderText: { fontSize: 40 },
-  itemImage: { width: 50, height: 50, backgroundColor: '#e5e7eb', borderRadius: 8, marginBottom: 8 },
-  itemName: { fontSize: 14, fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 8 },
-  itemHint: { fontSize: 10, color: '#9ca3af', marginTop: 4 },
-  dropZones: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, gap: 16 },
+  placeholderText: { fontSize: 48 },
+  itemImage: { 
+    width: 50, 
+    height: 50, 
+    backgroundColor: '#e5e7eb', 
+    borderRadius: 8, 
+    marginBottom: 8 
+  },
+  itemName: { 
+    fontSize: 16, 
+    fontWeight: '800', 
+    textAlign: 'center', 
+    paddingHorizontal: 8,
+    color: '#1c1c15', // on-background
+  },
+  itemHint: { 
+    fontSize: 11, 
+    color: '#424843', // on-surface-variant
+    marginTop: 6,
+    fontWeight: '600',
+  },
+  dropZones: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20, 
+    gap: 16 
+  },
   dropZone: { 
     flex: 1, 
-    height: 140, 
+    height: 160, 
     borderWidth: 3, 
     borderStyle: 'dashed', 
-    borderRadius: 12, 
+    borderRadius: 16, 
     alignItems: 'center', 
     justifyContent: 'center',
   },
   trashIcon: { 
-    fontSize: 48, 
+    fontSize: 56, 
     marginBottom: 8,
   },
   trashIconOpen: {
     transform: [{ scale: 1.2 }],
   },
-  dropZoneIcon: { fontSize: 18, fontWeight: 'bold', marginBottom: 6, color: '#374151' },
-  dropZoneLabel: { fontWeight: 'bold', fontSize: 14 },
-  dropZoneHint: { fontSize: 10, color: '#9ca3af', marginTop: 4, textAlign: 'center' },
-  emptyText: { textAlign: 'center', marginTop: 40, color: '#6b7280' },
+  dropZoneIcon: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 6, 
+    color: '#374151' 
+  },
+  dropZoneLabel: { 
+    fontWeight: '800', 
+    fontSize: 15 
+  },
+  dropZoneHint: { 
+    fontSize: 11, 
+    color: '#424843', // on-surface-variant
+    marginTop: 6, 
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  emptyText: { 
+    textAlign: 'center', 
+    marginTop: 40, 
+    color: '#9ca3af' 
+  },
 });

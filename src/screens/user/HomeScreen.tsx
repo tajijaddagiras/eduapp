@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../config/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 
 // Tips edukasi sampah
 const TIPS_HARIAN = [
-  { icon: '🍌', text: 'Kulit pisang terurai 2-5 minggu, tapi botol plastik butuh sampai 450 tahun!' },
-  { icon: '♻️', text: 'Satu botol plastik yang didaur ulang dapat menghemat energi untuk menyalakan lampu 6 jam!' },
-  { icon: '🌱', text: 'Sampah organik bisa dijadikan kompos untuk menyuburkan tanaman di rumah.' },
-  { icon: '🗑️', text: 'Memilah sampah dari rumah membantu mengurangi beban TPA hingga 60%!' },
-  { icon: '💧', text: 'Mendaur ulang 1 ton kertas dapat menghemat 17 pohon dan 26.000 liter air!' },
+  { icon: 'leaf-outline', text: 'Kulit pisang terurai 2-5 minggu, tapi botol plastik butuh sampai 450 tahun!', color: '#fbbf24' },
+  { icon: 'sync-outline', text: 'Satu botol plastik yang didaur ulang dapat menghemat energi untuk menyalakan lampu 6 jam!', color: '#60a5fa' },
+  { icon: 'rose-outline', text: 'Sampah organik bisa dijadikan kompos untuk menyuburkan tanaman di rumah.', color: '#4ade80' },
+  { icon: 'trash-outline', text: 'Memilah sampah dari rumah membantu mengurangi beban TPA hingga 60%!', color: '#f87171' },
+  { icon: 'water-outline', text: 'Mendaur ulang 1 ton kertas dapat menghemat 17 pohon dan 26.000 liter air!', color: '#38bdf8' },
 ];
 
 export default function HomeScreen({ navigation }: any) {
@@ -24,42 +24,70 @@ export default function HomeScreen({ navigation }: any) {
   const [rataRataSkor, setRataRataSkor] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tipHariIni, setTipHariIni] = useState(TIPS_HARIAN[0]);
+  const [misiMateri, setMisiMateri] = useState(false);
+  const [misiSimulasi, setMisiSimulasi] = useState(false);
+  const [misiSkor, setMisiSkor] = useState(false);
 
   useEffect(() => {
     // Set random tip setiap hari
     const today = new Date().getDate();
     setTipHariIni(TIPS_HARIAN[today % TIPS_HARIAN.length]);
-    
-    const fetchStats = async () => {
-      if (!user) return;
-      try {
-        // Get total materi count
-        const materiSnap = await getDocs(collection(db, 'materi'));
-        setTotalMateri(materiSnap.size);
 
-        // Get user progress
-        const progressQ = query(collection(db, 'progress'), where('userId', '==', user.uid));
-        const progressSnap = await getDocs(progressQ);
-        let totalSkor = 0;
-        let simCount = 0;
-        progressSnap.forEach(doc => {
-          const d = doc.data();
-          if (d.score) { totalSkor += d.score; simCount++; }
-        });
-        setSimulasiSelesai(simCount);
-        if (simCount > 0) setRataRataSkor(Math.round(totalSkor / simCount));
+    if (!user) return;
 
-        // Get read materi
-        const readQ = query(collection(db, 'progress'), where('userId', '==', user.uid), where('type', '==', 'materi'));
-        const readSnap = await getDocs(readQ);
-        setMateriSelesai(readSnap.size);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
+    // Fetch total materi count (one-time, jarang berubah)
+    getDocs(collection(db, 'materi')).then(snap => setTotalMateri(snap.size));
+
+    // Realtime listener untuk progress user
+    const progressQ = query(collection(db, 'progress'), where('userId', '==', user.uid));
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const unsubscribe = onSnapshot(progressQ, (snapshot) => {
+      let totalSkor = 0;
+      let simCount = 0;
+      let hasMateriToday = false;
+      let hasSimulasiToday = false;
+      let hasSkor80Today = false;
+      let materiCount = 0;
+
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const completedDate = d.completedAt?.toDate();
+        const isToday = completedDate && completedDate >= todayStart;
+
+        if (d.type === 'materi') {
+          materiCount++;
+        } else if (d.score) {
+          totalSkor += d.score;
+          simCount++;
+        }
+
+        if (isToday) {
+          if (d.type === 'materi') {
+            hasMateriToday = true;
+          } else {
+            hasSimulasiToday = true;
+            if (d.score && d.score >= 80) {
+              hasSkor80Today = true;
+            }
+          }
+        }
+      });
+
+      setSimulasiSelesai(simCount);
+      setMateriSelesai(materiCount);
+      if (simCount > 0) setRataRataSkor(Math.round(totalSkor / simCount));
+      setMisiMateri(hasMateriToday);
+      setMisiSimulasi(hasSimulasiToday);
+      setMisiSkor(hasSkor80Today);
+      setLoading(false);
+    }, (e) => {
+      console.error(e);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, [user]);
 
   const progressPct = totalMateri > 0 ? Math.round((materiSelesai / totalMateri) * 100) : 0;
@@ -91,9 +119,13 @@ export default function HomeScreen({ navigation }: any) {
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>
-                {userData?.name ? userData.name[0].toUpperCase() : 'U'}
-              </Text>
+              {userData?.photoUrl ? (
+                <Image source={{ uri: userData.photoUrl }} style={{ width: 42, height: 42, borderRadius: 21 }} />
+              ) : (
+                <Text style={styles.avatarText}>
+                  {userData?.name ? userData.name[0].toUpperCase() : 'U'}
+                </Text>
+              )}
             </View>
             <View>
               <Text style={styles.greet}>Hai, {userData?.name?.split(' ')[0] || 'Pengguna'}!</Text>
@@ -115,7 +147,7 @@ export default function HomeScreen({ navigation }: any) {
                 <Text style={styles.tipsLink}>Pelajari lebih lanjut →</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.tipsIcon}>{tipHariIni.icon}</Text>
+            <Ionicons name={tipHariIni.icon as any} size={48} color={tipHariIni.color || '#fff'} />
           </View>
         </View>
 
@@ -169,26 +201,30 @@ export default function HomeScreen({ navigation }: any) {
         <View style={styles.missionCard}>
           <View style={styles.missionHeader}>
             <Text style={styles.missionTitle}>Misi hari ini</Text>
-            <Text style={styles.missionProgress}>2/3 selesai</Text>
+            <Text style={styles.missionProgress}>
+              {[misiMateri, misiSimulasi, misiSkor].filter(Boolean).length}/3 selesai
+            </Text>
           </View>
           
           <View style={styles.missionItem}>
-            <View style={[styles.missionCheck, styles.missionCheckDone]}>
-              <Ionicons name="checkmark" size={16} color="#fff" />
+            <View style={[styles.missionCheck, misiMateri && styles.missionCheckDone]}>
+              {misiMateri && <Ionicons name="checkmark" size={16} color="#fff" />}
             </View>
-            <Text style={[styles.missionText, styles.missionTextDone]}>Baca 1 materi baru</Text>
+            <Text style={[styles.missionText, misiMateri && styles.missionTextDone]}>Baca 1 materi baru</Text>
           </View>
 
           <View style={styles.missionItem}>
-            <View style={[styles.missionCheck, styles.missionCheckDone]}>
-              <Ionicons name="checkmark" size={16} color="#fff" />
+            <View style={[styles.missionCheck, misiSimulasi && styles.missionCheckDone]}>
+              {misiSimulasi && <Ionicons name="checkmark" size={16} color="#fff" />}
             </View>
-            <Text style={[styles.missionText, styles.missionTextDone]}>Selesaikan 1 simulasi</Text>
+            <Text style={[styles.missionText, misiSimulasi && styles.missionTextDone]}>Selesaikan 1 simulasi</Text>
           </View>
 
           <View style={styles.missionItem}>
-            <View style={styles.missionCheck} />
-            <Text style={styles.missionText}>Dapatkan skor 80+ di kuis</Text>
+            <View style={[styles.missionCheck, misiSkor && styles.missionCheckDone]}>
+              {misiSkor && <Ionicons name="checkmark" size={16} color="#fff" />}
+            </View>
+            <Text style={[styles.missionText, misiSkor && styles.missionTextDone]}>Dapatkan skor 80+ di kuis</Text>
           </View>
         </View>
 

@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }: any) {
         <View style={styles.logoContainer}>
           <View style={styles.logoCard}>
             <Image 
-              source={require('../../../assets/icon.png')} 
+              source={require('../../../assets/images/icon.png')} 
               style={styles.logo}
               resizeMode="contain"
             />
@@ -146,25 +146,17 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logoCard: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#f1eee3', // surface-container
-    borderWidth: 4,
-    borderColor: '#01190a', // primary
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'transparent', // Transparan karena logo sudah transparan
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 6, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 8,
+    marginBottom: 16,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 160,
+    height: 160,
   },
   welcomeText: {
     fontSize: 28, // headline-xl-mobile
@@ -179,19 +171,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   
-  // Form Card
   formCard: {
-    backgroundColor: '#f1eee3', // surface-container
-    borderRadius: 24, // rounded-3xl
-    borderWidth: 3,
-    borderColor: '#01190a', // primary
+    backgroundColor: '#f1eee3',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#01190a',
     padding: 24,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
   },
   
   // Input Fields
@@ -226,24 +211,17 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   
-  // Login Button
   loginButton: {
-    backgroundColor: '#142e1d', // primary-container
-    borderRadius: 16,
+    backgroundColor: '#142e1d',
+    borderRadius: 14,
     borderWidth: 2,
-    borderColor: '#01190a', // primary
-    height: 56,
+    borderColor: '#01190a',
+    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     marginTop: 8,
-    // Neo-shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 6,
   },
   loginButtonDisabled: {
     opacity: 0.6,

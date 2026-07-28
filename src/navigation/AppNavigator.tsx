@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Auth Screens
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -26,6 +24,8 @@ import MultipleChoiceScreen from '../screens/user/MultipleChoiceScreen';
 import HasilEvaluasiScreen from '../screens/user/HasilEvaluasiScreen';
 import PembahasanScreen from '../screens/user/PembahasanScreen';
 import UEQFormScreen from '../screens/user/UEQFormScreen';
+import EditProfileScreen from '../screens/user/EditProfileScreen';
+import RiwayatScreen from '../screens/user/RiwayatScreen';
 
 // Admin Screens
 import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
@@ -48,19 +48,17 @@ function UserTabs() {
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
-          left: 5,
-          right: 5,
+          left: 20,
+          right: 20,
           height: 70,
           backgroundColor: '#ffffff',
-          borderRadius: 40,
-          elevation: 8,
+          borderRadius: 35,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 8 },
+          shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.1,
           shadowRadius: 12,
-          paddingHorizontal: 0,
-          paddingTop: 8,
-          paddingBottom: 8,
+          elevation: 8,
+          paddingHorizontal: 10,
         },
       }}
     >
@@ -70,25 +68,9 @@ function UserTabs() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
-              <Ionicons
-                name={focused ? 'home' : 'home-outline'}
-                size={24}
-                color={focused ? '#1d4ed8' : '#9ca3af'}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: focused ? '#1d4ed8' : '#9ca3af',
-                  fontSize: 10,
-                  marginTop: 3,
-                  fontWeight: focused ? '600' : '400',
-                  textAlign: 'center',
-                  width: 70,
-                }}
-              >
-                Beranda
-              </Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
+              <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
+              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Beranda</Text>
             </View>
           ),
         }}
@@ -100,25 +82,9 @@ function UserTabs() {
         component={MateriScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
-              <Ionicons
-                name={focused ? 'book' : 'book-outline'}
-                size={24}
-                color={focused ? '#1d4ed8' : '#9ca3af'}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: focused ? '#1d4ed8' : '#9ca3af',
-                  fontSize: 10,
-                  marginTop: 3,
-                  fontWeight: focused ? '600' : '400',
-                  textAlign: 'center',
-                  width: 70,
-                }}
-              >
-                Materi
-              </Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
+              <Ionicons name={focused ? 'book' : 'book-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
+              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Materi</Text>
             </View>
           ),
         }}
@@ -129,54 +95,24 @@ function UserTabs() {
         name="Kuesioner"
         component={UEQFormScreen}
         options={{
-          tabBarButton: (props) => (
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              {/* Floating Circle Button - Posisi lebih rendah */}
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={props.onPress}
-                style={{
-                  position: 'absolute',
-                  top: -38, // Dari -48 ke -38 (turun 10px)
-                  width: 64, // Dari 70 ke 64
-                  height: 64, // Dari 70 ke 64
-                  borderRadius: 32, // Dari 35 ke 32
-                  backgroundColor: '#1d4ed8',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#1d4ed8',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 8,
-                }}
-              >
-                <Ionicons name="clipboard-outline" size={28} color="#ffffff" /> {/* Dari 32 ke 28 */}
-              </TouchableOpacity>
-
-              {/* Label at Bottom - Same level as other tabs */}
-              <View style={{ 
-                position: 'absolute',
-                bottom: 0,
-                width: 70,
-                height: 54,
-                justifyContent: 'flex-end',
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: -30 }}>
+              <View style={{
+                width: 58,
+                height: 58,
+                borderRadius: 29,
+                backgroundColor: '#2e7d32',
                 alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#2e7d32',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.35,
+                shadowRadius: 8,
+                elevation: 6,
               }}>
-                <View style={{ height: 24 }} />
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    color: '#1d4ed8',
-                    fontSize: 10,
-                    fontWeight: '600',
-                    textAlign: 'center',
-                    marginTop: 3,
-                  }}
-                >
-                  Kuesioner
-                </Text>
+                <Ionicons name="clipboard-outline" size={26} color="#fff" />
               </View>
+              <Text style={{ color: '#2e7d32', fontSize: 9, marginTop: 6, fontWeight: '700', textAlign: 'center' }}>Kuesioner</Text>
             </View>
           ),
         }}
@@ -188,25 +124,9 @@ function UserTabs() {
         component={SimulasiScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
-              <Ionicons
-                name={focused ? 'game-controller' : 'game-controller-outline'}
-                size={24}
-                color={focused ? '#1d4ed8' : '#9ca3af'}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: focused ? '#1d4ed8' : '#9ca3af',
-                  fontSize: 10,
-                  marginTop: 3,
-                  fontWeight: focused ? '600' : '400',
-                  textAlign: 'center',
-                  width: 70,
-                }}
-              >
-                Simulasi
-              </Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
+              <Ionicons name={focused ? 'game-controller' : 'game-controller-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
+              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Simulasi</Text>
             </View>
           ),
         }}
@@ -218,25 +138,9 @@ function UserTabs() {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'flex-end', height: 54, width: 70, overflow: 'visible' }}>
-              <Ionicons
-                name={focused ? 'person' : 'person-outline'}
-                size={24}
-                color={focused ? '#1d4ed8' : '#9ca3af'}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: focused ? '#1d4ed8' : '#9ca3af',
-                  fontSize: 10,
-                  marginTop: 3,
-                  fontWeight: focused ? '600' : '400',
-                  textAlign: 'center',
-                  width: 70,
-                }}
-              >
-                Profil
-              </Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
+              <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
+              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Profil</Text>
             </View>
           ),
         }}
@@ -297,6 +201,8 @@ function MainNavigator() {
           <Stack.Screen name="HasilEvaluasi" component={HasilEvaluasiScreen} />
           <Stack.Screen name="Pembahasan" component={PembahasanScreen} />
           <Stack.Screen name="UEQForm" component={UEQFormScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="Riwayat" component={RiwayatScreen} />
         </>
       )}
     </Stack.Navigator>

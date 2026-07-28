@@ -117,10 +117,7 @@ export default function UEQFormScreen({ navigation, route }: any) {
       </View>
 
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        <Text style={styles.desc}>
-          Mohon luangkan waktu Anda menilai kesan penggunaan aplikasi ini.
-          {'\n'}<Text style={{ fontWeight: 'bold' }}>Progres: {answered}/{UEQ_ITEMS.length} pertanyaan ({progressPct}%)</Text>
-        </Text>
+        <Text style={styles.desc}>Mohon luangkan waktu Anda menilai kesan penggunaan aplikasi ini. <Text style={{ fontWeight: 'bold' }}>Progres: {answered}/{UEQ_ITEMS.length} pertanyaan ({progressPct}%)</Text></Text>
 
         {/* Progress Bar */}
         <View style={styles.progressBg}>
@@ -173,28 +170,167 @@ export default function UEQFormScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingTop: 50, borderBottomWidth: 1, borderBottomColor: '#e5e7eb', backgroundColor: '#fff' },
-  iconCircle: { width: 32, height: 32, borderWidth: 2, borderColor: '#333', borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 15, fontWeight: 'bold', color: '#111827' },
-  scroll: { flex: 1, paddingHorizontal: 20 },
-  desc: { fontSize: 13, color: '#6b7280', marginTop: 16, marginBottom: 10, lineHeight: 20 },
-  progressBg: { height: 8, backgroundColor: '#e5e7eb', borderRadius: 4, marginBottom: 20 },
-  progressFill: { height: 8, backgroundColor: '#2e7d32', borderRadius: 4 },
-  dimGroup: { marginBottom: 20 },
-  dimTitle: { fontSize: 13, fontWeight: 'bold', color: '#2e7d32', backgroundColor: '#f0fdf4', padding: 10, borderRadius: 8, marginBottom: 10, borderLeftWidth: 3, borderLeftColor: '#2e7d32' },
-  itemCard: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 12, borderWidth: 1.5, borderColor: '#e5e7eb' },
-  itemNum: { fontSize: 11, color: '#9ca3af', marginBottom: 8 },
-  labelRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  labelLeft: { fontSize: 12, fontWeight: 'bold', color: '#374151', flex: 1 },
-  labelRight: { fontSize: 12, fontWeight: 'bold', color: '#374151', flex: 1, textAlign: 'right' },
-  scaleRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  scaleBtn: { width: 36, height: 36, borderRadius: 18, borderWidth: 1.5, borderColor: '#d1d5db', backgroundColor: '#f9fafb', justifyContent: 'center', alignItems: 'center' },
-  scaleBtnActive: { backgroundColor: '#2e7d32', borderColor: '#2e7d32' },
-  scaleTxt: { fontSize: 13, color: '#6b7280', fontWeight: 'bold' },
-  scaleTxtActive: { color: '#fff' },
-  scaleLabels: { flexDirection: 'row', justifyContent: 'space-between' },
-  scaleLabel: { fontSize: 9, color: '#9ca3af' },
-  submitBtn: { backgroundColor: '#2e7d32', padding: 16, borderRadius: 12, alignItems: 'center', marginTop: 20, marginBottom: 10 },
-  submitText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fcf9ee' // background
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: 20, 
+    paddingTop: 50,
+    backgroundColor: '#fcf9ee',
+  },
+  iconCircle: { 
+    width: 40, 
+    height: 40, 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  headerTitle: { 
+    fontSize: 17, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
+  scroll: { 
+    flex: 1, 
+    paddingHorizontal: 20 
+  },
+  desc: { 
+    fontSize: 14, 
+    color: '#424843', // on-surface-variant
+    marginTop: 16, 
+    marginBottom: 12, 
+    lineHeight: 22,
+    fontWeight: '600',
+  },
+  progressBg: { 
+    height: 8, 
+    backgroundColor: '#e5e2d8', // outline-variant lighter
+    borderRadius: 4, 
+    marginBottom: 24,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  progressFill: { 
+    height: 4, 
+    backgroundColor: '#b0ceb5', // primary-fixed
+    borderRadius: 2,
+    margin: 2,
+  },
+  dimGroup: { 
+    marginBottom: 24 
+  },
+  dimTitle: { 
+    fontSize: 14, 
+    fontWeight: '800', 
+    color: '#01190a', // primary
+    backgroundColor: '#f1eee3', // surface-container
+    padding: 14, 
+    borderRadius: 12, 
+    marginBottom: 12, 
+    borderLeftWidth: 4, 
+    borderLeftColor: '#01190a', // primary
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  itemCard: { 
+    backgroundColor: '#ffffff', 
+    borderRadius: 16, 
+    padding: 20, 
+    marginBottom: 14, 
+    borderWidth: 2, 
+    borderColor: '#01190a' // primary
+  },
+  itemNum: { 
+    fontSize: 12, 
+    color: '#424843', // on-surface-variant
+    marginBottom: 10,
+    fontWeight: '700',
+  },
+  labelRow: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 16 
+  },
+  labelLeft: { 
+    fontSize: 13, 
+    fontWeight: '700', 
+    color: '#1c1c15', // on-background
+    flex: 1 
+  },
+  labelRight: { 
+    fontSize: 13, 
+    fontWeight: '700', 
+    color: '#1c1c15', // on-background
+    flex: 1, 
+    textAlign: 'right' 
+  },
+  scaleRow: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 8 
+  },
+  scaleBtn: { 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    backgroundColor: '#f1eee3', // surface-container
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  scaleBtnActive: { 
+    backgroundColor: '#142e1d', // primary-container
+    // Neo-shadow
+    shadowColor: '#000', 
+    shadowOffset: { width: 2, height: 2 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 4,
+  },
+  scaleTxt: { 
+    fontSize: 14, 
+    color: '#424843', // on-surface-variant
+    fontWeight: '800' 
+  },
+  scaleTxtActive: { 
+    color: '#cbead0' // primary-fixed
+  },
+  scaleLabels: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between' 
+  },
+  scaleLabel: { 
+    fontSize: 10, 
+    color: '#424843', // on-surface-variant
+    fontWeight: '600',
+  },
+  submitBtn: { 
+    backgroundColor: '#142e1d', // primary-container
+    padding: 18, 
+    borderRadius: 16, 
+    alignItems: 'center', 
+    marginTop: 24, 
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+    // Neo-shadow
+    shadowColor: '#000', 
+    shadowOffset: { width: 4, height: 4 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 6,
+  },
+  submitText: { 
+    color: '#cbead0', // primary-fixed
+    fontWeight: '800', 
+    fontSize: 17 
+  }
 });

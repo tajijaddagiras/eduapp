@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
@@ -186,7 +187,7 @@ export default function BinaryScreen({ route, navigation }: any) {
           onPress={() => handleAnswer('organik')}
           disabled={disableButtons}
         >
-          <Text style={styles.btnIcon}>🌱</Text>
+          <Ionicons name="leaf-outline" size={32} color="#15803d" style={{ marginBottom: 4 }} />
           <Text style={styles.btnText}>ORGANIK</Text>
           <Text style={styles.btnSubtext}>Sampah alami</Text>
         </TouchableOpacity>
@@ -196,7 +197,7 @@ export default function BinaryScreen({ route, navigation }: any) {
           onPress={() => handleAnswer('anorganik')}
           disabled={disableButtons}
         >
-          <Text style={styles.btnIcon}>♻️</Text>
+          <Ionicons name="sync-outline" size={32} color="#1d4ed8" style={{ marginBottom: 4 }} />
           <Text style={styles.btnText}>ANORGANIK</Text>
           <Text style={styles.btnSubtext}>Sampah buatan</Text>
         </TouchableOpacity>
@@ -206,28 +207,164 @@ export default function BinaryScreen({ route, navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9fafb' },
-  loadingText: { marginTop: 12, color: '#6b7280' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingTop: 50 },
-  headerIcon: { width: 32, height: 32, borderWidth: 2, borderColor: '#333', borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#374151' },
-  headerSubtitle: { fontSize: 11, color: '#6b7280', marginTop: 2 },
-  progressBg: { height: 8, backgroundColor: '#e5e7eb', marginHorizontal: 20, borderRadius: 4, marginBottom: 20 },
-  progressFill: { height: 8, backgroundColor: '#1d4ed8', borderRadius: 4 },
-  instruction: { textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#111827', lineHeight: 26, marginBottom: 30, paddingHorizontal: 20 },
-  feedbackBadge: { alignSelf: 'center', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginBottom: 10 },
-  feedbackText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  itemCard: { width: 160, height: 160, backgroundColor: '#fff', borderWidth: 2, borderColor: '#374151', borderRadius: 16, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6, marginBottom: 40 },
-  itemImage: { width: 60, height: 60, backgroundColor: '#e5e7eb', borderRadius: 8, marginBottom: 12 },
-  itemName: { fontSize: 16, fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 12 },
-  itemHint: { fontSize: 11, color: '#9ca3af', marginTop: 6 },
-  buttonContainer: { flexDirection: 'row', paddingHorizontal: 20, gap: 16 },
-  choiceBtn: { flex: 1, paddingVertical: 24, borderRadius: 16, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 6 },
-  btnOrganik: { backgroundColor: '#2e7d32' },
-  btnAnorganik: { backgroundColor: '#dc2626' },
-  btnIcon: { fontSize: 32, marginBottom: 8 },
-  btnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, marginBottom: 4 },
-  btnSubtext: { color: '#fff', fontSize: 11, opacity: 0.9 },
-  emptyText: { textAlign: 'center', marginTop: 40, color: '#6b7280' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fcf9ee' // background
+  },
+  center: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#fcf9ee' 
+  },
+  loadingText: { 
+    marginTop: 12, 
+    color: '#424843' // on-surface-variant
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    padding: 20, 
+    paddingTop: 50 
+  },
+  headerIcon: { 
+    width: 40, 
+    height: 40, 
+    borderWidth: 2, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  headerTitle: { 
+    fontSize: 15, 
+    fontWeight: '800', 
+    color: '#1c1c15' // on-background
+  },
+  headerSubtitle: { 
+    fontSize: 12, 
+    color: '#424843', // on-surface-variant
+    marginTop: 2 
+  },
+  progressBg: { 
+    height: 8, 
+    backgroundColor: '#e5e2d8', // outline-variant lighter
+    marginHorizontal: 20, 
+    borderRadius: 4, 
+    marginBottom: 20 
+  },
+  progressFill: { 
+    height: 8, 
+    backgroundColor: '#f4bf3d', // tertiary-fixed-dim
+    borderRadius: 4 
+  },
+  instruction: { 
+    textAlign: 'center', 
+    fontSize: 19, 
+    fontWeight: '800', 
+    color: '#1c1c15', // on-background
+    lineHeight: 28, 
+    marginBottom: 24, 
+    paddingHorizontal: 20 
+  },
+  feedbackBadge: { 
+    alignSelf: 'center', 
+    paddingHorizontal: 24, 
+    paddingVertical: 12, 
+    borderRadius: 20, 
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  feedbackText: { 
+    color: '#fff', 
+    fontWeight: '800', 
+    fontSize: 17 
+  },
+  itemCard: { 
+    width: 180, 
+    height: 180, 
+    backgroundColor: '#ffffff', 
+    borderWidth: 3, 
+    borderColor: '#01190a', // primary
+    borderRadius: 20, 
+    alignSelf: 'center', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowOpacity: 0.15, 
+    shadowRadius: 8, 
+    elevation: 6, 
+    marginBottom: 40 
+  },
+  itemImage: { 
+    width: 70, 
+    height: 70, 
+    backgroundColor: '#f1eee3', // surface-container
+    borderRadius: 12, 
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+  },
+  itemName: { 
+    fontSize: 17, 
+    fontWeight: '800', 
+    textAlign: 'center', 
+    paddingHorizontal: 12,
+    color: '#1c1c15', // on-background
+  },
+  itemHint: { 
+    fontSize: 12, 
+    color: '#424843', // on-surface-variant
+    marginTop: 8,
+    fontWeight: '600',
+  },
+  buttonContainer: { 
+    flexDirection: 'row', 
+    paddingHorizontal: 20, 
+    gap: 16 
+  },
+  choiceBtn: { 
+    flex: 1, 
+    paddingVertical: 28, 
+    borderRadius: 20, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    shadowColor: '#000', 
+    shadowOffset: { width: 4, height: 4 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 0, 
+    elevation: 8,
+    borderWidth: 3,
+    borderColor: '#01190a', // primary
+  },
+  btnOrganik: { 
+    backgroundColor: '#b0ceb5' // primary-fixed
+  },
+  btnAnorganik: { 
+    backgroundColor: '#fe7d5e' // secondary-container
+  },
+  btnIcon: { 
+    fontSize: 36, 
+    marginBottom: 8 
+  },
+  btnText: { 
+    color: '#01190a', // primary
+    fontWeight: '800', 
+    fontSize: 17, 
+    marginBottom: 4 
+  },
+  btnSubtext: { 
+    color: '#01190a', // primary
+    fontSize: 12, 
+    opacity: 0.8,
+    fontWeight: '700',
+  },
+  emptyText: { 
+    textAlign: 'center', 
+    marginTop: 40, 
+    color: '#9ca3af' 
+  },
 });
