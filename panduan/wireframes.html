@@ -1186,11 +1186,22 @@
     
     for (let i = 0; i < screens.length; i++) {
       try {
+        const title = screens[i].querySelector('.screen-title');
+        const desc = screens[i].querySelector('.screen-desc');
+        
+        // Sembunyikan teks penjelasan agar tidak ikut ter-download
+        if (title) title.style.display = 'none';
+        if (desc) desc.style.display = 'none';
+
         const canvas = await html2canvas(screens[i], { 
           scale: 2,
           backgroundColor: '#F0F0F0',
           logging: false
         });
+        
+        // Kembalikan teks seperti semula setelah di-capture
+        if (title) title.style.display = '';
+        if (desc) desc.style.display = '';
         
         const url = canvas.toDataURL('image/png');
         
