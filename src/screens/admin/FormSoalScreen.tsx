@@ -70,11 +70,11 @@ export default function FormSoalScreen({ route, navigation }: any) {
         setFormOptionC(editItem.optionC || '');
         setFormOptionD(editItem.optionD || '');
         setFormCorrectAnswer(editItem.correctAnswer || 'A');
-        setFormExplanation(editItem.explanation || '');
       } else {
         setFormName(editItem.name || '');
         setFormType(editItem.type || 'organik'); // Set tipe saat edit
       }
+      setFormExplanation(editItem.explanation || '');
       setFormImageUri(editItem.imageUrl || null);
     }
   }, []);
@@ -132,11 +132,12 @@ export default function FormSoalScreen({ route, navigation }: any) {
         levelName: selectedLevel.name,
         gameType: gameType,
         imageUrl: finalImageUrl || '',
+        explanation: formExplanation,
       };
 
       if (gameType === 'DragDrop' || gameType === 'Binary') {
-        if (!formName.trim()) {
-          Alert.alert('Error', 'Nama objek tidak boleh kosong!');
+        if (!formName.trim() || !formExplanation.trim()) {
+          Alert.alert('Error', 'Semua field wajib harus diisi!');
           setLoading(false);
           setUploading(false);
           return;
@@ -173,7 +174,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
           optionC: formOptionC,
           optionD: formOptionD,
           correctAnswer: formCorrectAnswer,
-          explanation: formExplanation,
         };
 
         if (isEditMode) {
@@ -304,16 +304,6 @@ export default function FormSoalScreen({ route, navigation }: any) {
                 </TouchableOpacity>
               ))}
             </View>
-
-            <Text style={styles.fieldLabel}>Penjelasan</Text>
-            <TextInput
-              style={[styles.input, styles.textarea]}
-              placeholder="Jelaskan mengapa jawaban tersebut benar..."
-              value={formExplanation}
-              onChangeText={setFormExplanation}
-              multiline
-              textAlignVertical="top"
-            />
           </>
         ) : (
           // Drag & Drop / Binary Form
@@ -362,6 +352,16 @@ export default function FormSoalScreen({ route, navigation }: any) {
             </TouchableOpacity>
           </>
         )}
+
+        <Text style={styles.fieldLabel}>Penjelasan Jawaban</Text>
+        <TextInput
+          style={[styles.input, styles.textarea]}
+          placeholder="Berikan penjelasan agar pengguna bisa belajar saat salah menjawab..."
+          value={formExplanation}
+          onChangeText={setFormExplanation}
+          multiline
+          textAlignVertical="top"
+        />
 
         {/* Save Button */}
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={uploading}>

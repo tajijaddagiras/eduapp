@@ -12,6 +12,7 @@ interface Stats {
 }
 
 const menuItems = [
+  { icon: '[S]', label: 'Manajemen Data Siswa', nav: 'DataSiswa' },
   { icon: '[M]', label: 'Manajemen Modul Materi', nav: 'ManageMateri' },
   { icon: '[K]', label: 'Manajemen Bank Simulasi', nav: 'ManageSoal' },
   { icon: '[L]', label: 'Kelola Level Soal', nav: 'ManageLevel' },

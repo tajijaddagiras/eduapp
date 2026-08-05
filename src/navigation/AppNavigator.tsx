@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -35,119 +35,167 @@ import FormSoalScreen from '../screens/admin/FormSoalScreen';
 import ManageLevelScreen from '../screens/admin/ManageLevelScreen';
 import FormLevelScreen from '../screens/admin/FormLevelScreen';
 import UEQAnalitikScreen from '../screens/admin/UEQAnalitikScreen';
+import DataSiswaScreen from '../screens/admin/DataSiswaScreen';
+import DetailKuesionerSiswaScreen from '../screens/admin/DetailKuesionerSiswaScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Tab definitions
+const USER_TABS = [
+  { name: 'Beranda',   icon: 'home',            iconFocused: 'home',            component: HomeScreen },
+  { name: 'Materi',    icon: 'book-outline',     iconFocused: 'book',            component: MateriScreen },
+  { name: 'Kuesioner', icon: 'clipboard-outline', iconFocused: 'clipboard',      component: UEQFormScreen },
+  { name: 'Simulasi',  icon: 'game-controller-outline', iconFocused: 'game-controller', component: SimulasiScreen },
+  { name: 'Profil',    icon: 'person-outline',   iconFocused: 'person',          component: ProfileScreen },
+];
+
+// Custom Tab Bar — fully controls overflow so the floating Kuesioner button isn't clipped
+function CustomTabBar({ state, descriptors, navigation }: any) {
+  return (
+    <View style={navStyles.wrapper}>
+      {/* The bar itself */}
+      <View style={navStyles.bar}>
+        {state.routes.map((route: any, index: number) => {
+          const focused = state.index === index;
+          const tab = USER_TABS[index];
+          const isCenter = index === 2; // Kuesioner
+
+          const onPress = () => {
+            const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+            if (!focused && !event.defaultPrevented) navigation.navigate(route.name);
+          };
+
+          if (isCenter) {
+            // Floating center button — rendered ABOVE the bar
+            return (
+              <TouchableOpacity
+                key={route.key}
+                onPress={onPress}
+                activeOpacity={0.8}
+                style={navStyles.centerWrapper}
+              >
+                <View style={navStyles.centerBtn}>
+                  <Ionicons name="clipboard-outline" size={26} color="#fff" />
+                </View>
+                <Text style={navStyles.centerLabel}>Kuesioner</Text>
+              </TouchableOpacity>
+            );
+          }
+
+          return (
+            <TouchableOpacity
+              key={route.key}
+              onPress={onPress}
+              activeOpacity={0.7}
+              style={navStyles.tabItem}
+            >
+              <Ionicons
+                name={(focused ? tab.iconFocused : tab.icon) as any}
+                size={24}
+                color={focused ? '#a53b22' : '#737972'}
+              />
+              <Text style={[navStyles.tabLabel, focused && navStyles.tabLabelFocused]}>
+                {tab.name}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+const navStyles = StyleSheet.create({
+  // Outer wrapper so the floating button can overflow above the bar
+  wrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    // Extra top padding gives room for the floating button
+    paddingTop: 28,
+    backgroundColor: 'transparent',
+  },
+  // The visible navigation bar
+  bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: 72,
+    backgroundColor: 'rgba(252, 249, 238, 0.95)',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#c2c8c0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 14,
+    paddingHorizontal: 8,
+  },
+  // Regular tab item
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+  tabLabel: {
+    fontSize: 10,
+    marginTop: 3,
+    fontWeight: '600',
+    color: '#737972',
+  },
+  tabLabelFocused: {
+    color: '#a53b22',
+    fontWeight: '700',
+  },
+  // Center Kuesioner button — sits above the bar
+  centerWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    // Push the button upward above the bar (mirror of HTML -top-6 = -24px)
+    marginTop: -46,
+    paddingBottom: 4,
+  },
+  centerBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#2d5af7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#2d5af7',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  centerLabel: {
+    fontSize: 10,
+    marginTop: 5,
+    fontWeight: '700',
+    color: '#737972',
+    textAlign: 'center',
+  },
+});
+
 function UserTabs() {
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          right: 20,
-          height: 70,
-          backgroundColor: '#ffffff',
-          borderRadius: 35,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          elevation: 8,
-          paddingHorizontal: 10,
-        },
-      }}
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
     >
-      {/* Tab 1: Beranda */}
-      <Tab.Screen
-        name="Beranda"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
-              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Beranda</Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 2: Materi */}
-      <Tab.Screen
-        name="Materi"
-        component={MateriScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? 'book' : 'book-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
-              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Materi</Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 3: Kuesioner (Center Button) */}
-      <Tab.Screen
-        name="Kuesioner"
-        component={UEQFormScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: -30 }}>
-              <View style={{
-                width: 58,
-                height: 58,
-                borderRadius: 29,
-                backgroundColor: '#2e7d32',
-                alignItems: 'center',
-                justifyContent: 'center',
-                shadowColor: '#2e7d32',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.35,
-                shadowRadius: 8,
-                elevation: 6,
-              }}>
-                <Ionicons name="clipboard-outline" size={26} color="#fff" />
-              </View>
-              <Text style={{ color: '#2e7d32', fontSize: 9, marginTop: 6, fontWeight: '700', textAlign: 'center' }}>Kuesioner</Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 4: Simulasi */}
-      <Tab.Screen
-        name="Simulasi"
-        component={SimulasiScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? 'game-controller' : 'game-controller-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
-              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Simulasi</Text>
-            </View>
-          ),
-        }}
-      />
-
-      {/* Tab 5: Profil */}
-      <Tab.Screen
-        name="Profil"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: 60 }}>
-              <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={focused ? '#01190a' : '#9ca3af'} />
-              <Text style={{ color: focused ? '#01190a' : '#9ca3af', fontSize: 10, marginTop: 4, fontWeight: focused ? '700' : '600', textAlign: 'center' }}>Profil</Text>
-            </View>
-          ),
-        }}
-      />
+      {USER_TABS.map((tab) => (
+        <Tab.Screen key={tab.name} name={tab.name} component={tab.component} />
+      ))}
     </Tab.Navigator>
   );
 }
+
 
 function MainNavigator() {
   const { user, userData, isLoading } = useAuth();
@@ -189,6 +237,8 @@ function MainNavigator() {
           <Stack.Screen name="ManageLevel" component={ManageLevelScreen} />
           <Stack.Screen name="FormLevel" component={FormLevelScreen} />
           <Stack.Screen name="UEQAnalitik" component={UEQAnalitikScreen} />
+          <Stack.Screen name="DataSiswa" component={DataSiswaScreen} />
+          <Stack.Screen name="DetailKuesionerSiswa" component={DetailKuesionerSiswaScreen} />
         </>
       ) : (
         // User Flow

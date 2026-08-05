@@ -22,6 +22,7 @@ export default function HomeScreen({ navigation }: any) {
   const [materiSelesai, setMateriSelesai] = useState(0);
   const [simulasiSelesai, setSimulasiSelesai] = useState(0);
   const [rataRataSkor, setRataRataSkor] = useState(0);
+  const [recentScores, setRecentScores] = useState<number[]>([0, 0, 0, 0, 0]);
   const [loading, setLoading] = useState(true);
   const [tipHariIni, setTipHariIni] = useState(TIPS_HARIAN[0]);
   const [misiMateri, setMisiMateri] = useState(false);
@@ -51,6 +52,8 @@ export default function HomeScreen({ navigation }: any) {
       let hasSkor80Today = false;
       let materiCount = 0;
 
+      let simScores: { score: number, time: number }[] = [];
+
       snapshot.forEach(doc => {
         const d = doc.data();
         const completedDate = d.completedAt?.toDate();
@@ -58,9 +61,13 @@ export default function HomeScreen({ navigation }: any) {
 
         if (d.type === 'materi') {
           materiCount++;
-        } else if (d.score) {
-          totalSkor += d.score;
-          simCount++;
+        } else if (d.score !== undefined && d.score !== null) {
+          const numericScore = Number(d.score);
+          if (!isNaN(numericScore)) {
+            totalSkor += numericScore;
+            simCount++;
+            simScores.push({ score: numericScore, time: completedDate?.getTime() || 0 });
+          }
         }
 
         if (isToday) {
@@ -68,7 +75,8 @@ export default function HomeScreen({ navigation }: any) {
             hasMateriToday = true;
           } else {
             hasSimulasiToday = true;
-            if (d.score && d.score >= 80) {
+            const s = Number(d.score);
+            if (!isNaN(s) && s >= 80) {
               hasSkor80Today = true;
             }
           }
@@ -77,7 +85,15 @@ export default function HomeScreen({ navigation }: any) {
 
       setSimulasiSelesai(simCount);
       setMateriSelesai(materiCount);
-      if (simCount > 0) setRataRataSkor(Math.round(totalSkor / simCount));
+      setRataRataSkor(simCount > 0 ? Math.round(totalSkor / simCount) : 0);
+      
+      // Ambil 5 skor terbaru untuk grafik batang (urutkan dari terlama ke terbaru di array 5 elemen)
+      simScores.sort((a, b) => b.time - a.time); // descending
+      const latestScores = simScores.slice(0, 5).reverse().map(s => s.score);
+      while (latestScores.length < 5) {
+        latestScores.unshift(0); // isi 0 di depan jika kuis yang dikerjakan belum sampai 5
+      }
+      setRecentScores(latestScores);
       setMisiMateri(hasMateriToday);
       setMisiSimulasi(hasSimulasiToday);
       setMisiSkor(hasSkor80Today);
@@ -92,22 +108,44 @@ export default function HomeScreen({ navigation }: any) {
 
   const progressPct = totalMateri > 0 ? Math.round((materiSelesai / totalMateri) * 100) : 0;
   
-  // Render bar chart horizontal sederhana (5 bars saja, no labels)
-  const renderScoreBarChart = (score: number) => {
-    const bars = 5;
-    const filledBars = Math.ceil((score / 100) * bars);
-    
+  const getScoreTrend = () => {
+    const actual = recentScores.filter(s => s > 0);
+    if (actual.length < 2) return { val: 0, isUp: true };
+    const latest = actual[actual.length - 1];
+    const prev = actual[actual.length - 2];
+    if (prev === 0) return { val: 100, isUp: true };
+    const diff = latest - prev;
+    return {
+      val: Math.round((Math.abs(diff) / prev) * 100),
+      isUp: diff >= 0
+    };
+  };
+  const trend = getScoreTrend();
+
+  const renderScoreBarChart = (scores: number[]) => {
+    // Cari index terakhir yang benar-benar punya skor > 0
+    const lastFilledIndex = scores.reduce((acc, s, i) => s > 0 ? i : acc, -1);
+
     return (
       <View style={styles.barChartContainer}>
-        {[...Array(bars)].map((_, i) => (
-          <View 
-            key={i}
-            style={[
-              styles.barItem,
-              i < filledBars && styles.barItemFilled
-            ]} 
-          />
-        ))}
+        {scores.map((score, i) => {
+          // Tinggi batang berdasarkan skor, min 4px agar selalu kelihatan
+          const h = Math.max(4, Math.round((score / 100) * 32));
+          // Hanya batang paling kanan yang punya data nyata yang menyala terang
+          // Kalau belum ada data sama sekali (lastFilledIndex = -1), semua redup
+          const isLatestFilled = lastFilledIndex >= 0 && i === lastFilledIndex;
+
+          return (
+            <View
+              key={i}
+              style={[
+                styles.barItem,
+                { height: h },
+                isLatestFilled ? styles.barItemFilled : styles.barItemDimmed
+              ]}
+            />
+          );
+        })}
       </View>
     );
   };
@@ -177,23 +215,29 @@ export default function HomeScreen({ navigation }: any) {
           <View style={styles.statCardLeft}>
             <View style={styles.statHeader}>
               <Text style={styles.statLabel}>Skor rata-rata</Text>
-              <View style={styles.statBadge}>
-                <Ionicons name="trending-up" size={12} color="#2e7d32" />
-                <Text style={styles.statBadgeText}>+12%</Text>
+              <View style={[styles.statBadge, !trend.isUp && { backgroundColor: '#ef4444' }]}>
+                <Ionicons name={trend.isUp ? "trending-up" : "trending-down"} size={12} color="#ffffff" />
+                <Text style={styles.statBadgeText}>{trend.isUp ? '+' : '-'}{trend.val}%</Text>
               </View>
             </View>
-            <Text style={styles.statValue}>{rataRataSkor}</Text>
-            {renderScoreBarChart(rataRataSkor)}
+            <View>
+              <Text style={styles.statValue}>{rataRataSkor}</Text>
+              {renderScoreBarChart(recentScores)}
+            </View>
           </View>
 
           {/* Simulasi Selesai */}
           <View style={styles.statCardRight}>
-            <Text style={styles.statLabel}>Simulasi selesai</Text>
-            <View style={styles.simCheckbox}>
-              <Ionicons name="checkbox" size={24} color="#1d4ed8" />
-              <Text style={styles.simNumber}>{simulasiSelesai}</Text>
+            <Text style={[styles.statLabel, { color: 'rgba(54, 38, 0, 0.8)' }]}>Simulasi selesai</Text>
+            <View>
+              <View style={styles.simCheckbox}>
+                <Ionicons name="game-controller" size={32} color="#362600" />
+                <Text style={styles.simNumber}>{simulasiSelesai}</Text>
+              </View>
+              <View style={styles.simBadge}>
+                <Text style={styles.simBadgeText}>Level: ahli pemilah</Text>
+              </View>
             </View>
-            <Text style={styles.simSubtext}>Level: ahli pemilah</Text>
           </View>
         </View>
 
@@ -376,84 +420,99 @@ const styles = StyleSheet.create({
   // Stats Row
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
     marginBottom: 16,
   },
   statCardLeft: {
     flex: 1,
-    backgroundColor: '#1f2937',
-    borderRadius: 20,
-    padding: 18,
+    backgroundColor: '#1a2620',
+    borderRadius: 24,
+    padding: 20,
+    justifyContent: 'space-between',
+    minHeight: 140,
   },
   statCardRight: {
     flex: 1,
-    backgroundColor: '#fef3c7',
-    borderRadius: 20,
-    padding: 18,
+    backgroundColor: '#f4bf3d',
+    borderRadius: 24,
+    padding: 20,
+    justifyContent: 'space-between',
+    minHeight: 140,
   },
   statHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
+    alignItems: 'flex-start',
   },
   statLabel: {
-    fontSize: 11,
-    color: '#9ca3af',
-    fontWeight: '600',
+    fontSize: 14,
+    color: '#ebe8dd',
+    fontWeight: '700',
   },
   statBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#dcfce7',
+    gap: 2,
+    backgroundColor: '#1e8b51',
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 2,
     borderRadius: 12,
   },
   statBadgeText: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#2e7d32',
+    color: '#ffffff',
   },
   statValue: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 12,
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 0,
   },
   
-  // Bar Chart Horizontal - Simple bars only (no labels)
+  // Bar Chart Vertical
   barChartContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     gap: 6,
+    height: 32,
+    marginTop: 8,
   },
   barItem: {
     flex: 1,
-    height: 10,
-    backgroundColor: '#374151',
-    borderRadius: 5,
+    backgroundColor: '#f4bf3d',
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
   },
   barItemFilled: {
-    backgroundColor: '#fbbf24',
+    opacity: 1,
+  },
+  barItemDimmed: {
+    opacity: 0.8,
   },
   
   simCheckbox: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginVertical: 8,
+    marginBottom: 8,
   },
   simNumber: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#362600',
   },
-  simSubtext: {
-    fontSize: 11,
-    color: '#78716c',
+  simBadge: {
+    backgroundColor: '#dca830',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  simBadgeText: {
+    fontSize: 14,
     fontWeight: '600',
+    color: '#362600',
   },
   
   // Mission Card

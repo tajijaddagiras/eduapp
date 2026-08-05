@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator
 } from 'react-native';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 // 26 Item UEQ Standar (Bahasa Indonesia)
 const UEQ_ITEMS = [
@@ -50,6 +51,30 @@ export default function UEQFormScreen({ navigation, route }: any) {
   const { user } = useAuth();
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const checkSubmission = async () => {
+        setLoading(true);
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+        try {
+          const q = query(collection(db, 'ueq_responses'), where('userId', '==', user.uid));
+          const snap = await getDocs(q);
+          setHasSubmitted(!snap.empty);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      checkSubmission();
+    }, [user])
+  );
 
   const handleSelect = (itemId: number, val: number) => {
     setAnswers(prev => ({ ...prev, [itemId]: val }));
@@ -92,7 +117,7 @@ export default function UEQFormScreen({ navigation, route }: any) {
         submittedAt: new Date(),
       });
       Alert.alert('Terima Kasih! 🎉', 'Kuesioner UEQ Anda berhasil disimpan. Data ini akan membantu penelitian kami!', [
-        { text: 'Kembali ke Beranda', onPress: () => navigation.navigate('UserTabs') }
+        { text: 'Kembali ke Beranda', onPress: () => navigation.navigate('Beranda') }
       ]);
     } catch (e) {
       console.error(e);
@@ -116,7 +141,20 @@ export default function UEQFormScreen({ navigation, route }: any) {
         <View style={{ width: 32 }} />
       </View>
 
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#2e7d32" style={{ marginTop: 40 }} />
+      ) : hasSubmitted ? (
+        <View style={styles.centerBox}>
+          <Text style={styles.alreadySubmittedTitle}>Terima Kasih!</Text>
+          <Text style={styles.alreadySubmittedDesc}>
+            Anda sudah pernah mengisi kuesioner evaluasi ini sebelumnya. Tanggapan Anda telah kami rekap dengan aman.
+          </Text>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.navigate('Beranda')}>
+            <Text style={styles.backBtnText}>Kembali ke Beranda</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <Text style={styles.desc}>Mohon luangkan waktu Anda menilai kesan penggunaan aplikasi ini. <Text style={{ fontWeight: 'bold' }}>Progres: {answered}/{UEQ_ITEMS.length} pertanyaan ({progressPct}%)</Text></Text>
 
         {/* Progress Bar */}
@@ -163,8 +201,9 @@ export default function UEQFormScreen({ navigation, route }: any) {
           )}
         </TouchableOpacity>
 
-        <View style={{ height: 40 }} />
+        <View style={{ height: 100 }} />
       </ScrollView>
+      )}
     </View>
   );
 }
@@ -332,5 +371,35 @@ const styles = StyleSheet.create({
     color: '#cbead0', // primary-fixed
     fontWeight: '800', 
     fontSize: 17 
+  },
+  centerBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+  },
+  alreadySubmittedTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#142e1d',
+    marginBottom: 12,
+  },
+  alreadySubmittedDesc: {
+    fontSize: 14,
+    color: '#424843',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  backBtn: {
+    backgroundColor: '#142e1d',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+  },
+  backBtnText: {
+    color: '#cbead0',
+    fontWeight: 'bold',
+    fontSize: 15,
   }
 });

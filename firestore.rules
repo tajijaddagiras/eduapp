@@ -79,9 +79,9 @@ service cloud.firestore {
     // 6. Collection 'ueq_responses' (Hasil Kuesioner UEQ)
     // =========================================================
     match /ueq_responses/{document=**} {
-      // Admin bisa membaca semua data UEQ untuk analitik
-      allow read: if isAdmin();
-      // User yang login hanya bisa SUBMIT (create) kuesioner
+      // Admin baca semua, User baca miliknya sendiri
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      // User yang login bisa SUBMIT
       allow create: if isAuthenticated();
       // Update & delete hanya admin
       allow update, delete: if isAdmin();

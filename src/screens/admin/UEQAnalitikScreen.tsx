@@ -4,6 +4,8 @@ import {
   ActivityIndicator, Alert
 } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
 import { db } from '../../config/firebase';
 
 const DIMENSIONS: Record<string, string> = {
@@ -75,15 +77,32 @@ export default function UEQAnalitikScreen({ navigation }: any) {
     return { width: `${pct}%`, left: val >= 0 ? '50%' : undefined, right: val < 0 ? '50%' : undefined };
   };
 
-  const handleExport = () => {
-    // In a real app, use react-native-fs or share API to export CSV
-    // Here we show the data summary as an alert
-    let csv = 'Dimensi,Rata-rata,Interpretasi\n';
-    DIM_KEYS.forEach(k => {
-      const interp = getInterpretation(means[k] || 0);
-      csv += `${DIMENSIONS[k]},${means[k] || 0},${interp.label}\n`;
-    });
-    Alert.alert('Data CSV Siap', `Total Responden: ${responses.length}\n\n${csv}\n\n(Fitur ekspor file CSV/Excel memerlukan library tambahan react-native-fs)`);
+  const handleExport = async () => {
+    try {
+      let csv = 'Dimensi,Rata-rata,Interpretasi\n';
+      DIM_KEYS.forEach(k => {
+        const interp = getInterpretation(means[k] || 0);
+        csv += `${DIMENSIONS[k]},${means[k] || 0},${interp.label}\n`;
+      });
+      
+      const fileName = `Rekap_UEQ_EduSampah_${new Date().toISOString().split('T')[0]}.csv`;
+      const fileUri = (FileSystem.documentDirectory || '') + fileName;
+      
+      await FileSystem.writeAsStringAsync(fileUri, csv, { encoding: FileSystem.EncodingType.UTF8 });
+      
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (isAvailable) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'text/csv',
+          dialogTitle: 'Bagikan Rekap Data UEQ',
+        });
+      } else {
+        Alert.alert('Perhatian', 'Fitur berbagi tidak didukung di perangkat atau emulator ini, tetapi file berhasil dibuat.');
+      }
+    } catch (e) {
+      console.error(e);
+      Alert.alert('Gagal Ekspor', 'Terjadi kesalahan saat membuat file CSV.');
+    }
   };
 
   return (

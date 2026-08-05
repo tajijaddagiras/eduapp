@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -9,11 +9,13 @@ interface Item {
   id: string;
   name: string;
   type: string;
+  imageUrl?: string | null;
+  explanation?: string;
 }
 
 export default function BinaryScreen({ route, navigation }: any) {
   const { user } = useAuth();
-  const { levelId, levelName, nilaiPerSoal } = route.params || {};
+  const { levelId, levelName, duration, nilaiPerSoal } = route.params || {};
   
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,6 +24,14 @@ export default function BinaryScreen({ route, navigation }: any) {
   const [wrongAnswers, setWrongAnswers] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [disableButtons, setDisableButtons] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(duration ? duration * 60 : 120);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -42,9 +52,16 @@ export default function BinaryScreen({ route, navigation }: any) {
         const querySnapshot = await getDocs(q);
         const fetched: Item[] = [];
         querySnapshot.forEach(doc => {
-          fetched.push({ id: doc.id, name: doc.data().name, type: doc.data().type });
+          fetched.push({ 
+            id: doc.id, 
+            name: doc.data().name, 
+            type: doc.data().type, 
+            imageUrl: doc.data().imageUrl || null,
+            explanation: doc.data().explanation || '',
+          });
         });
         setItems(fetched);
+        setGameStarted(true);
       } catch (e) {
         console.error(e);
       } finally {
@@ -53,6 +70,28 @@ export default function BinaryScreen({ route, navigation }: any) {
     };
     fetchItems();
   }, [levelId]);
+
+  useEffect(() => {
+    if (!gameStarted) return;
+    if (timeLeft <= 0) {
+      // Time up — finish game with current state
+      const totalItems = items.length;
+      const poinPerSoal = nilaiPerSoal || 10;
+      const totalScore = score * poinPerSoal;
+      const maxScore = totalItems * poinPerSoal;
+      const finalScore = totalItems > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+      navigation.replace('HasilEvaluasi', {
+        score: finalScore,
+        totalItems,
+        correctCount: score,
+        wrongAnswers,
+        evaluasiName: 'Klasifikasi Cepat',
+      });
+      return;
+    }
+    const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, gameStarted]);
 
   const handleAnswer = async (userAnswer: string) => {
     setDisableButtons(true);
@@ -64,6 +103,8 @@ export default function BinaryScreen({ route, navigation }: any) {
         name: item.name,
         userAnswer: userAnswer,
         correctAnswer: item.type,
+        imageUrl: item.imageUrl || null,
+        explanation: item.explanation,
       }]);
     }
 
@@ -108,7 +149,7 @@ export default function BinaryScreen({ route, navigation }: any) {
           totalItems: totalItems,
           correctCount: newScore,
           wrongAnswers: wrongAnswers.concat(isCorrect ? [] : [{
-            name: item.name, userAnswer, correctAnswer: item.type
+            name: item.name, userAnswer, correctAnswer: item.type, imageUrl: item.imageUrl || null, explanation: item.explanation
           }]),
           evaluasiName: 'Klasifikasi Cepat',
         });
@@ -155,7 +196,12 @@ export default function BinaryScreen({ route, navigation }: any) {
             <Text style={styles.headerSubtitle}>{levelName}</Text>
           )}
         </View>
-        <View style={{ width: 32 }} />
+        {/* Timer */}
+        <View style={[styles.timerBox, timeLeft < 30 ? { backgroundColor: '#fee2e2', borderColor: '#dc2626' } : {}]}>
+          <Text style={[styles.timerText, timeLeft < 30 ? { color: '#dc2626' } : {}]}>
+            ⏱ {formatTime(timeLeft)}
+          </Text>
+        </View>
       </View>
 
       {/* Progress Bar */}
@@ -175,7 +221,17 @@ export default function BinaryScreen({ route, navigation }: any) {
 
       {/* Item Display */}
       <View style={styles.itemCard}>
-        <View style={styles.itemImage} />
+        {items[currentIndex]?.imageUrl ? (
+          <Image
+            source={{ uri: items[currentIndex].imageUrl! }}
+            style={styles.itemImageReal}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.itemImagePlaceholder}>
+            <Text style={styles.placeholderText}>📦</Text>
+          </View>
+        )}
         <Text style={styles.itemName}>{items[currentIndex]?.name}</Text>
         <Text style={styles.itemHint}>Pilih kategori yang benar</Text>
       </View>
@@ -299,14 +355,40 @@ const styles = StyleSheet.create({
     elevation: 6, 
     marginBottom: 40 
   },
-  itemImage: { 
-    width: 70, 
-    height: 70, 
-    backgroundColor: '#f1eee3', // surface-container
-    borderRadius: 12, 
-    marginBottom: 12,
+  itemImageReal: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+    marginBottom: 10,
     borderWidth: 2,
-    borderColor: '#01190a', // primary
+    borderColor: '#01190a',
+  },
+  itemImagePlaceholder: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#f1eee3',
+    borderRadius: 12,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#01190a',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 32,
+  },
+  timerBox: {
+    backgroundColor: '#e8f5e9',
+    borderWidth: 1.5,
+    borderColor: '#01190a',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  timerText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#01190a',
   },
   itemName: { 
     fontSize: 17, 

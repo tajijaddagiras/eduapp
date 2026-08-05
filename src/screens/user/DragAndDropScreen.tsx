@@ -8,8 +8,9 @@ import { useAuth } from '../../context/AuthContext';
 interface Item {
   id: string;
   name: string;
-  type: string;
-  imageUrl?: string;
+  type: 'organik' | 'anorganik';
+  imageUrl?: string | null;
+  explanation?: string;
 }
 
 export default function DragAndDropScreen({ route, navigation }: any) {
@@ -118,7 +119,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
             id: doc.id, 
             name: data.name, 
             type: data.type,
-            imageUrl: data.imageUrl || null
+            imageUrl: data.imageUrl || null,
+            explanation: data.explanation || '',
           });
         });
         setItems(fetched);
@@ -148,6 +150,8 @@ export default function DragAndDropScreen({ route, navigation }: any) {
       name: item.name,
       userAnswer: userAnswer,
       correctAnswer: item.type,
+      imageUrl: item.imageUrl || null,
+      explanation: item.explanation,
     };
 
     if (!isCorrect) {

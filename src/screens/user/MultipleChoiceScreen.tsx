@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
@@ -27,7 +28,6 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   const [score, setScore] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState<any[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
   
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
@@ -99,7 +99,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
     return () => clearInterval(timer);
   }, [timeRemaining, currentIndex]);
 
-  const handleTimeUp = async () => {
+  const finishGame = async (finalCorrectCount: number, finalWrongAnswers: any[]) => {
     const totalQuestions = questions.length;
     const poinPerSoal = nilaiPerSoal || 10;
     
@@ -108,7 +108,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
       return;
     }
     
-    const totalScore = score * poinPerSoal;
+    const totalScore = finalCorrectCount * poinPerSoal;
     const maxScore = totalQuestions * poinPerSoal;
     const finalScore = Math.round((totalScore / maxScore) * 100);
     
@@ -118,7 +118,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
           userId: user.uid,
           type: 'pilihan-ganda',
           score: finalScore,
-          correctCount: score,
+          correctCount: finalCorrectCount,
           totalItems: totalQuestions,
           completedAt: new Date(),
         });
@@ -128,77 +128,56 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
     navigation.replace('HasilEvaluasi', {
       score: finalScore,
       totalItems: totalQuestions,
-      correctCount: score,
-      wrongAnswers,
+      correctCount: finalCorrectCount,
+      wrongAnswers: finalWrongAnswers,
       evaluasiName: 'Evaluasi Pilihan Ganda',
     });
   };
 
+  const handleTimeUp = async () => {
+    await finishGame(score, wrongAnswers);
+  };
+
   const handleAnswer = (answer: 'A' | 'B' | 'C' | 'D') => {
-    if (selectedAnswer || showExplanation) return;
+    if (selectedAnswer) return;
     
     setSelectedAnswer(answer);
     const question = questions[currentIndex];
     const isCorrect = question.correctAnswer === answer;
     
+    let currentWrongAnswers = [...wrongAnswers];
     if (!isCorrect) {
-      setWrongAnswers(prev => [...prev, {
+      const optionsMap: Record<string, string> = {
+        A: question.optionA,
+        B: question.optionB,
+        C: question.optionC,
+        D: question.optionD,
+      };
+      const newWrongAnswer = {
         name: question.question,
         userAnswer: answer,
+        userAnswerText: `${answer}. ${optionsMap[answer]}`,
         correctAnswer: question.correctAnswer,
-      }]);
-    } else {
-      setScore(score + 1);
+        correctAnswerText: `${question.correctAnswer}. ${optionsMap[question.correctAnswer]}`,
+        imageUrl: question.imageUrl || null,
+        explanation: question.explanation,
+      };
+      currentWrongAnswers.push(newWrongAnswer);
+      setWrongAnswers(currentWrongAnswers);
     }
     
-    // Show explanation
-    setShowExplanation(true);
-  };
-
-  const handleNext = async () => {
-    // Cek dulu apakah ini soal terakhir
-    const isLastQuestion = currentIndex >= questions.length - 1;
+    const newScore = isCorrect ? score + 1 : score;
+    if (isCorrect) setScore(newScore);
     
-    if (isLastQuestion) {
-      // SOAL TERAKHIR - Langsung navigate tanpa reset state (hindari flickering)
-      const totalQuestions = questions.length;
-      const poinPerSoal = nilaiPerSoal || 10;
-      
-      if (totalQuestions === 0) {
-        navigation.replace('UserTabs');
-        return;
+    setTimeout(async () => {
+      const isLastQuestion = currentIndex >= questions.length - 1;
+      if (isLastQuestion) {
+        await finishGame(newScore, currentWrongAnswers);
+      } else {
+        setSelectedAnswer(null);
+        setCurrentIndex(currentIndex + 1);
       }
-      
-      const totalScore = score * poinPerSoal;
-      const maxScore = totalQuestions * poinPerSoal;
-      const finalScore = Math.round((totalScore / maxScore) * 100);
-      
-      try {
-        if (user) {
-          await addDoc(collection(db, 'progress'), {
-            userId: user.uid,
-            type: 'pilihan-ganda',
-            score: finalScore,
-            correctCount: score,
-            totalItems: totalQuestions,
-            completedAt: new Date(),
-          });
-        }
-      } catch (e) { console.error(e); }
-
-      navigation.replace('HasilEvaluasi', {
-        score: finalScore,
-        totalItems: totalQuestions,
-        correctCount: score,
-        wrongAnswers,
-        evaluasiName: 'Evaluasi Pilihan Ganda',
-      });
-    } else {
-      // BUKAN SOAL TERAKHIR - Reset state dan lanjut ke soal berikutnya
-      setSelectedAnswer(null);
-      setShowExplanation(false);
-      setCurrentIndex(currentIndex + 1);
-    }
+    }, 1200);
   };
 
   const formatTime = (seconds: number) => {
@@ -278,8 +257,8 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
             const optionKey = `option${opt}` as keyof Question;
             const optionText = currentQuestion[optionKey] as string;
             
-            let optionStyle = [styles.optionBtn];
-            let optionTextStyle = [styles.optionText];
+            let optionStyle: any[] = [styles.optionBtn];
+            let optionTextStyle: any[] = [styles.optionText];
             
             if (selectedAnswer) {
               if (opt === currentQuestion.correctAnswer) {
@@ -302,26 +281,16 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
                   <Text style={styles.optionBadgeText}>{opt}</Text>
                 </View>
                 <Text style={optionTextStyle}>{optionText}</Text>
+                {selectedAnswer && opt === currentQuestion.correctAnswer && (
+                  <Ionicons name="checkmark-circle" size={24} color="#2e7d32" />
+                )}
+                {selectedAnswer && opt === selectedAnswer && opt !== currentQuestion.correctAnswer && (
+                  <Ionicons name="close-circle" size={24} color="#dc2626" />
+                )}
               </TouchableOpacity>
             );
           })}
         </View>
-
-        {/* Explanation */}
-        {showExplanation && (
-          <View style={[styles.explanationCard, isCorrect ? styles.explanationCorrect : styles.explanationWrong]}>
-            <Text style={styles.explanationTitle}>
-              {isCorrect ? '✓ Jawaban Benar!' : '✗ Jawaban Salah!'}
-            </Text>
-            <Text style={styles.explanationText}>{currentQuestion.explanation}</Text>
-            
-            <TouchableOpacity style={styles.nextBtn} onPress={handleNext}>
-              <Text style={styles.nextBtnText}>
-                {currentIndex < questions.length - 1 ? 'Soal Berikutnya' : 'Lihat Hasil'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </ScrollView>
     </View>
   );
