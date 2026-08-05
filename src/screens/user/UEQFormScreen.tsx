@@ -184,10 +184,7 @@ export default function UEQFormScreen({ navigation, route }: any) {
                     </TouchableOpacity>
                   ))}
                 </View>
-                <View style={styles.scaleLabels}>
-                  <Text style={styles.scaleLabel}>Sangat Tidak Setuju</Text>
-                  <Text style={styles.scaleLabel}>Sangat Setuju</Text>
-                </View>
+
               </View>
             ))}
           </View>

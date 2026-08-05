@@ -123,17 +123,13 @@ export default function HomeScreen({ navigation }: any) {
   const trend = getScoreTrend();
 
   const renderScoreBarChart = (scores: number[]) => {
-    // Cari index terakhir yang benar-benar punya skor > 0
-    const lastFilledIndex = scores.reduce((acc, s, i) => s > 0 ? i : acc, -1);
-
     return (
       <View style={styles.barChartContainer}>
         {scores.map((score, i) => {
           // Tinggi batang berdasarkan skor, min 4px agar selalu kelihatan
           const h = Math.max(4, Math.round((score / 100) * 32));
-          // Hanya batang paling kanan yang punya data nyata yang menyala terang
-          // Kalau belum ada data sama sekali (lastFilledIndex = -1), semua redup
-          const isLatestFilled = lastFilledIndex >= 0 && i === lastFilledIndex;
+          // Batang terang jika skor >= 50, redup jika < 50 atau belum ada data
+          const isBright = score >= 50;
 
           return (
             <View
@@ -141,7 +137,7 @@ export default function HomeScreen({ navigation }: any) {
               style={[
                 styles.barItem,
                 { height: h },
-                isLatestFilled ? styles.barItemFilled : styles.barItemDimmed
+                isBright ? styles.barItemFilled : styles.barItemDimmed
               ]}
             />
           );

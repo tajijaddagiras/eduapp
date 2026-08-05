@@ -214,6 +214,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 16,
+    borderWidth: 2,
+    borderColor: '#d1fae5',
   },
   avatarPlaceholder: {
     width: 50,
@@ -223,6 +225,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
+    borderWidth: 2,
+    borderColor: '#d1fae5',
   },
   avatarInitial: {
     color: '#fff',
