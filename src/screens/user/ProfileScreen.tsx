@@ -31,13 +31,15 @@ export default function ProfileScreen({ navigation }: any) {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Avatar */}
-        <View style={styles.avatarCircle}>
+        <View style={styles.avatarContainer}>
           {userData?.photoUrl ? (
-            <Image source={{ uri: userData.photoUrl }} style={{ width: 112, height: 112, borderRadius: 56 }} />
+            <Image source={{ uri: userData.photoUrl }} style={styles.avatar} />
           ) : (
-            <Text style={styles.avatarText}>
-              {userData?.name ? userData.name[0].toUpperCase() : 'U'}
-            </Text>
+            <View style={styles.avatarPlaceholder}>
+              <Text style={styles.avatarText}>
+                {userData?.name ? userData.name[0].toUpperCase() : 'U'}
+              </Text>
+            </View>
           )}
         </View>
 
@@ -94,17 +96,26 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#1c1c15', // on-background
   },
-  avatarCircle: { 
-    width: 110, 
-    height: 110, 
-    borderRadius: 55, 
-    backgroundColor: '#b0ceb5',
-    borderWidth: 2, 
-    borderColor: '#01190a',
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    alignSelf: 'center', 
+  avatarContainer: {
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  avatar: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    borderWidth: 2,
+    borderColor: '#01190a',
+  },
+  avatarPlaceholder: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: '#b0ceb5',
+    borderWidth: 2,
+    borderColor: '#01190a',
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

@@ -353,8 +353,8 @@ const styles = StyleSheet.create({
     padding: 18, 
     borderRadius: 16, 
     alignItems: 'center', 
-    marginTop: 24, 
-    marginBottom: 10,
+    marginTop: -4, 
+    marginBottom: 20,
     borderWidth: 2,
     borderColor: '#01190a', // primary
     // Neo-shadow
