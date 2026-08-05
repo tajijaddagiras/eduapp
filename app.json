@@ -15,12 +15,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#eff5f1",
         "foregroundImage": "./assets/adaptive-icon.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.girasss.eduapp",
-      "versionCode": 1
+      "package": "com.girasss.eduapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
