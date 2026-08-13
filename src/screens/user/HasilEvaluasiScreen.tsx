@@ -1,5 +1,178 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// --- Animasi Confetti ---
+const Confetti = () => {
+  const pieces = Array.from({ length: 60 }).map((_, i) => i);
+  return (
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      {pieces.map(i => <ConfettiPiece key={i} index={i} />)}
+    </View>
+  );
+};
+
+const ConfettiPiece = ({ index }: { index: number }) => {
+  const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const translateX = useRef(new Animated.Value(SCREEN_WIDTH / 2)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    const explode = () => {
+      // Tipe tembakan: 0 = Kiri, 1 = Kanan, 2 = Bawah Tengah
+      const originType = Math.floor(Math.random() * 3);
+      
+      let startX = 0;
+      let startY = 0;
+      let newTargetX = 0;
+      let newTargetY = 0;
+
+      if (originType === 0) {
+        // Tembak dari Kiri
+        startX = -20;
+        startY = SCREEN_HEIGHT * 0.4 + Math.random() * (SCREEN_HEIGHT * 0.4);
+        newTargetX = SCREEN_WIDTH * 0.3 + Math.random() * (SCREEN_WIDTH * 0.6);
+        newTargetY = startY - (150 + Math.random() * 200); 
+      } else if (originType === 1) {
+        // Tembak dari Kanan
+        startX = SCREEN_WIDTH + 20;
+        startY = SCREEN_HEIGHT * 0.4 + Math.random() * (SCREEN_HEIGHT * 0.4);
+        newTargetX = SCREEN_WIDTH * 0.7 - Math.random() * (SCREEN_WIDTH * 0.6);
+        newTargetY = startY - (150 + Math.random() * 200);
+      } else {
+        // Tembak dari Bawah
+        startX = SCREEN_WIDTH / 2 + (Math.random() * 100 - 50);
+        startY = SCREEN_HEIGHT + 20;
+        newTargetX = (SCREEN_WIDTH / 60) * index + (Math.random() * 60 - 30);
+        newTargetY = SCREEN_HEIGHT * 0.1 + Math.random() * (SCREEN_HEIGHT * 0.4);
+      }
+
+      translateY.setValue(startY);
+      translateX.setValue(startX);
+
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(translateY, { toValue: newTargetY, duration: 600 + Math.random() * 400, useNativeDriver: true }),
+          Animated.timing(translateX, { toValue: newTargetX, duration: 600 + Math.random() * 400, useNativeDriver: true })
+        ]),
+        Animated.timing(translateY, { toValue: SCREEN_HEIGHT + 100, duration: 2500 + Math.random() * 1500, useNativeDriver: true })
+      ]).start(() => {
+        timeout = setTimeout(explode, Math.random() * 500);
+      });
+    };
+
+    // Initial start
+    timeout = setTimeout(explode, Math.random() * 500);
+    
+    Animated.loop(
+      Animated.timing(rotate, { toValue: 1, duration: 800 + Math.random() * 1000, useNativeDriver: true })
+    ).start();
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const spin = rotate.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+  const colors = ['#f4bf3d', '#b0ceb5', '#fe7d5e', '#3b82f6', '#ec4899', '#a855f7'];
+  const color = colors[index % colors.length];
+  const isCircle = index % 3 === 0;
+
+  return (
+    <Animated.View style={{
+      position: 'absolute',
+      top: 0, left: 0,
+      width: 14, height: 14,
+      borderRadius: isCircle ? 7 : 2,
+      backgroundColor: color,
+      transform: [{ translateX }, { translateY }, { rotate: spin }]
+    }} />
+  );
+};
+
+// --- Animasi Hujan ---
+const Rain = () => {
+  const drops = Array.from({ length: 45 }).map((_, i) => i);
+  return (
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(71, 85, 105, 0.15)' }]} pointerEvents="none">
+      {drops.map(i => <RainDrop key={i} />)}
+    </View>
+  );
+};
+
+const RainDrop = () => {
+  const translateY = useRef(new Animated.Value(-50)).current;
+  const startX = Math.random() * SCREEN_WIDTH;
+  const speed = 600 + Math.random() * 400;
+  
+  useEffect(() => {
+    const fall = () => {
+      translateY.setValue(-50);
+      Animated.timing(translateY, {
+        toValue: SCREEN_HEIGHT + 50,
+        duration: speed,
+        useNativeDriver: true,
+      }).start(() => fall());
+    };
+    const timeout = setTimeout(fall, Math.random() * 1000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return (
+    <Animated.View style={{
+      position: 'absolute',
+      top: 0, left: startX,
+      width: 2, height: 25,
+      backgroundColor: '#94a3b8',
+      opacity: 0.6,
+      borderRadius: 1,
+      transform: [{ translateY }]
+    }} />
+  );
+};
+
+// --- Bouncing Icon ---
+const BouncingIcon = ({ isSuccess }: { isSuccess: boolean }) => {
+  const scale = useRef(new Animated.Value(1)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isSuccess) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(scale, { toValue: 1.15, duration: 600, useNativeDriver: true }),
+          Animated.timing(scale, { toValue: 1, duration: 600, useNativeDriver: true }),
+        ])
+      ).start();
+    } else {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(rotate, { toValue: 1, duration: 150, useNativeDriver: true }),
+          Animated.timing(rotate, { toValue: -1, duration: 150, useNativeDriver: true }),
+          Animated.timing(rotate, { toValue: 0, duration: 150, useNativeDriver: true }),
+          Animated.delay(1200)
+        ])
+      ).start();
+    }
+  }, [isSuccess]);
+
+  const spin = rotate.interpolate({
+    inputRange: [-1, 1],
+    outputRange: ['-10deg', '10deg']
+  });
+
+  return (
+    <Animated.View style={{ transform: [{ scale }, { rotate: isSuccess ? '0deg' : spin }] }}>
+      <Ionicons 
+        name={isSuccess ? "trophy" : "rainy"} 
+        size={72} 
+        color={isSuccess ? "#f59e0b" : "#64748b"} 
+      />
+    </Animated.View>
+  );
+};
 
 interface WrongAnswer {
   name: string;
@@ -13,18 +186,25 @@ export default function HasilEvaluasiScreen({ navigation, route }: any) {
   };
   const lulus = score >= 60;
 
+  const titleText = lulus ? 'Luar Biasa! Kerja Bagus! 🎉' : 'Jangan Menyerah! Tetap Semangat! 💪';
+  const messageText = lulus 
+    ? 'Kamu berhasil menyelesaikan evaluasi ini dengan nilai memuaskan. Pertahankan prestasimu dan terus jadi pahlawan lingkungan!'
+    : 'Nilaimu memang belum mencapai target, tapi tidak apa-apa. Kegagalan adalah awal dari keberhasilan. Yuk, baca lagi materinya dan coba lagi!';
+
   return (
     <View style={styles.container}>
+      {/* Background Animations */}
+      {lulus ? <Confetti /> : <Rain />}
+
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Icon Centang */}
-        <View style={[styles.iconCircle, { borderColor: lulus ? '#2e7d32' : '#dc2626' }]}>
-          <Text style={[styles.iconText, { color: lulus ? '#2e7d32' : '#dc2626' }]}>
-            {lulus ? '✓' : '✗'}
-          </Text>
+        {/* Animated Icon */}
+        <View style={[styles.iconCircle, { borderColor: lulus ? '#f59e0b' : '#94a3b8' }]}>
+          <BouncingIcon isSuccess={lulus} />
         </View>
 
-        <Text style={styles.title}>Evaluasi Selesai</Text>
+        <Text style={styles.title}>{titleText}</Text>
         <Text style={styles.subtitle}>{evaluasiName}</Text>
+        <Text style={styles.messageText}>{messageText}</Text>
 
         {/* Score Card */}
         <View style={[styles.scoreCard, { borderColor: lulus ? '#2e7d32' : '#dc2626' }]}>
@@ -108,16 +288,26 @@ const styles = StyleSheet.create({
     fontWeight: '800' 
   },
   title: { 
-    fontSize: 26, 
+    fontSize: 22, 
     fontWeight: '800', 
     color: '#1c1c15', // on-background
-    marginBottom: 8 
+    marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: { 
-    fontSize: 15, 
+    fontSize: 14, 
     color: '#424843', // on-surface-variant
+    marginBottom: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  messageText: {
+    fontSize: 15,
+    color: '#424843',
+    textAlign: 'center',
+    lineHeight: 22,
     marginBottom: 32,
-    fontWeight: '600',
+    paddingHorizontal: 12,
   },
   scoreCard: { 
     width: '100%', 
