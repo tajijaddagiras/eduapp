@@ -372,12 +372,14 @@ export default function DragAndDropScreen({ route, navigation }: any) {
         ref={(ref) => { itemRef.current = ref; }}
         collapsable={false}
         style={[
-          styles.itemCard, 
-          { 
-            transform: [{ translateX: pan.x }, { translateY: pan.y }],
+          styles.itemCard,
+          {
+            transform: [
+              { translateX: pan.x }, 
+              { translateY: pan.y },
+              { scale: isDragging ? 1.1 : 1 }
+            ],
             opacity: isDragging ? 0.9 : 1,
-            elevation: isDragging ? 12 : 6,
-            shadowOpacity: isDragging ? 0.4 : 0.15,
           }
         ]}
         {...panResponder.panHandlers}
@@ -387,7 +389,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           <Image 
             source={{ uri: currentItem.imageUrl }} 
             style={styles.itemImageReal}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         ) : (
           <View style={styles.itemImagePlaceholder}>
@@ -550,29 +552,18 @@ const styles = StyleSheet.create({
   itemCard: { 
     width: 200, 
     height: 200, 
-    backgroundColor: '#ffffff', 
-    borderWidth: 3, 
-    borderColor: '#01190a', // primary
-    borderRadius: 20, 
+    backgroundColor: 'transparent', 
     alignSelf: 'center', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.15, 
-    shadowRadius: 8, 
-    elevation: 6, 
     marginBottom: 40, 
-    padding: 16 
+    padding: 16,
+    zIndex: 10,
   },
   itemImageReal: { 
-    width: 120, 
-    height: 120, 
-    borderRadius: 16, 
+    width: 140, 
+    height: 140, 
     marginBottom: 12,
-    backgroundColor: '#f1eee3', // surface-container
-    borderWidth: 2,
-    borderColor: '#01190a', // primary
   },
   itemImagePlaceholder: { 
     width: 120, 

@@ -238,18 +238,19 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Question Card */}
-        <View style={styles.questionCard}>
-          <Text style={styles.questionText}>{currentQuestion.question}</Text>
-          
-          {currentQuestion.imageUrl && (
+        {/* Banner Image */}
+        {currentQuestion.imageUrl && (
+          <View style={styles.bannerContainer}>
             <Image 
               source={{ uri: currentQuestion.imageUrl }} 
-              style={styles.questionImage}
+              style={styles.bannerImage}
               resizeMode="contain"
             />
-          )}
-        </View>
+          </View>
+        )}
+
+        {/* Question Text */}
+        <Text style={styles.title}>{currentQuestion.question}</Text>
 
         {/* Options */}
         <View style={styles.optionsContainer}>
@@ -365,34 +366,28 @@ const styles = StyleSheet.create({
     padding: 20, 
     paddingBottom: 100 
   },
-  questionCard: { 
-    backgroundColor: '#ffffff', 
-    borderRadius: 20, 
-    padding: 24, 
-    marginBottom: 24, 
-    borderWidth: 3, 
-    borderColor: '#01190a', // primary
-    // Neo-shadow
-    shadowColor: '#000', 
-    shadowOffset: { width: 4, height: 4 }, 
-    shadowOpacity: 1, 
-    shadowRadius: 0, 
-    elevation: 6,
+  bannerContainer: {
+    marginBottom: 24,
   },
-  questionText: { 
-    fontSize: 17, 
-    fontWeight: '700', 
-    color: '#1c1c15', // on-background
-    lineHeight: 26, 
-    marginBottom: 12 
+  bannerImage: {
+    width: '100%',
+    aspectRatio: 16/9,
+    borderRadius: 32,
+    borderWidth: 4,
+    borderColor: '#01190a',
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 8,
   },
-  questionImage: { 
-    width: '100%', 
-    height: 180, 
-    borderRadius: 12, 
-    marginTop: 12,
-    borderWidth: 2,
-    borderColor: '#01190a', // primary
+  title: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#1c1c15',
+    marginBottom: 24,
+    lineHeight: 28,
   },
   optionsContainer: { 
     gap: 12, 

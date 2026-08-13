@@ -220,20 +220,24 @@ export default function BinaryScreen({ route, navigation }: any) {
       )}
 
       {/* Item Display */}
-      <View style={styles.itemCard}>
-        {items[currentIndex]?.imageUrl ? (
+      {items[currentIndex]?.imageUrl ? (
+        <View style={styles.bannerContainer}>
           <Image
             source={{ uri: items[currentIndex].imageUrl! }}
-            style={styles.itemImageReal}
-            resizeMode="cover"
+            style={styles.bannerImage}
+            resizeMode="contain"
           />
-        ) : (
-          <View style={styles.itemImagePlaceholder}>
+        </View>
+      ) : (
+        <View style={styles.bannerContainer}>
+          <View style={[styles.bannerImage, styles.bannerPlaceholder]}>
             <Text style={styles.placeholderText}>📦</Text>
           </View>
-        )}
+        </View>
+      )}
+
+      <View style={styles.body}>
         <Text style={styles.itemName}>{items[currentIndex]?.name}</Text>
-        <Text style={styles.itemHint}>Pilih kategori yang benar</Text>
       </View>
 
       {/* Binary Choice Buttons */}
@@ -338,39 +342,25 @@ const styles = StyleSheet.create({
     fontWeight: '800', 
     fontSize: 17 
   },
-  itemCard: { 
-    width: 180, 
-    height: 180, 
-    backgroundColor: '#ffffff', 
-    borderWidth: 3, 
-    borderColor: '#01190a', // primary
-    borderRadius: 20, 
-    alignSelf: 'center', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 4 }, 
-    shadowOpacity: 0.15, 
-    shadowRadius: 8, 
-    elevation: 6, 
-    marginBottom: 40 
+  bannerContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
   },
-  itemImageReal: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginBottom: 10,
-    borderWidth: 2,
+  bannerImage: {
+    width: '100%',
+    aspectRatio: 16/9,
+    borderRadius: 32,
+    borderWidth: 4,
     borderColor: '#01190a',
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 8,
   },
-  itemImagePlaceholder: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#f1eee3',
-    borderRadius: 12,
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#01190a',
+  bannerPlaceholder: {
+    backgroundColor: '#e5e2d8',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -390,18 +380,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#01190a',
   },
-  itemName: { 
-    fontSize: 17, 
-    fontWeight: '800', 
-    textAlign: 'center', 
-    paddingHorizontal: 12,
-    color: '#1c1c15', // on-background
+  body: {
+    paddingHorizontal: 20,
   },
-  itemHint: { 
-    fontSize: 12, 
-    color: '#424843', // on-surface-variant
-    marginTop: 8,
-    fontWeight: '600',
+  itemName: { 
+    fontSize: 22, 
+    fontWeight: '800', 
+    color: '#1c1c15', // on-background
+    lineHeight: 28,
+    marginBottom: 24,
   },
   buttonContainer: { 
     flexDirection: 'row', 
