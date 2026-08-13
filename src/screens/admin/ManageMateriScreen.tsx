@@ -7,11 +7,17 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useFocusEffect } from '@react-navigation/native';
 
+interface NumberedItem {
+  title: string;
+  description: string;
+}
+
 interface ContentSection {
   subtitle: string;
   content: string;
   isNumbered?: boolean;
-  numberedItems?: string[];
+  numberedSectionDescription?: string;
+  numberedItems?: NumberedItem[] | string[];
 }
 
 interface Materi {

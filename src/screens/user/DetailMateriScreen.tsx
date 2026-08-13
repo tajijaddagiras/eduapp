@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+/*  */import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 
+interface NumberedItem {
+  title?: string;
+  description?: string;
+}
+
 interface ContentSection {
   subtitle?: string;
   content: string;
   isNumbered?: boolean;
-  numberedItems?: string[];
+  numberedSectionDescription?: string;
+  numberedItems?: (string | NumberedItem)[];
 }
 
 // Helper function untuk variasi warna badge - sesuai HTML design system
@@ -94,22 +100,46 @@ export default function DetailMateriScreen({ route, navigation }: any) {
                   {section.subtitle && section.subtitle.trim() !== '' && (
                     <Text style={styles.numberedCardTitle}>{section.subtitle}</Text>
                   )}
-                  
+
+                  {/* Deskripsi pembuka sebelum daftar nomor */}
+                  {section.numberedSectionDescription && section.numberedSectionDescription.trim() !== '' && (
+                    <Text style={styles.numberedCardDescription}>{section.numberedSectionDescription}</Text>
+                  )}
+
                   <View style={styles.numberedListContainer}>
-                    {(section.numberedItems || []).filter(item => item.trim() !== '').map((item, itemIndex, array) => (
-                      <View 
-                        key={itemIndex} 
-                        style={[
-                          styles.numberedItem, 
-                          itemIndex === array.length - 1 && { marginBottom: 0 } // Remove margin on last item
-                        ]}
-                      >
-                        <View style={[styles.numberBadge, { backgroundColor: getNumberColor(itemIndex) }]}>
-                          <Text style={styles.numberBadgeText}>{itemIndex + 1}</Text>
+                    {(section.numberedItems || []).filter((item: any) => {
+                      if (!item) return false;
+                      if (typeof item === 'string') return item.trim() !== '';
+                      const titleStr = typeof item.title === 'string' ? item.title : '';
+                      const descStr = typeof item.description === 'string' ? item.description : '';
+                      return titleStr.trim() !== '' || descStr.trim() !== '';
+                    }).map((item: any, itemIndex, array) => {
+                      const isString = typeof item === 'string';
+                      const titleStr = isString ? '' : (item.title || '');
+                      const descStr = isString ? item : (item.description || '');
+                      
+                      return (
+                        <View
+                          key={itemIndex}
+                          style={[
+                            styles.numberedItem,
+                            itemIndex === array.length - 1 && { marginBottom: 0 }
+                          ]}
+                        >
+                          <View style={[styles.numberBadge, { backgroundColor: getNumberColor(itemIndex) }]}>
+                            <Text style={styles.numberBadgeText}>{itemIndex + 1}</Text>
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            {/* Title poin */}
+                            {!isString && titleStr.trim() !== '' && (
+                              <Text style={styles.numberedItemTitle}>{titleStr}</Text>
+                            )}
+                            {/* Penjelasan / legacy string */}
+                            <Text style={styles.numberedText}>{descStr}</Text>
+                          </View>
                         </View>
-                        <Text style={styles.numberedText}>{item}</Text>
-                      </View>
-                    ))}
+                      );
+                    })}
                   </View>
                 </View>
               ) : (
@@ -151,12 +181,12 @@ export default function DetailMateriScreen({ route, navigation }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcf9ee' }, // background
-  
+
   // Header
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20, // margin-mobile
     paddingTop: 50,
     paddingBottom: 16,
@@ -172,9 +202,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#01190a', // primary
   },
-  headerTitle: { 
+  headerTitle: {
     fontSize: 28, // headline-xl-mobile
-    fontWeight: '800', 
+    fontWeight: '800',
     color: '#1c1c15', // on-background
     lineHeight: 34,
   },
@@ -188,15 +218,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#01190a', // primary
   },
-  
+
   // Banner Image with neo-shadow
   bannerContainer: {
     paddingHorizontal: 20, // margin-mobile
     marginBottom: 32, // mb-8
   },
-  bannerImage: { 
-    width: '100%', 
-    aspectRatio: 16/9, // aspect-video
+  bannerImage: {
+    width: '100%',
+    aspectRatio: 16 / 9, // aspect-video
     borderRadius: 32, // rounded-[2rem]
     borderWidth: 4,
     borderColor: '#01190a', // primary
@@ -212,9 +242,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   // Body Content
-  body: { 
+  body: {
     paddingHorizontal: 20 // margin-mobile
   },
   badgeRow: {
@@ -223,20 +253,20 @@ const styles = StyleSheet.create({
     gap: 8, // gap-2
     marginBottom: 12, // mb-3
   },
-  badge: { 
+  badge: {
     paddingHorizontal: 16, // px-4
     paddingVertical: 6, // py-1.5
     borderRadius: 9999, // rounded-full
     borderWidth: 2,
     borderColor: '#01190a', // primary
   },
-  badgeOrg: { 
+  badgeOrg: {
     backgroundColor: '#fe7d5e', // secondary-container
   },
-  badgeAnorg: { 
+  badgeAnorg: {
     backgroundColor: '#fe7d5e', // secondary-container
   },
-  badgeText: { 
+  badgeText: {
     fontSize: 12, // label-sm
     fontWeight: 'bold',
     letterSpacing: 0.5,
@@ -244,16 +274,16 @@ const styles = StyleSheet.create({
   },
   badgeTextOrg: { color: '#711601' }, // on-secondary-container
   badgeTextAnorg: { color: '#711601' }, // on-secondary-container
-  
+
   // Title
-  title: { 
+  title: {
     fontSize: 22, // headline-lg-mobile
-    fontWeight: '800', 
+    fontWeight: '800',
     color: '#1c1c15', // on-background
     marginBottom: 16, // mb-4
     lineHeight: 28,
   },
-  
+
   // Content Sections
   contentSection: {
     marginBottom: 24, // space-y-6
@@ -270,7 +300,7 @@ const styles = StyleSheet.create({
     color: '#424843', // on-surface-variant
     lineHeight: 24,
   },
-  
+
   // Numbered Card - Big card containing title and all numbered items
   numberedCard: {
     backgroundColor: '#f1eee3', // surface-container
@@ -288,7 +318,16 @@ const styles = StyleSheet.create({
     marginBottom: 20, // mb-5 - consistent with vertical padding
     lineHeight: 28,
   },
-  
+  numberedCardDescription: {
+    fontSize: 16,
+    color: '#424843',
+    lineHeight: 24,
+    marginBottom: 20,
+    backgroundColor: '#d6ebd9', // Light green background
+    padding: 12,
+    borderRadius: 8,
+  },
+
   // Numbered List within card
   numberedListContainer: {
     // Container untuk list items
@@ -297,6 +336,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 16, // space-y-4
+  },
+  numberedItemTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1c1c15',
+    marginBottom: 4,
   },
   numberBadge: {
     width: 32, // w-8
@@ -320,9 +365,9 @@ const styles = StyleSheet.create({
     color: '#424843', // on-surface-variant
     lineHeight: 24,
   },
-  
+
   // Footer Button with neo-shadow
-  footer: { 
+  footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -331,7 +376,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     backgroundColor: 'transparent',
   },
-  doneBtn: { 
+  doneBtn: {
     height: 64, // h-16
     backgroundColor: '#142e1d', // primary-container
     borderRadius: 20, // rounded-[1.25rem]
@@ -348,10 +393,10 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 8,
   },
-  doneBtnActive: { 
+  doneBtnActive: {
     backgroundColor: '#2e7d32',
   },
-  doneBtnText: { 
+  doneBtnText: {
     fontWeight: '700',
     fontSize: 20, // headline-md
     color: '#cbead0', // primary-fixed

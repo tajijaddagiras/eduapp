@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, TextInput,
-  ActivityIndicator, Alert, ScrollView, Image, Modal, FlatList
+  ActivityIndicator, Alert, ScrollView, Image, Modal, FlatList, Platform
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { collection, addDoc, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
@@ -20,7 +20,13 @@ interface Level {
 
 const uploadToCloudinary = async (uri: string): Promise<string> => {
   const formData = new FormData();
-  formData.append('file', { uri, type: 'image/jpeg', name: 'soal.jpg' } as any);
+
+  if (Platform.OS === 'web' || uri.startsWith('data:')) {
+    formData.append('file', uri);
+  } else {
+    formData.append('file', { uri, type: 'image/jpeg', name: 'soal.jpg' } as any);
+  }
+  
   formData.append('upload_preset', UPLOAD_PRESET!);
   formData.append('folder', 'edusampah/soal');
 
@@ -59,10 +65,14 @@ export default function FormSoalScreen({ route, navigation }: any) {
   // Untuk Drag & Drop dan Binary: pilih tipe sampah (organik/anorganik)
   const [formType, setFormType] = useState<'organik' | 'anorganik'>('organik');
 
+  // Fetch level list on mount
   useEffect(() => {
     fetchLevel();
-    
-    if (isEditMode) {
+  }, []);
+
+  // Populate form fields when in edit mode
+  useEffect(() => {
+    if (isEditMode && editItem) {
       if (gameType === 'MultipleChoice') {
         setFormQuestion(editItem.question || '');
         setFormOptionA(editItem.optionA || '');
@@ -72,12 +82,12 @@ export default function FormSoalScreen({ route, navigation }: any) {
         setFormCorrectAnswer(editItem.correctAnswer || 'A');
       } else {
         setFormName(editItem.name || '');
-        setFormType(editItem.type || 'organik'); // Set tipe saat edit
+        setFormType(editItem.type || 'organik');
       }
       setFormExplanation(editItem.explanation || '');
       setFormImageUri(editItem.imageUrl || null);
     }
-  }, []);
+  }, [isEditMode, editItem?.id]); // re-run only when editItem changes
 
   const fetchLevel = async () => {
     try {
@@ -104,10 +114,15 @@ export default function FormSoalScreen({ route, navigation }: any) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.8,
+      base64: true,
     });
 
     if (!result.canceled) {
-      setFormImageUri(result.assets[0].uri);
+      if (result.assets[0].base64) {
+        setFormImageUri(`data:image/jpeg;base64,${result.assets[0].base64}`);
+      } else {
+        setFormImageUri(result.assets[0].uri);
+      }
     }
   };
 

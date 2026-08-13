@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, TextInput,
-  ActivityIndicator, Alert, ScrollView, Image
+  ActivityIndicator, Alert, ScrollView, Image, Platform
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
-interface ContentSection {
+export interface NumberedItem {
+  title: string;
+  description: string;
+}
+
+export interface ContentSection {
   subtitle: string;
   content: string;
   isNumbered?: boolean;
-  numberedItems?: string[];
+  numberedSectionDescription?: string; // Deskripsi sebelum daftar nomor
+  numberedItems?: NumberedItem[];      // Item dengan judul + penjelasan
 }
 
 const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -19,7 +25,13 @@ const UPLOAD_PRESET = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 const uploadToCloudinary = async (uri: string): Promise<string> => {
   const formData = new FormData();
-  formData.append('file', { uri, type: 'image/jpeg', name: 'materi.jpg' } as any);
+  
+  if (Platform.OS === 'web' || uri.startsWith('data:')) {
+    formData.append('file', uri); // Cloudinary accepts raw data URIs
+  } else {
+    formData.append('file', { uri, type: 'image/jpeg', name: 'materi.jpg' } as any);
+  }
+  
   formData.append('upload_preset', UPLOAD_PRESET!);
   formData.append('folder', 'edusampah/materi');
 
@@ -32,41 +44,51 @@ const uploadToCloudinary = async (uri: string): Promise<string> => {
   return data.secure_url;
 };
 
+const emptySection = (): ContentSection => ({
+  subtitle: '',
+  content: '',
+  isNumbered: false,
+  numberedSectionDescription: '',
+  numberedItems: [],
+});
+
+const emptyNumberedItem = (): NumberedItem => ({ title: '', description: '' });
+
 export default function FormMateriScreen({ route, navigation }: any) {
   const { editItem } = route.params || {};
   const isEditMode = !!editItem;
-  
+
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  
-  // Form state
+
   const [formTitle, setFormTitle] = useState('');
   const [formCategory, setFormCategory] = useState('Organik');
   const [formImageUri, setFormImageUri] = useState<string | null>(null);
-  
-  // Content sections
-  const [formSections, setFormSections] = useState<ContentSection[]>([
-    { subtitle: '', content: '', isNumbered: false, numberedItems: [] }
-  ]);
+  const [formSections, setFormSections] = useState<ContentSection[]>([emptySection()]);
 
   useEffect(() => {
     if (isEditMode && editItem) {
-      setFormTitle(editItem.title || ''); 
+      setFormTitle(editItem.title || '');
       setFormCategory(editItem.category || 'Organik');
       setFormImageUri(editItem.imageUrl || null);
-      
-      // Load sections if available, otherwise convert legacy content to first section
+
       if (editItem.sections && editItem.sections.length > 0) {
         setFormSections(editItem.sections.map((s: any) => ({
           subtitle: s.subtitle || '',
           content: s.content || '',
           isNumbered: s.isNumbered || false,
-          numberedItems: s.numberedItems || []
+          numberedSectionDescription: s.numberedSectionDescription || '',
+          // Migrate legacy string[] to NumberedItem[]
+          numberedItems: (s.numberedItems || []).map((item: any) =>
+            typeof item === 'string'
+              ? { title: item, description: '' }
+              : { title: item.title || '', description: item.description || '' }
+          ),
         })));
       } else if (editItem.content) {
-        setFormSections([{ subtitle: '', content: editItem.content, isNumbered: false, numberedItems: [] }]);
+        setFormSections([{ ...emptySection(), content: editItem.content }]);
       } else {
-        setFormSections([{ subtitle: '', content: '', isNumbered: false, numberedItems: [] }]);
+        setFormSections([emptySection()]);
       }
     }
   }, [isEditMode, editItem]);
@@ -77,11 +99,71 @@ export default function FormMateriScreen({ route, navigation }: any) {
       allowsEditing: true,
       aspect: [16, 9],
       quality: 0.8,
+      base64: true,
     });
-
+    
     if (!result.canceled) {
-      setFormImageUri(result.assets[0].uri);
+      if (result.assets[0].base64) {
+        setFormImageUri(`data:image/jpeg;base64,${result.assets[0].base64}`);
+      } else {
+        setFormImageUri(result.assets[0].uri);
+      }
     }
+  };
+
+  const updateSection = (index: number, updates: Partial<ContentSection>) => {
+    const newSections = [...formSections];
+    newSections[index] = { ...newSections[index], ...updates };
+    setFormSections(newSections);
+  };
+
+  const updateNumberedItem = (sectionIndex: number, itemIndex: number, updates: Partial<NumberedItem>) => {
+    const newSections = [...formSections];
+    const newSection = { ...newSections[sectionIndex] };
+    const items = [...(newSection.numberedItems || [])];
+    
+    let currentItem = items[itemIndex];
+    if (typeof currentItem === 'string') {
+      currentItem = { title: currentItem, description: '' };
+    }
+    
+    items[itemIndex] = { ...currentItem, ...updates };
+    newSection.numberedItems = items;
+    newSections[sectionIndex] = newSection;
+    setFormSections(newSections);
+  };
+
+  const addNumberedItem = (sectionIndex: number) => {
+    const newSections = [...formSections];
+    const newSection = { ...newSections[sectionIndex] };
+    const items = [...(newSection.numberedItems || [])];
+    items.push(emptyNumberedItem());
+    newSection.numberedItems = items;
+    newSections[sectionIndex] = newSection;
+    setFormSections(newSections);
+  };
+
+  const removeNumberedItem = (sectionIndex: number, itemIndex: number) => {
+    const newSections = [...formSections];
+    const newSection = { ...newSections[sectionIndex] };
+    newSection.numberedItems = (newSection.numberedItems || []).filter((_, i) => i !== itemIndex);
+    newSections[sectionIndex] = newSection;
+    setFormSections(newSections);
+  };
+
+  const toggleNumbered = (index: number) => {
+    const newSections = [...formSections];
+    const newSection = { ...newSections[index] };
+    const willBeNumbered = !newSection.isNumbered;
+    newSection.isNumbered = willBeNumbered;
+    if (willBeNumbered && (!newSection.numberedItems || newSection.numberedItems.length === 0)) {
+      newSection.numberedItems = [emptyNumberedItem()];
+    }
+    if (!newSection.numberedSectionDescription) {
+      newSection.numberedSectionDescription = '';
+    }
+    newSections[index] = newSection;
+    setFormSections(newSections);
   };
 
   const handleSave = async () => {
@@ -90,43 +172,43 @@ export default function FormMateriScreen({ route, navigation }: any) {
     setUploading(true);
     try {
       let finalImageUrl = formImageUri;
-      
-      // If there's an image and it's a local file (not already a Cloudinary URL), upload it
       if (formImageUri && !formImageUri.startsWith('http')) {
         finalImageUrl = await uploadToCloudinary(formImageUri);
       }
 
-      // Prepare sections data - filter out empty sections
-      const filteredSections = formSections.filter(s => s.content.trim() !== '' || (s.isNumbered && s.numberedItems && s.numberedItems.length > 0 && s.numberedItems.some(i => i.trim() !== '')));
+      const filteredSections = formSections.filter(s => {
+        if (s.isNumbered) {
+          return (s.numberedItems || []).some(i => i.title.trim() !== '' || i.description.trim() !== '');
+        }
+        return s.content.trim() !== '';
+      });
+
+      const payload = {
+        title: formTitle,
+        category: formCategory,
+        content: filteredSections.length > 0 ? filteredSections[0].content : '',
+        sections: filteredSections,
+        imageUrl: finalImageUrl,
+      };
 
       if (isEditMode) {
-        await updateDoc(doc(db, 'materi', editItem.id), {
-          title: formTitle, 
-          category: formCategory,
-          content: filteredSections.length > 0 ? filteredSections[0].content : '', // legacy compat
-          sections: filteredSections,
-          imageUrl: finalImageUrl,
-        });
+        await updateDoc(doc(db, 'materi', editItem.id), payload);
       } else {
         await addDoc(collection(db, 'materi'), {
-          title: formTitle, 
-          category: formCategory,
-          content: filteredSections.length > 0 ? filteredSections[0].content : '', // legacy compat
-          sections: filteredSections,
-          status: 'Published', 
+          ...payload,
+          status: 'Published',
           createdAt: new Date(),
-          imageUrl: finalImageUrl,
         });
       }
-      
+
       Alert.alert('Berhasil', isEditMode ? 'Materi berhasil diperbarui!' : 'Materi berhasil ditambahkan!', [
         { text: 'OK', onPress: () => navigation.goBack() }
       ]);
-    } catch (e) { 
-      console.error(e); 
+    } catch (e) {
+      console.error(e);
       Alert.alert('Error', 'Gagal menyimpan materi. Pastikan koneksi internet stabil.');
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
       setUploading(false);
     }
   };
@@ -154,40 +236,27 @@ export default function FormMateriScreen({ route, navigation }: any) {
           ))}
         </View>
 
-        <Text style={styles.fieldLabel}>Isi Konten Pelajaran (Paragraf dengan Sub-judul)</Text>
-        <Text style={styles.fieldHint}>💡 Tambahkan beberapa paragraf dengan sub-judul untuk strukturisasi konten yang lebih baik</Text>
-        
+        <Text style={styles.fieldLabel}>Isi Konten Pelajaran</Text>
+        <Text style={styles.fieldHint}>💡 Tambahkan beberapa paragraf atau sub-judul. Mode Penomoran cocok untuk langkah-langkah atau poin penting.</Text>
+
         {formSections.map((section, index) => (
           <View key={index} style={styles.sectionBox}>
+            {/* Section Header */}
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionLabel}>Paragraf {index + 1}</Text>
               <View style={{ flexDirection: 'row', gap: 8 }}>
-                {/* Toggle Numbered List */}
-                <TouchableOpacity 
-                  onPress={() => {
-                    const newSections = [...formSections];
-                    const willBeNumbered = !newSections[index].isNumbered;
-                    newSections[index].isNumbered = willBeNumbered;
-                    
-                    if (willBeNumbered && (!newSections[index].numberedItems || newSections[index].numberedItems!.length === 0)) {
-                      newSections[index].numberedItems = [''];
-                    }
-                    
-                    setFormSections(newSections);
-                  }}
+                <TouchableOpacity
+                  onPress={() => toggleNumbered(index)}
                   style={[styles.toggleNumberBtn, section.isNumbered && styles.toggleNumberBtnActive]}
                 >
                   <Text style={[styles.toggleNumberText, section.isNumbered && styles.toggleNumberTextActive]}>
                     {section.isNumbered ? '🔢 Penomoran' : '📝 Paragraf'}
                   </Text>
                 </TouchableOpacity>
-                
+
                 {formSections.length > 1 && (
-                  <TouchableOpacity 
-                    onPress={() => {
-                      const newSections = formSections.filter((_, i) => i !== index);
-                      setFormSections(newSections);
-                    }}
+                  <TouchableOpacity
+                    onPress={() => setFormSections(formSections.filter((_, i) => i !== index))}
                     style={styles.removeSectionBtn}
                   >
                     <Text style={styles.removeSectionText}>Hapus</Text>
@@ -195,66 +264,75 @@ export default function FormMateriScreen({ route, navigation }: any) {
                 )}
               </View>
             </View>
-            
+
+            {/* Sub-judul (always shown) */}
             <TextInput
               style={styles.input}
-              placeholder={`Sub-judul ${section.isNumbered ? '(Contoh: Cara Penanganan)' : '(opsional - Contoh: Pengertian Limbah B3)'}`}
+              placeholder={`Sub-judul ${section.isNumbered ? '(Contoh: Cara Penanganan yang Bijak)' : '(opsional)'}`}
               value={section.subtitle}
-              onChangeText={(text) => {
-                const newSections = [...formSections];
-                newSections[index].subtitle = text;
-                setFormSections(newSections);
-              }}
+              onChangeText={(text) => updateSection(index, { subtitle: text })}
             />
-            
+
             {section.isNumbered ? (
               <View style={{ marginTop: 8 }}>
-                {(section.numberedItems || ['']).map((item, itemIndex) => (
+                {/* Deskripsi Pembuka sebelum nomor */}
+                <Text style={styles.numberedSectionLabel}>📄 Deskripsi Pembuka (opsional)</Text>
+                <TextInput
+                  style={[styles.input, styles.textarea, { marginBottom: 16, backgroundColor: '#f0fdf4', borderColor: '#86efac' }]}
+                  placeholder="Tulis kalimat pengantar sebelum daftar nomor, contoh: 'Berikut adalah cara-cara yang bisa kamu lakukan...'"
+                  value={section.numberedSectionDescription || ''}
+                  onChangeText={(text) => updateSection(index, { numberedSectionDescription: text })}
+                  multiline
+                  numberOfLines={3}
+                  textAlignVertical="top"
+                />
+
+                {/* Daftar Item Bernomor */}
+                <Text style={styles.numberedSectionLabel}>🔢 Daftar Poin Bernomor</Text>
+                {(section.numberedItems || [emptyNumberedItem()]).map((item, itemIndex) => (
                   <View key={itemIndex} style={styles.numberedInputBox}>
+                    {/* Header nomor + hapus */}
                     <View style={styles.numberedInputHeader}>
                       <View style={styles.listNumberBadge}>
                         <Text style={styles.listNumberText}>{itemIndex + 1}</Text>
                       </View>
+                      <Text style={styles.numberedItemSectionText}>Poin ke-{itemIndex + 1}</Text>
                       {(section.numberedItems?.length || 0) > 1 && (
-                        <TouchableOpacity 
-                          onPress={() => {
-                            const newSections = [...formSections];
-                            newSections[index].numberedItems = newSections[index].numberedItems!.filter((_, i) => i !== itemIndex);
-                            setFormSections(newSections);
-                          }}
+                        <TouchableOpacity
+                          onPress={() => removeNumberedItem(index, itemIndex)}
                           style={styles.removeNumberItemBtn}
                         >
                           <Text style={styles.removeNumberItemText}>✕</Text>
                         </TouchableOpacity>
                       )}
                     </View>
+
+                    {/* Judul item */}
                     <TextInput
-                      style={[styles.input, styles.numberedInput]}
-                      placeholder={`Langkah ${itemIndex + 1}...`}
-                      value={item}
-                      onChangeText={(text) => {
-                        const newSections = [...formSections];
-                        if (!newSections[index].numberedItems) newSections[index].numberedItems = [];
-                        newSections[index].numberedItems![itemIndex] = text;
-                        setFormSections(newSections);
-                      }}
+                      style={[styles.input, { marginBottom: 6, backgroundColor: '#fffbeb', borderColor: '#fbbf24' }]}
+                      placeholder={`Judul Poin ${itemIndex + 1} (Contoh: Jadikan Pupuk Kompos)`}
+                      value={item.title}
+                      onChangeText={(text) => updateNumberedItem(index, itemIndex, { title: text })}
+                    />
+
+                    {/* Penjelasan item */}
+                    <TextInput
+                      style={[styles.input, styles.textarea, { backgroundColor: '#fffbeb', borderColor: '#fbbf24' }]}
+                      placeholder={`Penjelasan Poin ${itemIndex + 1} (Contoh: Kumpulkan kulit buah di ember kecil, campurkan dengan daun kering...)`}
+                      value={item.description}
+                      onChangeText={(text) => updateNumberedItem(index, itemIndex, { description: text })}
                       multiline
-                      numberOfLines={2}
+                      numberOfLines={4}
                       textAlignVertical="top"
                     />
                   </View>
                 ))}
-                
-                <TouchableOpacity 
+
+                <TouchableOpacity
                   style={styles.addNumberItemBtn}
-                  onPress={() => {
-                    const newSections = [...formSections];
-                    if (!newSections[index].numberedItems) newSections[index].numberedItems = [];
-                    newSections[index].numberedItems!.push('');
-                    setFormSections(newSections);
-                  }}
+                  onPress={() => addNumberedItem(index)}
                 >
-                  <Text style={styles.addNumberItemText}>+ Tambah Langkah</Text>
+                  <Text style={styles.addNumberItemText}>+ Tambah Poin Baru</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -262,11 +340,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
                 style={[styles.input, styles.textarea, { marginTop: 8 }]}
                 placeholder="Tulis isi paragraf di sini..."
                 value={section.content}
-                onChangeText={(text) => {
-                  const newSections = [...formSections];
-                  newSections[index].content = text;
-                  setFormSections(newSections);
-                }}
+                onChangeText={(text) => updateSection(index, { content: text })}
                 multiline
                 numberOfLines={6}
                 textAlignVertical="top"
@@ -274,12 +348,10 @@ export default function FormMateriScreen({ route, navigation }: any) {
             )}
           </View>
         ))}
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.addSectionBtn}
-          onPress={() => {
-            setFormSections([...formSections, { subtitle: '', content: '', isNumbered: false, numberedItems: [] }]);
-          }}
+          onPress={() => setFormSections([...formSections, emptySection()])}
         >
           <Text style={styles.addSectionText}>+ Tambah Paragraf Baru</Text>
         </TouchableOpacity>
@@ -317,8 +389,8 @@ const styles = StyleSheet.create({
   fieldLabel: { fontSize: 13, fontWeight: 'bold', color: '#374151', marginBottom: 6, marginTop: 16 },
   fieldHint: { fontSize: 11, color: '#6b7280', marginBottom: 12, fontStyle: 'italic' },
   input: { borderWidth: 1.5, borderColor: '#d1d5db', borderRadius: 10, padding: 14, backgroundColor: '#fafafa', fontSize: 14 },
-  textarea: { height: 120, textAlignVertical: 'top' },
-  
+  textarea: { height: 100, textAlignVertical: 'top' },
+
   sectionBox: {
     backgroundColor: '#f9fafb',
     borderWidth: 1.5,
@@ -333,68 +405,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#374151',
-  },
-  removeSectionBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    backgroundColor: '#fee2e2',
-    borderRadius: 6,
-  },
-  removeSectionText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#dc2626',
-  },
-  toggleNumberBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
+  sectionLabel: { fontSize: 13, fontWeight: 'bold', color: '#374151' },
+  removeSectionBtn: { paddingHorizontal: 10, paddingVertical: 4, backgroundColor: '#fee2e2', borderRadius: 6 },
+  removeSectionText: { fontSize: 11, fontWeight: '600', color: '#dc2626' },
+  toggleNumberBtn: { paddingHorizontal: 12, paddingVertical: 6, backgroundColor: '#f3f4f6', borderRadius: 8, borderWidth: 1.5, borderColor: '#d1d5db' },
+  toggleNumberBtnActive: { backgroundColor: '#fffbeb', borderColor: '#fbbf24' },
+  toggleNumberText: { fontSize: 11, fontWeight: '600', color: '#6b7280' },
+  toggleNumberTextActive: { color: '#92400e' },
+
+  numberedSectionLabel: { fontSize: 12, fontWeight: '700', color: '#374151', marginBottom: 8 },
+
+  numberedInputBox: {
+    backgroundColor: '#fff',
     borderWidth: 1.5,
-    borderColor: '#d1d5db',
+    borderColor: '#fde68a',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 10,
   },
-  toggleNumberBtnActive: {
-    backgroundColor: '#fffbeb',
-    borderColor: '#fbbf24',
-  },
-  toggleNumberText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#6b7280',
-  },
-  toggleNumberTextActive: {
-    color: '#92400e',
-  },
-  
-  numberedInputBox: { marginBottom: 12 },
-  numberedInputHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
+  numberedInputHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
   listNumberBadge: {
     width: 28, height: 28, borderRadius: 14, backgroundColor: '#fbbf24',
     justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#000',
   },
   listNumberText: { fontSize: 13, fontWeight: 'bold', color: '#111827' },
+  numberedItemSectionText: { fontSize: 12, fontWeight: '600', color: '#92400e', flex: 1 },
   removeNumberItemBtn: {
     width: 24, height: 24, borderRadius: 12, backgroundColor: '#fee2e2',
-    justifyContent: 'center', alignItems: 'center', marginLeft: 'auto',
+    justifyContent: 'center', alignItems: 'center',
   },
   removeNumberItemText: { fontSize: 14, color: '#dc2626', fontWeight: 'bold' },
-  numberedInput: { minHeight: 60, backgroundColor: '#fffbeb', borderColor: '#fbbf24' },
   addNumberItemBtn: {
     borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#fbbf24', borderRadius: 10,
     padding: 12, alignItems: 'center', marginTop: 4, backgroundColor: '#fffbeb',
   },
   addNumberItemText: { fontSize: 13, fontWeight: '600', color: '#92400e' },
-  
+
   addSectionBtn: {
     borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#9ca3af', borderRadius: 10,
     padding: 14, alignItems: 'center', marginTop: 4, marginBottom: 16,
   },
   addSectionText: { fontSize: 13, fontWeight: '600', color: '#6b7280' },
-  
+
   catRow: { flexDirection: 'row', gap: 12 },
   catOpt: { flex: 1, padding: 14, borderWidth: 1.5, borderColor: '#9ca3af', borderRadius: 10, alignItems: 'center' },
   catOptActive: { backgroundColor: '#374151', borderColor: '#374151' },
