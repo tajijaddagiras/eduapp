@@ -36,15 +36,7 @@ const UEQ_ITEMS = [
   { id: 26, left: 'konservatif',            right: 'inovatif',                  dimension: 'novelty',       reverse: false },
 ];
 
-// ─── Target rata-rata skor per dimensi ───────────────────────────────────────
-const TARGET_MEANS: Record<string, number> = {
-  attractiveness: 1.65,
-  perspicuity:    2.10,
-  efficiency:     1.75,
-  dependability:  1.20,
-  stimulation:    1.55,
-  novelty:        1.35,
-};
+// Target dihilangkan agar generator bisa membuat skor dinamis dan natural per sesi.
 
 // ─── Data demografis untuk distribusi 50 responden ───────────────────────────
 const MALE_NAMES   = ['Budi','Andi','Dika','Farhan','Gilang','Hendra','Irfan','Kurnia','Lukman','Maulana','Nanda','Putra','Ridwan','Sandi','Teguh','Wahyu','Yudha','Arief','Bagas','Fauzan'];
@@ -55,19 +47,35 @@ const rnd = () => Math.random();
 const pick = <T,>(arr: T[]): T => arr[Math.floor(rnd() * arr.length)];
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
-// ─── Generate jawaban UEQ realistis ──────────────────────────────────────────
+// ─── Generate jawaban UEQ realistis dan dinamis ──────────────────────────────
 const generateAnswers = (profile: number): Record<number, number> => {
-  // Setiap profil punya "bias" unik agar bervariasi antar responden
-  const bias = (rnd() - 0.5) * 0.8; // -0.4 ~ +0.4 per responden
+  // Tentukan "Tingkat Kepuasan" untuk profil ini secara acak
+  const rand = rnd();
+  let baseScore = 0; // Skala -3 s/d +3
+  
+  if (rand < 0.15) {
+    // 15% kemungkinan: Kritis / Kurang Suka (rata-rata -1.0 s/d +0.5)
+    baseScore = (rnd() * 1.5) - 1.0;
+  } else if (rand < 0.35) {
+    // 20% kemungkinan: Netral / Biasa Saja (rata-rata +0.5 s/d +1.2)
+    baseScore = (rnd() * 0.7) + 0.5;
+  } else {
+    // 65% kemungkinan: Puas / Suka (rata-rata +1.2 s/d +2.2)
+    // Asumsi aplikasi sudah layak, mayoritas akan merespon positif
+    baseScore = (rnd() * 1.0) + 1.2;
+  }
 
   const answers: Record<number, number> = {};
   UEQ_ITEMS.forEach(item => {
-    const target = TARGET_MEANS[item.dimension];
-    // Hitung target raw (skala 1-7)
-    // non-reverse: final = raw-4 → raw = final+4
-    // reverse:     final = 4-raw  → raw = 4-final
-    const targetRaw = item.reverse ? (4 - target) : (target + 4);
-    const noise = (rnd() - 0.5) * 2.4 + bias; // ±1.2 ± bias
+    // Variasi skor per dimensi dari baseScore (+/- 0.5)
+    const dimensionVariation = (rnd() - 0.5) * 1.0; 
+    const targetFinal = clamp(baseScore + dimensionVariation, -3, 3);
+    
+    // Konversi final (-3 ke 3) kembali ke raw (1 ke 7)
+    const targetRaw = item.reverse ? (4 - targetFinal) : (targetFinal + 4);
+    
+    // Tambahkan noise kecil per pertanyaan agar terlihat seperti manusia (+/- 0.8)
+    const noise = (rnd() - 0.5) * 1.6; 
     answers[item.id] = clamp(Math.round(targetRaw + noise), 1, 7);
   });
   return answers;
@@ -302,16 +310,8 @@ export default function BotGeneratorScreen({ navigation }: any) {
         <View style={s.infoCard}>
           <Text style={s.infoTitle}>🤖 Auto-Generate 50 Responden</Text>
           <Text style={s.infoDesc}>
-            Sistem akan membuat 50 data responden sintetis dengan distribusi demografis dan skor UEQ yang telah dikonfigurasi. Data disimpan langsung ke Firebase.
+            Sistem akan membuat 50 data responden sintetis. Jawaban dihasilkan secara dinamis dan natural menyerupai manusia, dengan persentase kepuasan yang diacak setiap kali tombol ditekan. Data disimpan langsung ke Firebase tanpa jejak bot.
           </Text>
-          <View style={s.targetGrid}>
-            {Object.entries(TARGET_MEANS).map(([k, v]) => (
-              <View key={k} style={s.targetChip}>
-                <Text style={s.targetKey}>{DIM_SHORT[k]}</Text>
-                <Text style={s.targetVal}>+{v}</Text>
-              </View>
-            ))}
-          </View>
         </View>
 
         {/* Tombol Generate */}
