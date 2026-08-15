@@ -53,16 +53,20 @@ const generateAnswers = (profile: number): Record<number, number> => {
   const rand = rnd();
   let baseScore = 0; // Skala -3 s/d +3
   
-  if (rand < 0.05) {
-    // 5% kemungkinan: Kritis / Kurang Suka (rata-rata -0.5 s/d +0.5)
-    baseScore = (rnd() * 1.0) - 0.5;
-  } else if (rand < 0.15) {
-    // 10% kemungkinan: Netral / Biasa Saja (rata-rata +0.5 s/d +1.3)
-    baseScore = (rnd() * 0.8) + 0.5;
+  if (rand < 0.10) {
+    // 10% kemungkinan: Kritis / Kurang Suka (rata-rata -1.0 s/d +0.0)
+    baseScore = (rnd() * 1.0) - 1.0;
+  } else if (rand < 0.25) {
+    // 15% kemungkinan: Netral / Biasa Saja (rata-rata +0.0 s/d +1.0)
+    baseScore = (rnd() * 1.0) + 0.0;
+  } else if (rand < 0.65) {
+    // 40% kemungkinan: Suka / Good (rata-rata +1.0 s/d +1.8)
+    // Untuk memastikan muncul status "Good" di beberapa dimensi
+    baseScore = (rnd() * 0.8) + 1.0;
   } else {
-    // 85% kemungkinan: Sangat Puas / Suka (rata-rata +1.8 s/d +2.8)
-    // Ditingkatkan agar rata-rata mayoritas bisa mencapai > 2.0 (Excellent)
-    baseScore = (rnd() * 1.0) + 1.8;
+    // 35% kemungkinan: Sangat Puas / Excellent (rata-rata +1.8 s/d +2.6)
+    // Untuk memastikan muncul status "Excellent" di beberapa dimensi
+    baseScore = (rnd() * 0.8) + 1.8;
   }
 
   const answers: Record<number, number> = {};
