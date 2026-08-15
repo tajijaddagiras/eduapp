@@ -38,6 +38,7 @@ import FormLevelScreen from '../screens/admin/FormLevelScreen';
 import UEQAnalitikScreen from '../screens/admin/UEQAnalitikScreen';
 import DataSiswaScreen from '../screens/admin/DataSiswaScreen';
 import DetailKuesionerSiswaScreen from '../screens/admin/DetailKuesionerSiswaScreen';
+import BotGeneratorScreen from '../screens/admin/BotGeneratorScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -241,6 +242,7 @@ function MainNavigator() {
           <Stack.Screen name="UEQAnalitik" component={UEQAnalitikScreen} />
           <Stack.Screen name="DataSiswa" component={DataSiswaScreen} />
           <Stack.Screen name="DetailKuesionerSiswa" component={DetailKuesionerSiswaScreen} />
+          <Stack.Screen name="BotGenerator" component={BotGeneratorScreen} />
         </>
       ) : (
         // User Flow

@@ -12,11 +12,12 @@ interface Stats {
 }
 
 const menuItems = [
-  { icon: '[S]', label: 'Manajemen Data Siswa', nav: 'DataSiswa' },
-  { icon: '[M]', label: 'Manajemen Modul Materi', nav: 'ManageMateri' },
-  { icon: '[K]', label: 'Manajemen Bank Simulasi', nav: 'ManageSoal' },
-  { icon: '[L]', label: 'Kelola Level Soal', nav: 'ManageLevel' },
-  { icon: '[A]', label: 'Analisis Data UEQ', nav: 'UEQAnalitik', highlight: true },
+  { icon: '[S]', label: 'Manajemen Data Siswa',      nav: 'DataSiswa' },
+  { icon: '[M]', label: 'Manajemen Modul Materi',    nav: 'ManageMateri' },
+  { icon: '[K]', label: 'Manajemen Bank Simulasi',   nav: 'ManageSoal' },
+  { icon: '[L]', label: 'Kelola Level Soal',         nav: 'ManageLevel' },
+  { icon: '[A]', label: 'Analisis Data UEQ',         nav: 'UEQAnalitik', highlight: true },
+  { icon: '[🤖]', label: 'Bot Generator Kuesioner',  nav: 'BotGenerator', highlight: true },
 ];
 
 export default function AdminDashboardScreen({ navigation }: any) {
