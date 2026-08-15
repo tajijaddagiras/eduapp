@@ -225,10 +225,15 @@ export default function BotGeneratorScreen({ navigation }: any) {
                   // Buat ID unik untuk bot ini
                   const botUserId = `bot_${r.no}_${Date.now()}_${Math.floor(Math.random()*1000)}`;
                   
+                  // Buat email realistis berdasarkan nama (contoh: budisantoso99@gmail.com)
+                  const sanitizedName = r.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+                  const randomNum = Math.floor(Math.random() * 99) + 1;
+                  const realisticEmail = `${sanitizedName}${randomNum}@gmail.com`;
+
                   // 1. Simpan bot sebagai User agar muncul di DataSiswaScreen
                   await setDoc(doc(usersCol, botUserId), {
                     name: r.name,
-                    email: `bot${r.no}@edusampah.com`,
+                    email: realisticEmail,
                     role: 'user',
                     createdAt: r.submittedAt,
                     sekolah: r.education, // Kita simpan pendidikan di kolom sekolah
