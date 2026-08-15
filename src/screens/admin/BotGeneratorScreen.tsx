@@ -101,33 +101,33 @@ interface Responden {
   submittedAt: Date;
 }
 
-// ─── Rencana distribusi 36 responden (Sesuai Skripsi) ─────────────────────────
-// Gender: Laki-laki=14, Perempuan=22
-// Usia: <18=5, 18-25=23, >25=8
-// Edu: SMA=9, Diploma/Sarjana=24, Lainnya=3
+// ─── Rencana distribusi 50 responden (Berdasarkan persentase Skripsi) ───────
+// Gender: Laki-laki=19, Perempuan=31
+// Usia: <18=7, 18-25=32, >25=11
+// Edu: SMA=13, Diploma/Sarjana=33, Lainnya=4
 const buildDemographics = (i: number): Pick<Responden, 'gender' | 'name' | 'ageGroup' | 'education'> => {
-  const gender: 'Laki-laki' | 'Perempuan' = i < 14 ? 'Laki-laki' : 'Perempuan';
+  const gender: 'Laki-laki' | 'Perempuan' = i < 19 ? 'Laki-laki' : 'Perempuan';
   const name = gender === 'Laki-laki'
     ? `${pick(MALE_NAMES)} ${pick(SURNAMES)}`
     : `${pick(FEMALE_NAMES)} ${pick(SURNAMES)}`;
 
   let ageGroup: '< 18 Tahun' | '18–25 Tahun' | '> 25 Tahun';
-  if (i < 5) ageGroup = '< 18 Tahun';
-  else if (i < 28) ageGroup = '18–25 Tahun'; // 5 + 23 = 28
+  if (i < 7) ageGroup = '< 18 Tahun';
+  else if (i < 39) ageGroup = '18–25 Tahun'; // 7 + 32 = 39
   else ageGroup = '> 25 Tahun';
 
   let education: 'SMA/Sederajat' | 'Diploma/Sarjana' | 'Lainnya';
-  if (i < 9) education = 'SMA/Sederajat';
-  else if (i < 33) education = 'Diploma/Sarjana'; // 9 + 24 = 33
+  if (i < 13) education = 'SMA/Sederajat';
+  else if (i < 46) education = 'Diploma/Sarjana'; // 13 + 33 = 46
   else education = 'Lainnya';
 
   return { gender, name, ageGroup, education };
 };
 
-// ─── Generate 36 responden ────────────────────────────────────────────────────
+// ─── Generate 50 responden ────────────────────────────────────────────────────
 const generateResponden = (): Responden[] => {
   const list: Responden[] = [];
-  const TOTAL = 36;
+  const TOTAL = 50;
   // Shuffle index agar demografi tidak terlihat berurutan
   const indices = Array.from({ length: TOTAL }, (_, i) => i);
   // Fisher-Yates shuffle
@@ -307,9 +307,9 @@ export default function BotGeneratorScreen({ navigation }: any) {
 
         {/* Info card */}
         <View style={s.infoCard}>
-          <Text style={s.infoTitle}>🤖 Auto-Generate 36 Responden</Text>
+          <Text style={s.infoTitle}>🤖 Auto-Generate 50 Responden</Text>
           <Text style={s.infoDesc}>
-            Sistem akan membuat 36 data responden sintetis. Jawaban dihasilkan secara dinamis dan natural menyerupai manusia, dengan persentase kepuasan yang diacak. Data disimpan langsung ke Firebase tanpa jejak bot.
+            Sistem akan membuat 50 data responden sintetis. Jawaban dihasilkan secara dinamis dan natural menyerupai manusia, dengan persentase kepuasan yang diacak. Data disimpan langsung ke Firebase tanpa jejak bot.
           </Text>
         </View>
 
@@ -321,14 +321,14 @@ export default function BotGeneratorScreen({ navigation }: any) {
         >
           {generating
             ? <ActivityIndicator color="#fff" />
-            : <Text style={s.genBtnText}>🤖 Generate 36 Responden</Text>}
+            : <Text style={s.genBtnText}>🤖 Generate 50 Responden</Text>}
         </TouchableOpacity>
 
         {/* Preview ringkasan skor rata-rata */}
         {preview.length > 0 && (
           <>
             <View style={s.summaryCard}>
-              <Text style={s.summaryTitle}>📊 Rata-rata Skor Keseluruhan (N=36)</Text>
+              <Text style={s.summaryTitle}>📊 Rata-rata Skor Keseluruhan (N=50)</Text>
               {Object.entries(overallMeans).map(([k, v]) => {
                 const interp = getInterpretation(v);
                 return (
