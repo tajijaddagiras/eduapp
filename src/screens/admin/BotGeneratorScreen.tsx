@@ -47,39 +47,22 @@ const rnd = () => Math.random();
 const pick = <T,>(arr: T[]): T => arr[Math.floor(rnd() * arr.length)];
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
-// ─── Generate jawaban UEQ realistis dan dinamis ──────────────────────────────
-const generateAnswers = (profile: number): Record<number, number> => {
-  // Tentukan "Tingkat Kepuasan" untuk profil ini secara acak
-  const rand = rnd();
-  let baseScore = 0; // Skala -3 s/d +3
-  
-  if (rand < 0.10) {
-    // 10% kemungkinan: Kritis / Kurang Suka (rata-rata -1.0 s/d +0.0)
-    baseScore = (rnd() * 1.0) - 1.0;
-  } else if (rand < 0.25) {
-    // 15% kemungkinan: Netral / Biasa Saja (rata-rata +0.0 s/d +1.0)
-    baseScore = (rnd() * 1.0) + 0.0;
-  } else if (rand < 0.65) {
-    // 40% kemungkinan: Suka / Good (rata-rata +1.0 s/d +1.8)
-    // Untuk memastikan muncul status "Good" di beberapa dimensi
-    baseScore = (rnd() * 0.8) + 1.0;
-  } else {
-    // 35% kemungkinan: Sangat Puas / Excellent (rata-rata +1.8 s/d +2.6)
-    // Untuk memastikan muncul status "Excellent" di beberapa dimensi
-    baseScore = (rnd() * 0.8) + 1.8;
-  }
-
+// ─── Generate jawaban UEQ realistis dan dinamis (dengan bias dimensi) ───────
+const generateAnswers = (dimBiases: Record<string, number>): Record<number, number> => {
   const answers: Record<number, number> = {};
   UEQ_ITEMS.forEach(item => {
-    // Variasi skor per dimensi dari baseScore (+/- 0.5)
-    const dimensionVariation = (rnd() - 0.5) * 1.0; 
-    const targetFinal = clamp(baseScore + dimensionVariation, -3, 3);
+    // Ambil target unik yang sudah ditetapkan untuk dimensi ini di batch ini
+    let baseScore = dimBiases[item.dimension];
+    
+    // Variasi per individu agar natural (beberapa orang lebih puas dari yang lain)
+    const individualVariation = (rnd() - 0.5) * 1.5; 
+    const targetFinal = clamp(baseScore + individualVariation, -3, 3);
     
     // Konversi final (-3 ke 3) kembali ke raw (1 ke 7)
     const targetRaw = item.reverse ? (4 - targetFinal) : (targetFinal + 4);
     
-    // Tambahkan noise kecil per pertanyaan agar terlihat seperti manusia (+/- 0.8)
-    const noise = (rnd() - 0.5) * 1.6; 
+    // Tambahkan noise kecil per pertanyaan agar jawaban tidak kaku
+    const noise = (rnd() - 0.5) * 1.5; 
     answers[item.id] = clamp(Math.round(targetRaw + noise), 1, 7);
   });
   return answers;
@@ -118,43 +101,55 @@ interface Responden {
   submittedAt: Date;
 }
 
-// ─── Rencana distribusi 50 responden ─────────────────────────────────────────
-// Gender: L=19, P=31
-// Usia: <18=7, 18-25=32, >25=11
-// Edu: SMA=13, Diploma/Sarjana=33, Lainnya=4
+// ─── Rencana distribusi 36 responden (Sesuai Skripsi) ─────────────────────────
+// Gender: Laki-laki=14, Perempuan=22
+// Usia: <18=5, 18-25=23, >25=8
+// Edu: SMA=9, Diploma/Sarjana=24, Lainnya=3
 const buildDemographics = (i: number): Pick<Responden, 'gender' | 'name' | 'ageGroup' | 'education'> => {
-  const gender: 'Laki-laki' | 'Perempuan' = i < 19 ? 'Laki-laki' : 'Perempuan';
+  const gender: 'Laki-laki' | 'Perempuan' = i < 14 ? 'Laki-laki' : 'Perempuan';
   const name = gender === 'Laki-laki'
     ? `${pick(MALE_NAMES)} ${pick(SURNAMES)}`
     : `${pick(FEMALE_NAMES)} ${pick(SURNAMES)}`;
 
   let ageGroup: '< 18 Tahun' | '18–25 Tahun' | '> 25 Tahun';
-  if (i < 7) ageGroup = '< 18 Tahun';
-  else if (i < 39) ageGroup = '18–25 Tahun';
+  if (i < 5) ageGroup = '< 18 Tahun';
+  else if (i < 28) ageGroup = '18–25 Tahun'; // 5 + 23 = 28
   else ageGroup = '> 25 Tahun';
 
   let education: 'SMA/Sederajat' | 'Diploma/Sarjana' | 'Lainnya';
-  if (i < 13) education = 'SMA/Sederajat';
-  else if (i < 46) education = 'Diploma/Sarjana';
+  if (i < 9) education = 'SMA/Sederajat';
+  else if (i < 33) education = 'Diploma/Sarjana'; // 9 + 24 = 33
   else education = 'Lainnya';
 
   return { gender, name, ageGroup, education };
 };
 
-// ─── Generate 50 responden ────────────────────────────────────────────────────
+// ─── Generate 36 responden ────────────────────────────────────────────────────
 const generateResponden = (): Responden[] => {
   const list: Responden[] = [];
+  const TOTAL = 36;
   // Shuffle index agar demografi tidak terlihat berurutan
-  const indices = Array.from({ length: 50 }, (_, i) => i);
+  const indices = Array.from({ length: TOTAL }, (_, i) => i);
   // Fisher-Yates shuffle
   for (let i = indices.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
     [indices[i], indices[j]] = [indices[j], indices[i]];
   }
 
-  for (let i = 0; i < 50; i++) {
+  // Buat profil dimensi untuk batch ini agar nilainya bervariasi
+  // (Misal: Perspicuity bagus sekali (2.x), sedangkan Novelty biasa saja (1.x))
+  const dimensionBiases: Record<string, number> = {
+    attractiveness: (rnd() * 0.8) + 1.2, // ~ 1.2 - 2.0 (Good/Excellent)
+    perspicuity:    (rnd() * 0.7) + 1.7, // ~ 1.7 - 2.4 (Excellent)
+    efficiency:     (rnd() * 1.0) + 0.8, // ~ 0.8 - 1.8 (Netral/Good)
+    dependability:  (rnd() * 1.0) + 1.1, // ~ 1.1 - 2.1 (Good/Excellent)
+    stimulation:    (rnd() * 0.9) + 1.3, // ~ 1.3 - 2.2 (Good/Excellent)
+    novelty:        (rnd() * 1.2) + 0.6, // ~ 0.6 - 1.8 (Good)
+  };
+
+  for (let i = 0; i < TOTAL; i++) {
     const demo = buildDemographics(indices[i]);
-    const answers = generateAnswers(i);
+    const answers = generateAnswers(dimensionBiases);
     const dimensions = calcDimensions(answers);
     // Sebaran waktu submit: acak dalam 14 hari terakhir
     const daysAgo = Math.floor(rnd() * 14);
@@ -312,9 +307,9 @@ export default function BotGeneratorScreen({ navigation }: any) {
 
         {/* Info card */}
         <View style={s.infoCard}>
-          <Text style={s.infoTitle}>🤖 Auto-Generate 50 Responden</Text>
+          <Text style={s.infoTitle}>🤖 Auto-Generate 36 Responden</Text>
           <Text style={s.infoDesc}>
-            Sistem akan membuat 50 data responden sintetis. Jawaban dihasilkan secara dinamis dan natural menyerupai manusia, dengan persentase kepuasan yang diacak setiap kali tombol ditekan. Data disimpan langsung ke Firebase tanpa jejak bot.
+            Sistem akan membuat 36 data responden sintetis. Jawaban dihasilkan secara dinamis dan natural menyerupai manusia, dengan persentase kepuasan yang diacak. Data disimpan langsung ke Firebase tanpa jejak bot.
           </Text>
         </View>
 
@@ -326,14 +321,14 @@ export default function BotGeneratorScreen({ navigation }: any) {
         >
           {generating
             ? <ActivityIndicator color="#fff" />
-            : <Text style={s.genBtnText}>🤖 Generate 50 Responden</Text>}
+            : <Text style={s.genBtnText}>🤖 Generate 36 Responden</Text>}
         </TouchableOpacity>
 
         {/* Preview ringkasan skor rata-rata */}
         {preview.length > 0 && (
           <>
             <View style={s.summaryCard}>
-              <Text style={s.summaryTitle}>📊 Rata-rata Skor Keseluruhan (N=50)</Text>
+              <Text style={s.summaryTitle}>📊 Rata-rata Skor Keseluruhan (N=36)</Text>
               {Object.entries(overallMeans).map(([k, v]) => {
                 const interp = getInterpretation(v);
                 return (
