@@ -111,19 +111,19 @@ export default function DataSiswaScreen({ navigation }: any) {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <Text style={{ fontWeight: 'bold' }}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Data Siswa</Text>
+        <Text style={styles.headerTitle}>Data User</Text>
         <View style={{ width: 32 }} />
       </View>
 
       <View style={styles.content}>
         <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>Total Siswa Terdaftar: {users.length}</Text>
+          <Text style={styles.statsText}>Total User Terdaftar: {users.length}</Text>
         </View>
 
         {loading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color="#2e7d32" />
-            <Text style={{ marginTop: 10, color: '#6b7280' }}>Memuat data siswa...</Text>
+            <Text style={{ marginTop: 10, color: '#6b7280' }}>Memuat data user...</Text>
           </View>
         ) : (
           <FlatList
@@ -134,7 +134,7 @@ export default function DataSiswaScreen({ navigation }: any) {
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>Belum ada data siswa terdaftar.</Text>
+                <Text style={styles.emptyText}>Belum ada data user terdaftar.</Text>
               </View>
             }
           />

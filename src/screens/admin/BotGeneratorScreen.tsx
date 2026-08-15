@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
   ActivityIndicator, Alert, FlatList
 } from 'react-native';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 // ─── UEQ Items (sama persis dengan UEQFormScreen) ────────────────────────────
@@ -217,11 +217,27 @@ export default function BotGeneratorScreen({ navigation }: any) {
           onPress: async () => {
             setSaving(true);
             try {
-              const col = collection(db, 'ueq_responses');
+              const ueqCol = collection(db, 'ueq_responses');
+              const usersCol = collection(db, 'users');
+              
               await Promise.all(
-                preview.map(r =>
-                  addDoc(col, {
-                    userId: `bot_${r.no}_${Date.now()}`,
+                preview.map(async (r) => {
+                  // Buat ID unik untuk bot ini
+                  const botUserId = `bot_${r.no}_${Date.now()}_${Math.floor(Math.random()*1000)}`;
+                  
+                  // 1. Simpan bot sebagai User agar muncul di DataSiswaScreen
+                  await setDoc(doc(usersCol, botUserId), {
+                    name: r.name,
+                    email: `bot${r.no}@edusampah.com`,
+                    role: 'user',
+                    createdAt: r.submittedAt,
+                    sekolah: r.education, // Kita simpan pendidikan di kolom sekolah
+                    isBot: true
+                  });
+                  
+                  // 2. Simpan hasil UEQ yang merujuk ke ID bot tersebut
+                  await addDoc(ueqCol, {
+                    userId: botUserId,
                     name: r.name,
                     gender: r.gender,
                     ageGroup: r.ageGroup,
@@ -231,8 +247,8 @@ export default function BotGeneratorScreen({ navigation }: any) {
                     simulasiScore: r.simulasiScore,
                     submittedAt: r.submittedAt,
                     isBot: true,
-                  })
-                )
+                  });
+                })
               );
               Alert.alert('Berhasil! ✅', `${preview.length} data responden berhasil disimpan ke Firebase.`, [
                 { text: 'Lihat Analitik', onPress: () => navigation.replace('UEQAnalitik') },

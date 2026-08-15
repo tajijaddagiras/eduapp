@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Stats {
   totalUsers: number;
@@ -12,7 +13,7 @@ interface Stats {
 }
 
 const menuItems = [
-  { icon: '[S]', label: 'Manajemen Data Siswa',      nav: 'DataSiswa' },
+  { icon: '[S]', label: 'Manajemen Data User',      nav: 'DataSiswa' },
   { icon: '[M]', label: 'Manajemen Modul Materi',    nav: 'ManageMateri' },
   { icon: '[K]', label: 'Manajemen Bank Simulasi',   nav: 'ManageSoal' },
   { icon: '[L]', label: 'Kelola Level Soal',         nav: 'ManageLevel' },
@@ -24,29 +25,32 @@ export default function AdminDashboardScreen({ navigation }: any) {
   const [stats, setStats] = useState<Stats>({ totalUsers: 0, totalMateri: 0, totalSoal: 0, totalUEQ: 0 });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [usersSnap, materiSnap, soalSnap, ueqSnap] = await Promise.all([
-          getDocs(query(collection(db, 'users'), where('role', '==', 'user'))),
-          getDocs(collection(db, 'materi')),
-          getDocs(collection(db, 'soal')),
-          getDocs(collection(db, 'ueq_responses')),
-        ]);
-        setStats({
-          totalUsers: usersSnap.size,
-          totalMateri: materiSnap.size,
-          totalSoal: soalSnap.size,
-          totalUEQ: ueqSnap.size,
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchStats = async () => {
+        setLoading(true);
+        try {
+          const [usersSnap, materiSnap, soalSnap, ueqSnap] = await Promise.all([
+            getDocs(query(collection(db, 'users'), where('role', '==', 'user'))),
+            getDocs(collection(db, 'materi')),
+            getDocs(collection(db, 'soal')),
+            getDocs(collection(db, 'ueq_responses')),
+          ]);
+          setStats({
+            totalUsers: usersSnap.size,
+            totalMateri: materiSnap.size,
+            totalSoal: soalSnap.size,
+            totalUEQ: ueqSnap.size,
+          });
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchStats();
+    }, [])
+  );
 
   const handleLogout = async () => {
     try { await signOut(auth); } catch (e) { console.error(e); }
@@ -73,7 +77,7 @@ export default function AdminDashboardScreen({ navigation }: any) {
           <View style={styles.statsGrid}>
             <View style={[styles.statBox, { backgroundColor: '#f0fdf4', borderColor: '#2e7d32' }]}>
               <Text style={[styles.statVal, { color: '#2e7d32' }]}>{stats.totalUsers}</Text>
-              <Text style={styles.statLabel}>Siswa Terdaftar</Text>
+              <Text style={styles.statLabel}>Total User</Text>
             </View>
             <View style={styles.statBox}>
               <Text style={styles.statVal}>{stats.totalMateri}</Text>

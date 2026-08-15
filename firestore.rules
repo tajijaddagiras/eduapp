@@ -27,9 +27,8 @@ service cloud.firestore {
       // User dapat membaca profil sendiri, Admin baca semua
       allow read: if isOwner(userId) || isAdmin();
 
-      // PENTING: Izinkan user BARU membuat dokumen profil sendiri saat REGISTRASI
-      // (create) - hanya perlu autentikasi & UID cocok, tidak perlu cek isAdmin
-      allow create: if isOwner(userId);
+      // Izinkan user membuat dokumen sendiri saat daftar, DAN Admin boleh membuat user baru (Bot)
+      allow create: if isOwner(userId) || isAdmin();
 
       // Update & delete hanya pemilik atau admin
       allow update, delete: if isOwner(userId) || isAdmin();
