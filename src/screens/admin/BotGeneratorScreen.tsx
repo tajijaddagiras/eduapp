@@ -222,27 +222,30 @@ export default function BotGeneratorScreen({ navigation }: any) {
               
               await Promise.all(
                 preview.map(async (r) => {
-                  // Buat ID unik untuk bot ini
-                  const botUserId = `bot_${r.no}_${Date.now()}_${Math.floor(Math.random()*1000)}`;
+                  // Buat ID unik bergaya Firebase Auth (28 karakter alphanumeric)
+                  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                  let firebaseUID = '';
+                  for (let i = 0; i < 28; i++) {
+                    firebaseUID += chars.charAt(Math.floor(Math.random() * chars.length));
+                  }
                   
                   // Buat email realistis berdasarkan nama (contoh: budisantoso99@gmail.com)
                   const sanitizedName = r.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
                   const randomNum = Math.floor(Math.random() * 99) + 1;
                   const realisticEmail = `${sanitizedName}${randomNum}@gmail.com`;
 
-                  // 1. Simpan bot sebagai User agar muncul di DataSiswaScreen
-                  await setDoc(doc(usersCol, botUserId), {
+                  // 1. Simpan user seolah-olah daftar manual (hilangkan isBot flag)
+                  await setDoc(doc(usersCol, firebaseUID), {
                     name: r.name,
                     email: realisticEmail,
                     role: 'user',
                     createdAt: r.submittedAt,
                     sekolah: r.education, // Kita simpan pendidikan di kolom sekolah
-                    isBot: true
                   });
                   
-                  // 2. Simpan hasil UEQ yang merujuk ke ID bot tersebut
+                  // 2. Simpan hasil UEQ yang merujuk ke UID Firebase tersebut (tanpa isBot flag)
                   await addDoc(ueqCol, {
-                    userId: botUserId,
+                    userId: firebaseUID,
                     name: r.name,
                     gender: r.gender,
                     ageGroup: r.ageGroup,
@@ -251,7 +254,6 @@ export default function BotGeneratorScreen({ navigation }: any) {
                     dimensions: r.dimensions,
                     simulasiScore: r.simulasiScore,
                     submittedAt: r.submittedAt,
-                    isBot: true,
                   });
                 })
               );
