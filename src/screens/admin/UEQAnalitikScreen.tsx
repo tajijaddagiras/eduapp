@@ -24,12 +24,20 @@ interface Response {
   dimensions: Record<string, number>;
   simulasiScore: number;
   submittedAt: any;
+  gender?: string;
+  ageGroup?: string;
+  education?: string;
 }
 
 export default function UEQAnalitikScreen({ navigation }: any) {
   const [responses, setResponses] = useState<Response[]>([]);
   const [loading, setLoading] = useState(true);
   const [means, setMeans] = useState<Record<string, number>>({});
+  const [demographics, setDemographics] = useState({
+    gender: { 'Laki-laki': 0, 'Perempuan': 0 },
+    ageGroup: { '< 18 Tahun': 0, '18–25 Tahun': 0, '> 25 Tahun': 0 },
+    education: { 'SMA/Sederajat': 0, 'Diploma/Sarjana': 0, 'Lainnya': 0 }
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,11 +51,24 @@ export default function UEQAnalitikScreen({ navigation }: any) {
         if (data.length > 0) {
           const sums: Record<string, number> = {};
           DIM_KEYS.forEach(k => { sums[k] = 0; });
+          
+          const demo = {
+            gender: { 'Laki-laki': 0, 'Perempuan': 0 } as Record<string, number>,
+            ageGroup: { '< 18 Tahun': 0, '18–25 Tahun': 0, '> 25 Tahun': 0 } as Record<string, number>,
+            education: { 'SMA/Sederajat': 0, 'Diploma/Sarjana': 0, 'Lainnya': 0 } as Record<string, number>
+          };
+
           data.forEach(r => {
             DIM_KEYS.forEach(k => {
               sums[k] += (r.dimensions?.[k] || 0);
             });
+            // Demographics mapping
+            if (r.gender && demo.gender[r.gender] !== undefined) demo.gender[r.gender]++;
+            if (r.ageGroup && demo.ageGroup[r.ageGroup] !== undefined) demo.ageGroup[r.ageGroup]++;
+            if (r.education && demo.education[r.education] !== undefined) demo.education[r.education]++;
           });
+          
+          setDemographics(demo);
           const meansCalc: Record<string, number> = {};
           DIM_KEYS.forEach(k => {
             meansCalc[k] = parseFloat((sums[k] / data.length).toFixed(2));
@@ -79,7 +100,23 @@ export default function UEQAnalitikScreen({ navigation }: any) {
 
   const handleExport = async () => {
     try {
-      let csv = 'Dimensi,Rata-rata,Interpretasi\n';
+      const total = responses.length;
+      let csv = 'TABEL KARAKTERISTIK RESPONDEN\n';
+      csv += 'Karakteristik,Kategori,Jumlah,Persentase\n';
+      
+      const appendDemo = (charName: string, dataObj: Record<string, number>) => {
+        Object.entries(dataObj).forEach(([cat, count]) => {
+          const pct = total > 0 ? ((count / total) * 100).toFixed(1) + '%' : '0%';
+          csv += `${charName},${cat},${count},${pct}\n`;
+        });
+      };
+      
+      appendDemo('Jenis Kelamin', demographics.gender);
+      appendDemo('Usia', demographics.ageGroup);
+      appendDemo('Pendidikan Terakhir', demographics.education);
+      
+      csv += '\nTABEL HASIL UEQ\n';
+      csv += 'Skala UEQ,Nilai Rata-rata,Kategori\n';
       DIM_KEYS.forEach(k => {
         const interp = getInterpretation(means[k] || 0);
         csv += `${DIMENSIONS[k]},${means[k] || 0},${interp.label}\n`;
@@ -133,6 +170,45 @@ export default function UEQAnalitikScreen({ navigation }: any) {
             </View>
           ) : (
             <>
+              {/* Tabel Karakteristik Responden */}
+              <View style={styles.chartCard}>
+                <Text style={styles.chartTitle}>Karakteristik Responden</Text>
+                <Text style={styles.chartSubtitle}>Distribusi Demografis dari {responses.length} Responden</Text>
+                
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.th, { flex: 2 }]}>Kategori</Text>
+                  <Text style={[styles.th, { flex: 1, textAlign: 'center' }]}>Jumlah</Text>
+                  <Text style={[styles.th, { flex: 1, textAlign: 'right' }]}>Persentase</Text>
+                </View>
+                
+                <View style={styles.tableSectionTitle}><Text style={styles.sectionTitleText}>Jenis Kelamin</Text></View>
+                {Object.entries(demographics.gender).map(([cat, count]) => (
+                  <View key={`gender-${cat}`} style={styles.tableRow}>
+                    <Text style={[styles.td, { flex: 2 }]}>{cat}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'center', fontWeight: 'bold' }]}>{count}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'right' }]}>{responses.length > 0 ? ((count/responses.length)*100).toFixed(1) : 0}%</Text>
+                  </View>
+                ))}
+
+                <View style={styles.tableSectionTitle}><Text style={styles.sectionTitleText}>Usia</Text></View>
+                {Object.entries(demographics.ageGroup).map(([cat, count]) => (
+                  <View key={`age-${cat}`} style={styles.tableRow}>
+                    <Text style={[styles.td, { flex: 2 }]}>{cat}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'center', fontWeight: 'bold' }]}>{count}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'right' }]}>{responses.length > 0 ? ((count/responses.length)*100).toFixed(1) : 0}%</Text>
+                  </View>
+                ))}
+
+                <View style={styles.tableSectionTitle}><Text style={styles.sectionTitleText}>Pendidikan Terakhir</Text></View>
+                {Object.entries(demographics.education).map(([cat, count]) => (
+                  <View key={`edu-${cat}`} style={styles.tableRow}>
+                    <Text style={[styles.td, { flex: 2 }]}>{cat}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'center', fontWeight: 'bold' }]}>{count}</Text>
+                    <Text style={[styles.td, { flex: 1, textAlign: 'right' }]}>{responses.length > 0 ? ((count/responses.length)*100).toFixed(1) : 0}%</Text>
+                  </View>
+                ))}
+              </View>
+
               {/* Chart Card */}
               <View style={styles.chartCard}>
                 <Text style={styles.chartTitle}>Skala Pengalaman Pengguna</Text>
@@ -238,4 +314,8 @@ const styles = StyleSheet.create({
   tableHeadText: { fontWeight: 'bold', color: '#111827' },
   exportBtn: { backgroundColor: '#374151', padding: 16, borderRadius: 12, alignItems: 'center' },
   exportText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
+  th: { fontSize: 12, fontWeight: 'bold', color: '#374151' },
+  td: { fontSize: 12, color: '#4b5563' },
+  tableSectionTitle: { backgroundColor: '#e5e7eb', paddingVertical: 4, paddingHorizontal: 8, marginTop: 8, borderRadius: 4 },
+  sectionTitleText: { fontSize: 11, fontWeight: 'bold', color: '#374151' },
 });
