@@ -33,7 +33,11 @@ export default function UEQAnalitikScreen({ navigation }: any) {
   const [responses, setResponses] = useState<Response[]>([]);
   const [loading, setLoading] = useState(true);
   const [means, setMeans] = useState<Record<string, number>>({});
-  const [demographics, setDemographics] = useState({
+  const [demographics, setDemographics] = useState<{
+    gender: Record<string, number>;
+    ageGroup: Record<string, number>;
+    education: Record<string, number>;
+  }>({
     gender: { 'Laki-laki': 0, 'Perempuan': 0 },
     ageGroup: { '< 18 Tahun': 0, '18–25 Tahun': 0, '> 25 Tahun': 0 },
     education: { 'SMA/Sederajat': 0, 'Diploma/Sarjana': 0, 'Lainnya': 0 }
