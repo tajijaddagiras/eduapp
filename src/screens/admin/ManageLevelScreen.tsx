@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, Platform } from 'react-native';
 import { collection, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
@@ -45,23 +45,33 @@ export default function ManageLevelScreen({ navigation }: any) {
   }, [activeTab]);
 
   const handleDelete = async (id: string) => {
-    Alert.alert('Hapus Level', 'Yakin ingin menghapus level ini?', [
-      { text: 'Batal', style: 'cancel' },
-      { 
-        text: 'Hapus', 
-        style: 'destructive',
-        onPress: async () => {
-          setLoading(true);
-          try {
-            await deleteDoc(doc(db, 'level', id));
-            fetchLevel(activeTab);
-          } catch (error) {
-            console.error("Error deleting level:", error);
-            setLoading(false);
-          }
-        }
+    const confirmMessage = 'Yakin ingin menghapus level ini?';
+    
+    const processDelete = async () => {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, 'level', id));
+        fetchLevel(activeTab);
+      } catch (error) {
+        console.error("Error deleting level:", error);
+        setLoading(false);
       }
-    ]);
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) {
+        processDelete();
+      }
+    } else {
+      Alert.alert('Hapus Level', confirmMessage, [
+        { text: 'Batal', style: 'cancel' },
+        { 
+          text: 'Hapus', 
+          style: 'destructive',
+          onPress: processDelete
+        }
+      ]);
+    }
   };
 
   const navigateToAddForm = () => {

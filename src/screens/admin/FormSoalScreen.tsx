@@ -128,7 +128,8 @@ export default function FormSoalScreen({ route, navigation }: any) {
 
   const handleSave = async () => {
     if (!selectedLevel) {
-      Alert.alert('Error', 'Pilih level terlebih dahulu!');
+      if (Platform.OS === 'web') window.alert('Error: Pilih level terlebih dahulu!');
+      else Alert.alert('Error', 'Pilih level terlebih dahulu!');
       return;
     }
 
@@ -152,7 +153,8 @@ export default function FormSoalScreen({ route, navigation }: any) {
 
       if (gameType === 'DragDrop' || gameType === 'Binary') {
         if (!formName.trim() || !formExplanation.trim()) {
-          Alert.alert('Error', 'Semua field wajib harus diisi!');
+          if (Platform.OS === 'web') window.alert('Error: Semua field wajib harus diisi!');
+          else Alert.alert('Error', 'Semua field wajib harus diisi!');
           setLoading(false);
           setUploading(false);
           return;
@@ -175,7 +177,8 @@ export default function FormSoalScreen({ route, navigation }: any) {
       } else if (gameType === 'MultipleChoice') {
         if (!formQuestion.trim() || !formOptionA.trim() || !formOptionB.trim() || 
             !formOptionC.trim() || !formOptionD.trim() || !formExplanation.trim()) {
-          Alert.alert('Error', 'Semua field harus diisi!');
+          if (Platform.OS === 'web') window.alert('Error: Semua field harus diisi!');
+          else Alert.alert('Error', 'Semua field harus diisi!');
           setLoading(false);
           setUploading(false);
           return;
@@ -201,12 +204,18 @@ export default function FormSoalScreen({ route, navigation }: any) {
         }
       }
 
-      Alert.alert('Sukses', `Soal berhasil ${isEditMode ? 'diupdate' : 'ditambahkan'}`, [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      if (Platform.OS === 'web') {
+        window.alert(`Sukses: Soal berhasil ${isEditMode ? 'diupdate' : 'ditambahkan'}`);
+        navigation.goBack();
+      } else {
+        Alert.alert('Sukses', `Soal berhasil ${isEditMode ? 'diupdate' : 'ditambahkan'}`, [
+          { text: 'OK', onPress: () => navigation.goBack() }
+        ]);
+      }
     } catch (error) {
       console.error("Error saving document: ", error);
-      Alert.alert('Error', `Gagal ${isEditMode ? 'mengupdate' : 'menambahkan'} soal. Pastikan koneksi internet stabil.`);
+      if (Platform.OS === 'web') window.alert(`Error: Gagal ${isEditMode ? 'mengupdate' : 'menambahkan'} soal. Pastikan koneksi internet stabil.`);
+      else Alert.alert('Error', `Gagal ${isEditMode ? 'mengupdate' : 'menambahkan'} soal. Pastikan koneksi internet stabil.`);
     } finally {
       setLoading(false);
       setUploading(false);
@@ -464,7 +473,8 @@ const styles = StyleSheet.create({
     borderRadius: 10, 
     padding: 14, 
     backgroundColor: '#fafafa', 
-    fontSize: 14 
+    fontSize: 14,
+    outlineWidth: 0,
   },
   textarea: { height: 100, textAlignVertical: 'top' },
   fieldHint: { 

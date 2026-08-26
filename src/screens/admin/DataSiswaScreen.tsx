@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Image, Alert, Platform } from 'react-native';
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
@@ -86,55 +86,67 @@ export default function DataSiswaScreen({ navigation }: any) {
   const handleDeleteSelected = () => {
     if (selectedIds.length === 0) return;
     
-    Alert.alert(
-      'Hapus Data User',
-      `Apakah Anda yakin ingin menghapus ${selectedIds.length} user secara permanen? Data kuesioner mereka juga akan ikut terhapus.`,
-      [
-        { text: 'Batal', style: 'cancel' },
-        { 
-          text: 'Hapus', 
-          style: 'destructive',
-          onPress: async () => {
-             setLoading(true);
-             try {
-               const deletePromises: Promise<void>[] = [];
-               
-               // 1. Delete Users
-               for (const id of selectedIds) {
-                 deletePromises.push(deleteDoc(doc(db, 'users', id)));
-               }
-               
-               // 2. Delete UEQ Responses
-               const ueqSnap = await getDocs(collection(db, 'ueq_responses'));
-               ueqSnap.forEach(d => {
-                 if (selectedIds.includes(d.data().userId)) {
-                   deletePromises.push(deleteDoc(doc(db, 'ueq_responses', d.id)));
-                 }
-               });
-               
-               // 3. Delete Progress (if any)
-               const progressSnap = await getDocs(collection(db, 'progress'));
-               progressSnap.forEach(d => {
-                 if (selectedIds.includes(d.data().userId)) {
-                   deletePromises.push(deleteDoc(doc(db, 'progress', d.id)));
-                 }
-               });
-
-               await Promise.all(deletePromises);
-               
-               setSelectedIds([]);
-               setIsSelectMode(false);
-               Alert.alert('Berhasil', 'Data user beserta kuesionernya berhasil dihapus.');
-               fetchUsers();
-             } catch (error) {
-               console.error('Delete error', error);
-               Alert.alert('Gagal', 'Terjadi kesalahan saat menghapus data.');
-               setLoading(false);
-             }
-          }
+    const confirmMessage = `Apakah Anda yakin ingin menghapus ${selectedIds.length} user secara permanen? Data kuesioner mereka juga akan ikut terhapus.`;
+    
+    const processDelete = async () => {
+      setLoading(true);
+      try {
+        const deletePromises: Promise<void>[] = [];
+        
+        // 1. Delete Users
+        for (const id of selectedIds) {
+          deletePromises.push(deleteDoc(doc(db, 'users', id)));
         }
-      ]
-    );
+        
+        // 2. Delete UEQ Responses
+        const ueqSnap = await getDocs(collection(db, 'ueq_responses'));
+        ueqSnap.forEach(d => {
+          if (selectedIds.includes(d.data().userId)) {
+            deletePromises.push(deleteDoc(doc(db, 'ueq_responses', d.id)));
+          }
+        });
+        
+        // 3. Delete Progress (if any)
+        const progressSnap = await getDocs(collection(db, 'progress'));
+        progressSnap.forEach(d => {
+          if (selectedIds.includes(d.data().userId)) {
+            deletePromises.push(deleteDoc(doc(db, 'progress', d.id)));
+          }
+        });
+
+        await Promise.all(deletePromises);
+        
+        setSelectedIds([]);
+        setIsSelectMode(false);
+        if (Platform.OS === 'web') window.alert('Berhasil: Data user beserta kuesionernya berhasil dihapus.');
+        else Alert.alert('Berhasil', 'Data user beserta kuesionernya berhasil dihapus.');
+        fetchUsers();
+      } catch (error) {
+        console.error('Delete error', error);
+        if (Platform.OS === 'web') window.alert('Gagal: Terjadi kesalahan saat menghapus data.');
+        else Alert.alert('Gagal', 'Terjadi kesalahan saat menghapus data.');
+        setLoading(false);
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) {
+        processDelete();
+      }
+    } else {
+      Alert.alert(
+        'Hapus Data User',
+        confirmMessage,
+        [
+          { text: 'Batal', style: 'cancel' },
+          { 
+            text: 'Hapus', 
+            style: 'destructive',
+            onPress: processDelete
+          }
+        ]
+      );
+    }
   };
 
   const renderUserCard = ({ item }: { item: UserData }) => {

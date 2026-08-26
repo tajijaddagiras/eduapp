@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, TextInput, Platform } from 'react-native';
 import { collection, getDocs, deleteDoc, doc, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
@@ -37,23 +37,33 @@ export default function ManageKategoriScreen({ navigation }: any) {
   }, [navigation]);
 
   const handleDelete = async (id: string) => {
-    Alert.alert('Hapus Kategori', 'Yakin ingin menghapus kategori ini?', [
-      { text: 'Batal', style: 'cancel' },
-      { 
-        text: 'Hapus', 
-        style: 'destructive',
-        onPress: async () => {
-          setLoading(true);
-          try {
-            await deleteDoc(doc(db, 'kategori', id));
-            fetchKategori();
-          } catch (error) {
-            console.error("Error deleting kategori:", error);
-            setLoading(false);
-          }
-        }
+    const confirmMessage = 'Yakin ingin menghapus kategori ini?';
+    
+    const processDelete = async () => {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, 'kategori', id));
+        fetchKategori();
+      } catch (error) {
+        console.error("Error deleting kategori:", error);
+        setLoading(false);
       }
-    ]);
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) {
+        processDelete();
+      }
+    } else {
+      Alert.alert('Hapus Kategori', confirmMessage, [
+        { text: 'Batal', style: 'cancel' },
+        { 
+          text: 'Hapus', 
+          style: 'destructive',
+          onPress: processDelete
+        }
+      ]);
+    }
   };
 
   const navigateToAddForm = () => {

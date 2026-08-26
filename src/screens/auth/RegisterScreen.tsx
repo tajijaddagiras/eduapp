@@ -27,7 +27,7 @@ export default function RegisterScreen({ navigation }: any) {
       alert('Password minimal 6 karakter');
       return;
     }
-    
+
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -52,11 +52,11 @@ export default function RegisterScreen({ navigation }: any) {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -120,10 +120,10 @@ export default function RegisterScreen({ navigation }: any) {
                 secureTextEntry={!showPassword}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                <Ionicons 
-                  name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                  size={20} 
-                  color="#424843" 
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={20}
+                  color="#424843"
                 />
               </TouchableOpacity>
             </View>
@@ -143,19 +143,19 @@ export default function RegisterScreen({ navigation }: any) {
                 secureTextEntry={!showConfirmPassword}
               />
               <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)} style={styles.eyeIcon}>
-                <Ionicons 
-                  name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
-                  size={20} 
-                  color="#424843" 
+                <Ionicons
+                  name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
+                  size={20}
+                  color="#424843"
                 />
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Register Button */}
-          <TouchableOpacity 
-            style={[styles.registerButton, loading && styles.registerButtonDisabled]} 
-            onPress={handleRegister} 
+          <TouchableOpacity
+            style={[styles.registerButton, loading && styles.registerButtonDisabled]}
+            onPress={handleRegister}
             disabled={loading}
           >
             {loading ? (
@@ -176,7 +176,7 @@ export default function RegisterScreen({ navigation }: any) {
           </View>
 
           {/* Login Link */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.loginLink}
             onPress={() => navigation.goBack()}
           >
@@ -191,8 +191,8 @@ export default function RegisterScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
+  container: {
+    flex: 1,
     backgroundColor: '#fcf9ee', // background - konsisten
   },
   scrollContent: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 40,
   },
-  
+
   // Back Button
   backButton: {
     width: 40,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  
+
   // Logo Section
   logoContainer: {
     alignItems: 'center',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     color: '#424843', // on-surface-variant
     textAlign: 'center',
   },
-  
+
   formCard: {
     backgroundColor: '#f1eee3',
     borderRadius: 20,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     borderColor: '#01190a',
     padding: 24,
   },
-  
+
   // Input Fields
   inputContainer: {
     marginBottom: 18,
@@ -268,11 +268,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     color: '#1c1c15', // on-background
+    outlineWidth: 0,
   },
   eyeIcon: {
     padding: 4,
   },
-  
+
   registerButton: {
     backgroundColor: '#142e1d',
     borderRadius: 14,
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#cbead0', // primary-fixed
   },
-  
+
   // Divider
   divider: {
     flexDirection: 'row',
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
     color: '#424843', // on-surface-variant
     fontWeight: '600',
   },
-  
+
   // Login Link
   loginLink: {
     alignItems: 'center',

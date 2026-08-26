@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#1c1c15', // on-background
+    outlineWidth: 0,
   },
   eyeIcon: {
     padding: 4,

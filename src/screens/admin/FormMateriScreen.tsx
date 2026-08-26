@@ -167,7 +167,11 @@ export default function FormMateriScreen({ route, navigation }: any) {
   };
 
   const handleSave = async () => {
-    if (!formTitle.trim()) { Alert.alert('Error', 'Judul materi tidak boleh kosong!'); return; }
+    if (!formTitle.trim()) {
+      if (Platform.OS === 'web') window.alert('Error: Judul materi tidak boleh kosong!');
+      else Alert.alert('Error', 'Judul materi tidak boleh kosong!');
+      return;
+    }
     setLoading(true);
     setUploading(true);
     try {
@@ -201,12 +205,18 @@ export default function FormMateriScreen({ route, navigation }: any) {
         });
       }
 
-      Alert.alert('Berhasil', isEditMode ? 'Materi berhasil diperbarui!' : 'Materi berhasil ditambahkan!', [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      if (Platform.OS === 'web') {
+        window.alert(isEditMode ? 'Berhasil: Materi berhasil diperbarui!' : 'Berhasil: Materi berhasil ditambahkan!');
+        navigation.goBack();
+      } else {
+        Alert.alert('Berhasil', isEditMode ? 'Materi berhasil diperbarui!' : 'Materi berhasil ditambahkan!', [
+          { text: 'OK', onPress: () => navigation.goBack() }
+        ]);
+      }
     } catch (e) {
       console.error(e);
-      Alert.alert('Error', 'Gagal menyimpan materi. Pastikan koneksi internet stabil.');
+      if (Platform.OS === 'web') window.alert('Error: Gagal menyimpan materi. Pastikan koneksi internet stabil.');
+      else Alert.alert('Error', 'Gagal menyimpan materi. Pastikan koneksi internet stabil.');
     } finally {
       setLoading(false);
       setUploading(false);
@@ -388,7 +398,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: 'bold', color: '#111827' },
   fieldLabel: { fontSize: 13, fontWeight: 'bold', color: '#374151', marginBottom: 6, marginTop: 16 },
   fieldHint: { fontSize: 11, color: '#6b7280', marginBottom: 12, fontStyle: 'italic' },
-  input: { borderWidth: 1.5, borderColor: '#d1d5db', borderRadius: 10, padding: 14, backgroundColor: '#fafafa', fontSize: 14 },
+  input: { borderWidth: 1.5, borderColor: '#d1d5db', borderRadius: 10, padding: 14, backgroundColor: '#fafafa', fontSize: 14, outlineWidth: 0 },
   textarea: { height: 100, textAlignVertical: 'top' },
 
   sectionBox: {

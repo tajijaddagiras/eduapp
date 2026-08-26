@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, TextInput,
-  ActivityIndicator, Alert, ScrollView
+  ActivityIndicator, Alert, ScrollView, Platform
 } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -20,19 +20,24 @@ export default function FormLevelScreen({ route, navigation }: any) {
     return 'Tambah Level Pilihan Ganda';
   };
 
+  const showAlert = (title: string, msg: string) => {
+    if (Platform.OS === 'web') window.alert(`${title}: ${msg}`);
+    else Alert.alert(title, msg);
+  };
+
   const handleSave = async () => {
     if (!formName.trim()) {
-      Alert.alert('Error', 'Nama level tidak boleh kosong!');
+      showAlert('Error', 'Nama level tidak boleh kosong!');
       return;
     }
 
     if (!durasi.trim() || isNaN(Number(durasi)) || Number(durasi) <= 0) {
-      Alert.alert('Error', 'Durasi harus berupa angka positif!');
+      showAlert('Error', 'Durasi harus berupa angka positif!');
       return;
     }
 
     if (!nilaiPerSoal.trim() || isNaN(Number(nilaiPerSoal)) || Number(nilaiPerSoal) <= 0) {
-      Alert.alert('Error', 'Nilai per soal harus berupa angka positif!');
+      showAlert('Error', 'Nilai per soal harus berupa angka positif!');
       return;
     }
 
@@ -47,12 +52,17 @@ export default function FormLevelScreen({ route, navigation }: any) {
         createdAt: new Date()
       });
 
-      Alert.alert('Sukses', 'Level berhasil ditambahkan', [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      if (Platform.OS === 'web') {
+        window.alert('Sukses: Level berhasil ditambahkan');
+        navigation.goBack();
+      } else {
+        Alert.alert('Sukses', 'Level berhasil ditambahkan', [
+          { text: 'OK', onPress: () => navigation.goBack() }
+        ]);
+      }
     } catch (error) {
       console.error("Error adding level: ", error);
-      Alert.alert('Error', 'Gagal menambahkan level');
+      showAlert('Error', 'Gagal menambahkan level');
     } finally {
       setLoading(false);
     }
@@ -157,7 +167,8 @@ const styles = StyleSheet.create({
     borderRadius: 10, 
     padding: 14, 
     backgroundColor: '#fafafa', 
-    fontSize: 14 
+    fontSize: 14,
+    outlineWidth: 0,
   },
   fieldHint: { 
     fontSize: 11, 

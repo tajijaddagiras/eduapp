@@ -80,8 +80,8 @@ service cloud.firestore {
     match /ueq_responses/{document=**} {
       // Admin baca semua, User baca miliknya sendiri
       allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
-      // User yang login bisa SUBMIT
-      allow create: if isAuthenticated();
+      // User yang login bisa SUBMIT, Admin bisa untuk restore
+      allow create: if isAuthenticated() || isAdmin();
       // Update & delete hanya admin
       allow update, delete: if isAdmin();
     }
@@ -92,9 +92,9 @@ service cloud.firestore {
     match /progress/{progressId} {
       // User bisa baca progressnya sendiri, admin baca semua
       allow read: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
-      // User bisa buat & update progress miliknya sendiri
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // User bisa buat & update progress miliknya sendiri ATAU admin (untuk keperluan restore)
+      allow create: if (isAuthenticated() && request.resource.data.userId == request.auth.uid) || isAdmin();
+      allow update: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
       allow delete: if isAdmin();
     }
 

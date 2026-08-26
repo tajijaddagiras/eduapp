@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  ActivityIndicator, Alert, FlatList
+  ActivityIndicator, Alert, FlatList, Platform
 } from 'react-native';
 import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -210,74 +210,82 @@ export default function BotGeneratorScreen({ navigation }: any) {
 
   const handleSave = async () => {
     if (preview.length === 0) {
-      Alert.alert('Info', 'Generate data terlebih dahulu.');
+      if (Platform.OS === 'web') window.alert('Info: Generate data terlebih dahulu.');
+      else Alert.alert('Info', 'Generate data terlebih dahulu.');
       return;
     }
-    Alert.alert(
-      'Konfirmasi Simpan',
-      `Simpan ${preview.length} responden bot ke database Firebase?`,
-      [
-        { text: 'Batal', style: 'cancel' },
-        {
-          text: 'Simpan',
-          style: 'default',
-          onPress: async () => {
-            setSaving(true);
-            try {
-              const ueqCol = collection(db, 'ueq_responses');
-              const usersCol = collection(db, 'users');
-              
-              await Promise.all(
-                preview.map(async (r) => {
-                  // Buat ID unik bergaya Firebase Auth (28 karakter alphanumeric)
-                  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                  let firebaseUID = '';
-                  for (let i = 0; i < 28; i++) {
-                    firebaseUID += chars.charAt(Math.floor(Math.random() * chars.length));
-                  }
-                  
-                  // Buat email realistis berdasarkan nama (contoh: budisantoso99@gmail.com)
-                  const sanitizedName = r.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-                  const randomNum = Math.floor(Math.random() * 99) + 1;
-                  const realisticEmail = `${sanitizedName}${randomNum}@gmail.com`;
 
-                  // 1. Simpan user seolah-olah daftar manual (hilangkan isBot flag)
-                  await setDoc(doc(usersCol, firebaseUID), {
-                    name: r.name,
-                    email: realisticEmail,
-                    role: 'user',
-                    createdAt: r.submittedAt,
-                    sekolah: r.education, // Kita simpan pendidikan di kolom sekolah
-                  });
-                  
-                  // 2. Simpan hasil UEQ yang merujuk ke UID Firebase tersebut (tanpa isBot flag)
-                  await addDoc(ueqCol, {
-                    userId: firebaseUID,
-                    name: r.name,
-                    gender: r.gender,
-                    ageGroup: r.ageGroup,
-                    education: r.education,
-                    answers: r.answers,
-                    dimensions: r.dimensions,
-                    simulasiScore: r.simulasiScore,
-                    submittedAt: r.submittedAt,
-                  });
-                })
-              );
-              Alert.alert('Berhasil! ✅', `${preview.length} data responden berhasil disimpan ke Firebase.`, [
-                { text: 'Lihat Analitik', onPress: () => navigation.replace('UEQAnalitik') },
-                { text: 'OK' },
-              ]);
-            } catch (e) {
-              console.error(e);
-              Alert.alert('Error', 'Gagal menyimpan data. Coba lagi.');
-            } finally {
-              setSaving(false);
+    const confirmMessage = `Simpan ${preview.length} responden bot ke database Firebase?`;
+    const doSave = async () => {
+      setSaving(true);
+      try {
+        const ueqCol = collection(db, 'ueq_responses');
+        const usersCol = collection(db, 'users');
+        
+        await Promise.all(
+          preview.map(async (r) => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let firebaseUID = '';
+            for (let i = 0; i < 28; i++) {
+              firebaseUID += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-          },
-        },
-      ]
-    );
+            
+            const sanitizedName = r.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+            const randomNum = Math.floor(Math.random() * 99) + 1;
+            const realisticEmail = `${sanitizedName}${randomNum}@gmail.com`;
+
+            await setDoc(doc(usersCol, firebaseUID), {
+              name: r.name,
+              email: realisticEmail,
+              role: 'user',
+              createdAt: r.submittedAt,
+              sekolah: r.education,
+            });
+            
+            await addDoc(ueqCol, {
+              userId: firebaseUID,
+              name: r.name,
+              gender: r.gender,
+              ageGroup: r.ageGroup,
+              education: r.education,
+              answers: r.answers,
+              dimensions: r.dimensions,
+              simulasiScore: r.simulasiScore,
+              submittedAt: r.submittedAt,
+            });
+          })
+        );
+
+        if (Platform.OS === 'web') {
+          window.alert(`Berhasil! ✅ ${preview.length} data responden berhasil disimpan ke Firebase.`);
+          navigation.replace('UEQAnalitik');
+        } else {
+          Alert.alert('Berhasil! ✅', `${preview.length} data responden berhasil disimpan ke Firebase.`, [
+            { text: 'Lihat Analitik', onPress: () => navigation.replace('UEQAnalitik') },
+            { text: 'OK' },
+          ]);
+        }
+      } catch (e) {
+        console.error(e);
+        if (Platform.OS === 'web') window.alert('Error: Gagal menyimpan data. Coba lagi.');
+        else Alert.alert('Error', 'Gagal menyimpan data. Coba lagi.');
+      } finally {
+        setSaving(false);
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) doSave();
+    } else {
+      Alert.alert(
+        'Konfirmasi Simpan',
+        confirmMessage,
+        [
+          { text: 'Batal', style: 'cancel' },
+          { text: 'Simpan', style: 'default', onPress: doSave },
+        ]
+      );
+    }
   };
 
   const handleReset = () => {

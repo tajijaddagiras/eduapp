@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, FlatList,
-  ActivityIndicator, Alert, Image
+  ActivityIndicator, Alert, Image, Platform
 } from 'react-native';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -61,14 +61,22 @@ export default function ManageMateriScreen({ navigation }: any) {
   };
 
   const handleDelete = (id: string) => {
-    Alert.alert('Hapus Materi', 'Yakin ingin menghapus materi ini?', [
-      { text: 'Batal', style: 'cancel' },
-      { text: 'Hapus', style: 'destructive', onPress: async () => {
+    const confirmMessage = 'Yakin ingin menghapus materi ini?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) {
         setLoading(true);
-        await deleteDoc(doc(db, 'materi', id));
-        fetchMateri();
-      }},
-    ]);
+        deleteDoc(doc(db, 'materi', id)).then(() => fetchMateri());
+      }
+    } else {
+      Alert.alert('Hapus Materi', confirmMessage, [
+        { text: 'Batal', style: 'cancel' },
+        { text: 'Hapus', style: 'destructive', onPress: async () => {
+          setLoading(true);
+          await deleteDoc(doc(db, 'materi', id));
+          fetchMateri();
+        }},
+      ]);
+    }
   };
 
   return (

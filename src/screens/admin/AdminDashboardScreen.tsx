@@ -19,6 +19,7 @@ const menuItems = [
   { icon: '[L]', label: 'Kelola Level Soal',         nav: 'ManageLevel' },
   { icon: '[A]', label: 'Analisis Data UEQ',         nav: 'UEQAnalitik', highlight: true },
   { icon: '[🤖]', label: 'Bot Generator Kuesioner',  nav: 'BotGenerator', highlight: true },
+  { icon: '[💾]', label: 'Backup & Restore Data',   nav: 'BackupRestore', highlight: true },
 ];
 
 export default function AdminDashboardScreen({ navigation }: any) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, Image, Platform } from 'react-native';
 import { collection, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
@@ -76,23 +76,33 @@ export default function ManageSoalScreen({ navigation }: any) {
   }, [activeTab]);
 
   const handleDelete = async (id: string) => {
-    Alert.alert('Hapus Item', 'Yakin ingin menghapus item ini?', [
-      { text: 'Batal', style: 'cancel' },
-      { 
-        text: 'Hapus', 
-        style: 'destructive',
-        onPress: async () => {
-          setLoading(true);
-          try {
-            await deleteDoc(doc(db, 'soal', id));
-            fetchSoal(activeTab);
-          } catch (error) {
-            console.error("Error deleting document: ", error);
-            setLoading(false);
-          }
-        }
+    const confirmMessage = 'Yakin ingin menghapus item ini?';
+    
+    const processDelete = async () => {
+      setLoading(true);
+      try {
+        await deleteDoc(doc(db, 'soal', id));
+        fetchSoal(activeTab);
+      } catch (error) {
+        console.error("Error deleting document: ", error);
+        setLoading(false);
       }
-    ]);
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(confirmMessage)) {
+        processDelete();
+      }
+    } else {
+      Alert.alert('Hapus Item', confirmMessage, [
+        { text: 'Batal', style: 'cancel' },
+        { 
+          text: 'Hapus', 
+          style: 'destructive',
+          onPress: processDelete
+        }
+      ]);
+    }
   };
 
   const handleEdit = (item: SoalItem) => {
