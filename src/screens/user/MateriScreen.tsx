@@ -13,7 +13,6 @@ interface Materi {
   category: string;
   status: string;
   imageUrl?: string;
-  description?: string;
   createdAt?: any;
 }
 
@@ -87,12 +86,6 @@ export default function MateriScreen({ navigation }: any) {
     setFiltered(result);
   }, [data, activeFilter, search]);
 
-  const getDefaultDesc = (category: string) => {
-    if (category === 'Organik') return 'Pelajari cara mengolah sampah organik menjadi kompos yang bermanfaat.';
-    if (category === 'Anorganik') return 'Pelajari cara memilah dan mendaur ulang sampah anorganik dengan benar.';
-    return 'Pelajari materi edukasi pengelolaan sampah secara lengkap.';
-  };
-
   const isNewModule = (item: Materi) => {
     if (!item.createdAt) return false;
     const createdTime = item.createdAt.toDate ? item.createdAt.toDate().getTime() : new Date(item.createdAt).getTime();
@@ -165,11 +158,6 @@ export default function MateriScreen({ navigation }: any) {
         <View style={styles.newModuleContent}>
           <View style={styles.newModuleLeft}>
             <Text style={styles.newModuleTitle}>{item.title}</Text>
-            <Text style={styles.newModuleDesc} numberOfLines={2}>
-              {item.description && item.description.trim() !== ''
-                ? item.description
-                : getDefaultDesc(item.category)}
-            </Text>
             <View style={styles.newModuleCategoryRow}>
               <Ionicons
                 name={item.category === 'Organik' ? 'leaf-outline' : 'sync-outline'}
@@ -386,11 +374,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 4,
-  },
-  newModuleDesc: {
-    fontSize: 13,
-    color: '#d1fae5',
-    lineHeight: 18,
   },
   newModuleCategoryRow: {
     flexDirection: 'row',

@@ -109,7 +109,6 @@ export default function ManageMateriScreen({ navigation }: any) {
                   {item.category.toUpperCase()}
                 </Text>
               </View>
-              {item.content ? <Text style={styles.cardPreview} numberOfLines={1}>{item.content}</Text> : null}
               <View style={styles.cardActions}>
                 <TouchableOpacity style={styles.editBtn} onPress={() => openEdit(item)}>
                   <Text style={styles.editBtnText}>Edit Konten</Text>
@@ -145,7 +144,6 @@ const styles = StyleSheet.create({
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
   cardTitle: { fontSize: 15, fontWeight: 'bold', color: '#111827', flex: 1 },
   catBadge: { fontSize: 11, fontWeight: 'bold' },
-  cardPreview: { fontSize: 11, color: '#6b7280', marginBottom: 12 },
   cardActions: { flexDirection: 'row', gap: 8, marginTop: 4 },
   editBtn: { flex: 1, borderWidth: 1.5, borderColor: '#374151', borderRadius: 6, paddingVertical: 8, alignItems: 'center' },
   editBtnText: { fontSize: 12, fontWeight: 'bold', color: '#374151' },

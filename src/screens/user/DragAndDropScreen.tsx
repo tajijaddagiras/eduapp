@@ -27,6 +27,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   const [timeLeft, setTimeLeft] = useState(duration ? duration * 60 : 300);
   const [gameStarted, setGameStarted] = useState(false);
   const [hoveringZone, setHoveringZone] = useState<'organik' | 'anorganik' | null>(null);
+  const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
 
   const pan = useRef(new Animated.ValueXY()).current;
   const organikZoneRef = useRef<any>(null);
@@ -61,6 +62,13 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   }, [timeLeft, gameStarted]);
 
   const finishGame = async (finalScoreValue: number, finalWrongAnswers: any[]) => {
+    // Prevent double save
+    if (gameFinished) {
+      console.log('⚠️ Game already finished, skipping save');
+      return;
+    }
+    setGameFinished(true);
+    
     const totalItems = itemsRef.current.length || items.length;
     const poinPerSoal = nilaiPerSoal || 10;
     
@@ -75,6 +83,7 @@ export default function DragAndDropScreen({ route, navigation }: any) {
     
     try {
       if (user) {
+        console.log('💾 Saving progress: Simulasi Drag & Drop, Score:', finalScore);
         await addDoc(collection(db, 'progress'), {
           userId: user.uid,
           type: 'simulasi',
@@ -83,8 +92,11 @@ export default function DragAndDropScreen({ route, navigation }: any) {
           totalItems: totalItems,
           completedAt: new Date(),
         });
+        console.log('✅ Progress saved successfully');
       }
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      console.error('❌ Error saving progress:', e); 
+    }
 
     navigation.replace('HasilEvaluasi', {
       score: finalScore,

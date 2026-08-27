@@ -26,6 +26,7 @@ export default function BinaryScreen({ route, navigation }: any) {
   const [disableButtons, setDisableButtons] = useState(false);
   const [timeLeft, setTimeLeft] = useState(duration ? duration * 60 : 120);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -119,6 +120,13 @@ export default function BinaryScreen({ route, navigation }: any) {
       if (currentIndex < items.length - 1) {
         setCurrentIndex(currentIndex + 1);
       } else {
+        // Prevent double save
+        if (gameFinished) {
+          console.log('⚠️ Game already finished, skipping save');
+          return;
+        }
+        setGameFinished(true);
+        
         const totalItems = items.length;
         const poinPerSoal = nilaiPerSoal || 10;
         
@@ -133,6 +141,7 @@ export default function BinaryScreen({ route, navigation }: any) {
         
         try {
           if (user) {
+            console.log('💾 Saving progress: Klasifikasi Cepat, Score:', finalScore);
             await addDoc(collection(db, 'progress'), {
               userId: user.uid,
               type: 'klasifikasi',
@@ -141,8 +150,11 @@ export default function BinaryScreen({ route, navigation }: any) {
               totalItems: totalItems,
               completedAt: new Date(),
             });
+            console.log('✅ Progress saved successfully');
           }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+          console.error('❌ Error saving progress:', e); 
+        }
 
         navigation.replace('HasilEvaluasi', {
           score: finalScore,

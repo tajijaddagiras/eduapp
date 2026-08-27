@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Edu App",
-    "slug": "edu-app",
+    "name": "EDU APPS",
+    "slug": "edu-apps",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,9 +27,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "09f63d59-b82e-4dfe-b678-1fb7274b27f5"
+        "projectId": "f15e4841-4e3f-4c60-bab3-df1342b748cf"
       }
     },
-    "owner": "girasss"
+    "owner": "appsedus-team"
   }
 }

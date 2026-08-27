@@ -29,28 +29,42 @@ export default function RiwayatScreen({ navigation }: any) {
     
     setLoading(true);
     try {
+      // Query tanpa orderBy untuk avoid composite index requirement
       const q = query(
         collection(db, 'progress'),
-        where('userId', '==', user.uid),
-        orderBy('completedAt', 'desc')
+        where('userId', '==', user.uid)
       );
       
       const querySnapshot = await getDocs(q);
       const items: ProgressItem[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        items.push({
-          id: doc.id,
-          type: data.type || 'simulasi',
-          score: data.score || 0,
-          correctCount: data.correctCount || 0,
-          totalItems: data.totalItems || 0,
-          completedAt: data.completedAt?.toDate() || new Date(),
-        });
+        
+        // Filter: hanya tampilkan yang punya score (skip progress materi)
+        if (data.score !== undefined && data.score !== null) {
+          items.push({
+            id: doc.id,
+            type: data.type || 'simulasi',
+            score: data.score || 0,
+            correctCount: data.correctCount || 0,
+            totalItems: data.totalItems || 0,
+            completedAt: data.completedAt?.toDate() || new Date(),
+          });
+        }
       });
+      
+      // Sort di client side setelah fetch
+      items.sort((a, b) => b.completedAt.getTime() - a.completedAt.getTime());
+      
       setHistory(items);
+      console.log('✅ Fetched history:', items.length, 'items');
     } catch (error) {
-      console.error('Error fetching history:', error);
+      console.error('❌ Error fetching history:', error);
+      
+      // Jika error karena index, berikan link untuk create index
+      if (error instanceof Error && error.message.includes('index')) {
+        console.error('🔗 CREATE INDEX: Klik link di atas error ini untuk create Firestore index otomatis');
+      }
     } finally {
       setLoading(false);
     }

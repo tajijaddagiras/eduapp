@@ -7,22 +7,23 @@
   <title>EduSampah - Monochrome Wireframes (LMS Version)</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* Monochrome Draw.io Style Theme */
+    /* EduSampah Wireframe - Sketsa Monochrome */
     body {
-      background-color: #F0F0F0;
-      font-family: 'Courier New', Courier, monospace;
+      background-color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Arial', sans-serif;
       padding: 40px;
       margin: 0;
-      color: #333;
+      color: #000;
     }
 
     h1 {
       text-align: center;
-      color: #333;
+      color: #000;
       margin-bottom: 20px;
       font-size: 28px;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
     .controls {
@@ -31,19 +32,19 @@
     }
 
     .btn-download {
-      background-color: #333;
-      color: white;
+      background-color: #fff;
+      color: #000;
       border: 2px solid #000;
-      padding: 12px 24px;
+      padding: 14px 28px;
       font-size: 16px;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 900;
       font-family: inherit;
     }
 
     .btn-download:hover {
-      background-color: #555;
+      background-color: #f0f0f0;
     }
 
     .grid {
@@ -61,17 +62,17 @@
 
     .screen-title {
       margin-bottom: 12px;
-      color: #333;
-      font-weight: bold;
+      color: #000;
+      font-weight: 900;
       font-size: 14px;
       text-transform: uppercase;
     }
 
     .screen {
-      width: 320px;
-      height: 640px;
-      background-color: #FFFFFF;
-      border: 2px solid #333;
+      width: 360px;
+      height: 720px;
+      background-color: #fff;
+      border: 2px solid #000;
       border-radius: 32px;
       padding: 24px;
       box-sizing: border-box;
@@ -81,39 +82,41 @@
       flex-direction: column;
     }
 
-    /* Text Styles */
+    /* Text Styles - Bold Wireframe */
     .text-h1 {
-      font-size: 22px;
-      font-weight: bold;
-      color: #333;
+      font-size: 24px;
+      font-weight: 900;
+      color: #000;
       margin: 0 0 8px 0;
     }
 
     .text-h2 {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
+      font-size: 18px;
+      font-weight: 900;
+      color: #000;
       margin: 0 0 8px 0;
     }
 
     .text-h3 {
       font-size: 14px;
-      font-weight: bold;
-      color: #333;
+      font-weight: 900;
+      color: #000;
       margin: 0 0 4px 0;
     }
 
     .text-body {
-      font-size: 12px;
-      color: #555;
+      font-size: 13px;
+      color: #333;
       margin: 0 0 8px 0;
-      line-height: 1.4;
+      line-height: 1.5;
+      font-weight: 500;
     }
 
     .text-small {
-      font-size: 10px;
-      color: #777;
+      font-size: 11px;
+      color: #666;
       margin: 0;
+      font-weight: 600;
     }
 
     .text-center {
@@ -125,74 +128,79 @@
       display: block;
       margin-top: 24px;
       font-size: 13px;
-      color: #555;
+      color: #333;
       text-align: justify;
-      max-width: 320px;
+      max-width: 360px;
       line-height: 1.6;
     }
 
-    /* Wireframe primitives */
+    /* Wireframe primitives - Sketsa Style */
     .wf-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 24px;
-      border-bottom: 1px solid #DDD;
+      border-bottom: 2px solid #ddd;
       padding-bottom: 12px;
     }
 
     .wf-icon-circle {
-      width: 28px;
-      height: 28px;
-      border: 2px solid #333;
+      width: 32px;
+      height: 32px;
+      border: 2px solid #000;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 900;
+      color: #000;
+      background-color: #fff;
     }
 
     .wf-icon-square {
-      width: 28px;
-      height: 28px;
-      border: 2px solid #333;
-      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      border: 2px solid #000;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 900;
+      color: #000;
+      background-color: #fff;
     }
 
     .wf-block {
-      background-color: #F9F9F9;
-      border: 2px solid #999;
-      border-radius: 16px;
-      padding: 16px;
+      background-color: #fafafa;
+      border: 2px solid #000;
+      border-radius: 20px;
+      padding: 24px;
       margin-bottom: 16px;
     }
 
     .wf-card {
-      border: 2px solid #CCC;
-      background-color: #FFF;
-      border-radius: 16px;
+      border: 2px solid #000;
+      background-color: #fafafa;
+      border-radius: 20px;
       padding: 16px;
       margin-bottom: 12px;
     }
 
     .wf-image {
-      background-color: #EEE;
-      border: 2px dashed #999;
-      border-radius: 8px;
+      background-color: #f5f5f5;
+      border: 2px dashed #000;
+      border-radius: 16px;
       width: 100%;
       height: 140px;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #666;
-      font-size: 14px;
+      color: #999;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .wf-image-large {
@@ -200,32 +208,34 @@
     }
 
     .wf-image-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background-color: #EEE;
-      border: 2px dashed #999;
+      width: 140px;
+      height: 140px;
+      border-radius: 70px;
+      background-color: #fff;
+      border: 2px solid #000;
       margin: 0 auto 24px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #666;
+      color: #999;
       font-size: 14px;
+      font-weight: 900;
     }
 
     .wf-input {
-      height: 44px;
-      border: 2px solid #999;
+      height: 52px;
+      border: 2px solid #000;
       border-radius: 12px;
       width: 100%;
       margin-bottom: 16px;
       box-sizing: border-box;
-      padding: 0 12px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
-      color: #555;
-      font-size: 12px;
-      background-color: #FAFAFA;
+      color: #999;
+      font-size: 14px;
+      background-color: #fff;
+      font-weight: 600;
     }
 
     .wf-textarea {
@@ -235,34 +245,34 @@
     }
 
     .wf-button {
-      height: 48px;
-      background-color: #333;
-      color: white;
-      border: 2px solid #333;
-      border-radius: 12px;
+      height: 52px;
+      background-color: #fff;
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 16px;
       width: 100%;
       margin-top: auto;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 14px;
+      font-weight: 900;
+      font-size: 16px;
     }
 
     .wf-button-outline {
-      height: 48px;
-      border: 2px solid #333;
-      color: #333;
-      background-color: transparent;
-      border-radius: 12px;
+      height: 52px;
+      border: 2px solid #000;
+      color: #000;
+      background-color: #fff;
+      border-radius: 16px;
       width: 100%;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 14px;
+      font-weight: 900;
+      font-size: 16px;
     }
 
     .wf-bottom-nav {
@@ -271,8 +281,8 @@
       left: 16px;
       right: 16px;
       height: 60px;
-      border: 2px solid #333;
-      background-color: #FFFFFF;
+      border: 2px solid #000;
+      background-color: #fff;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -286,7 +296,7 @@
       gap: 4px;
       color: #999;
       font-size: 8px;
-      font-weight: bold;
+      font-weight: 900;
       width: 44px;
       text-align: center;
     }
@@ -294,31 +304,33 @@
     .wf-nav-icon {
       width: 20px;
       height: 20px;
-      border: 2px solid #999;
+      border: 2px solid #ccc;
       border-radius: 4px;
+      background-color: #fff;
     }
 
     .wf-nav-center {
       width: 50px;
       height: 50px;
-      background-color: #333;
+      background-color: #fff;
+      border: 2px solid #000;
       border-radius: 50%;
       margin-top: -24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #FFF;
-      font-weight: bold;
+      color: #000;
+      font-weight: 900;
       font-size: 10px;
     }
 
     .wf-nav-item.active {
-      color: #333;
+      color: #000;
     }
 
     .wf-nav-item.active .wf-nav-icon {
-      background-color: #333;
-      border-color: #333;
+      background-color: #000;
+      border-color: #000;
     }
 
     .wf-grid-2 {
@@ -329,10 +341,10 @@
     }
 
     .wf-box {
-      background-color: #F9F9F9;
-      border: 2px solid #CCC;
-      border-radius: 4px;
-      padding: 12px;
+      background-color: #fafafa;
+      border: 2px solid #000;
+      border-radius: 16px;
+      padding: 16px;
       text-align: center;
     }
 
@@ -342,34 +354,38 @@
       gap: 16px;
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 1px dashed #CCC;
+      border-bottom: 2px dashed #ccc;
     }
 
     .wf-avatar-small {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 2px solid #333;
+      width: 42px;
+      height: 42px;
+      border-radius: 21px;
+      border: 2px solid #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 12px;
+      font-weight: 900;
+      font-size: 14px;
+      color: #000;
+      background-color: #fff;
     }
 
     .wf-badge {
-      padding: 4px 8px;
-      border: 1px solid #333;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: bold;
+      padding: 6px 12px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #000;
+      background-color: #fff;
     }
 
     /* Progress Bar */
     .wf-progress-bg {
       height: 8px;
-      background-color: #EEE;
-      border: 1px solid #CCC;
+      background-color: #f0f0f0;
+      border: 2px solid #000;
       border-radius: 4px;
       width: 100%;
       margin-bottom: 16px;
@@ -377,14 +393,14 @@
 
     .wf-progress-fill {
       height: 100%;
-      background-color: #666;
-      border-radius: 3px;
+      background-color: #000;
+      border-radius: 2px;
     }
 
     /* UEQ Chart Styles */
     .wf-chart-bar {
       height: 16px;
-      background-color: #333;
+      background-color: #000;
       border-radius: 2px;
       margin-bottom: 8px;
     }
@@ -403,19 +419,26 @@
     <!-- 1. Splash Screen -->
     <div class="screen-container">
       <div class="screen-title">01. Splash Screen</div>
-      <div class="screen" style="justify-content: center; align-items: center;" id="screen-splash">
-        <div class="wf-image-circle"
-          style="width: 120px; height: 120px; border: 4px solid #333; background-color: #FFF;">
-          [ LOGO ]
-        </div>
-        <p class="text-h1 text-center">EduSampah</p>
+      <div class="screen" style="justify-content: center; align-items: center; position: relative;" id="screen-splash">
+        <!-- Decorative Circle Top-Right -->
+        <div style="position: absolute; top: -100px; right: -80px; width: 240px; height: 240px; border-radius: 50%; background-color: #f0f0f0; border: 2px dashed #ccc;"></div>
 
-        <div style="position: absolute; bottom: 60px; display: flex; flex-direction: column; align-items: center;">
-          <div
-            style="width: 24px; height: 24px; border: 3px solid #CCC; border-top-color: #333; border-radius: 50%; margin-bottom: 16px;">
+        <!-- Main Content -->
+        <div style="z-index: 10; display: flex; flex-direction: column; align-items: center;">
+          <!-- Logo Circle -->
+          <div style="width: 140px; height: 140px; border: 2px solid #000; border-radius: 70px; background-color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <p style="font-size: 14px; margin: 0; font-weight: 900; color: #000;">LOGO</p>
           </div>
-          <p class="text-small">Loading...</p>
+          
+          <!-- Title -->
+          <p class="text-h1 text-center" style="margin-bottom: 8px;">Mulai Langkah Kecilmu</p>
+          
+          <!-- Subtitle -->
+          <p class="text-body text-center" style="color: #999; font-size: 12px;">Selamatkan Bumi Hari Ini</p>
         </div>
+
+        <!-- Decorative Circle Bottom-Left -->
+        <div style="position: absolute; bottom: -120px; left: -100px; width: 280px; height: 280px; border-radius: 50%; background-color: #f0f0f0; border: 2px dashed #ccc;"></div>
       </div>
       <div class="screen-desc">Ini adalah halaman pertama yang muncul saat aplikasi dibuka. Tujuannya untuk menampilkan
         logo aplikasi sementara sistem memuat data di latar belakang sebelum masuk ke halaman utama.</div>
@@ -425,17 +448,31 @@
     <div class="screen-container">
       <div class="screen-title">02. Onboarding</div>
       <div class="screen" id="screen-onboarding">
-        <div class="wf-image wf-image-large" style="margin-top: 20px; border-style: solid;">[ ILUSTRASI EDUKASI ]</div>
-        <p class="text-h1 text-center" style="margin-top: 24px;">Mari Belajar Memilah</p>
-        <p class="text-body text-center" style="margin-bottom: 40px;">Tingkatkan pengetahuan Anda tentang pengelolaan
-          sampah melalui modul edukasi interaktif kami.</p>
-
-        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 20px; margin-bottom: 40px;">
-          <div style="width: 24px; height: 8px; background-color: #333; border-radius: 4px;"></div>
-          <div style="width: 8px; height: 8px; background-color: #CCC; border-radius: 4px;"></div>
-          <div style="width: 8px; height: 8px; background-color: #CCC; border-radius: 4px;"></div>
+        <!-- Skip Button -->
+        <div style="align-self: flex-end; padding: 10px 20px; border-radius: 8px; border: 2px solid #000; background-color: #fff; margin-bottom: 20px;">
+          <p class="text-small" style="color: #000; font-weight: 900;">Lewati</p>
         </div>
-        <div class="wf-button">Mulai Belajar</div>
+
+        <!-- Image Card -->
+        <div style="width: 100%; height: 280px; background-color: #f5f5f5; border-radius: 24px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+          <p class="text-body" style="color: #999; font-weight: 700;">[ Gambar Ilustrasi Edukasi ]</p>
+        </div>
+
+        <!-- Text Card -->
+        <div class="wf-card" style="border-radius: 20px; padding: 24px;">
+          <p class="text-h1 text-center" style="margin-bottom: 12px;">Mari Belajar Memilah</p>
+          <p class="text-body text-center">Kenali perbedaan antara sampah organik dan anorganik untuk menjaga lingkungan kita bersama.</p>
+        </div>
+
+        <!-- Pagination Dots -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px; margin-bottom: 24px;">
+          <div style="width: 32px; height: 10px; background-color: #000; border-radius: 5px; border: 2px solid #000;"></div>
+          <div style="width: 10px; height: 10px; background-color: #fff; border-radius: 5px; border: 2px solid #000;"></div>
+          <div style="width: 10px; height: 10px; background-color: #fff; border-radius: 5px; border: 2px solid #000;"></div>
+        </div>
+
+        <!-- Next Button -->
+        <div class="wf-button" style="margin-top: auto;">Selanjutnya →</div>
       </div>
       <div class="screen-desc">Halaman pengenalan singkat untuk pengguna baru. Di sini ada ilustrasi dan teks penjelasan
         singkat tentang tujuan aplikasi, yaitu belajar memilah sampah. Setelah ini, pengguna bisa lanjut ke halaman
@@ -446,16 +483,56 @@
     <div class="screen-container">
       <div class="screen-title">03. Login</div>
       <div class="screen" id="screen-login">
-        <p class="text-h1 text-center" style="margin-top: 40px; margin-bottom: 8px;">Selamat Datang</p>
-        <p class="text-body text-center" style="margin-bottom: 40px;">Masuk ke akun belajar Anda</p>
+        <!-- Logo Section -->
+        <div style="text-align: center; margin-bottom: 40px; margin-top: 20px;">
+          <div style="width: 100px; height: 100px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 80px; height: 80px; border: 2px solid #000; border-radius: 40px; display: flex; align-items: center; justify-content: center; background-color: #fff;">
+              <p style="font-size: 11px; margin: 0; font-weight: 900; color: #000;">[ LOGO ]</p>
+            </div>
+          </div>
+          <p class="text-h1" style="margin-bottom: 8px;">Selamat Datang!</p>
+          <p class="text-body" style="color: #999;">Masuk untuk melanjutkan belajar</p>
+        </div>
 
-        <div class="wf-input">[Icon] Email</div>
-        <div class="wf-input">[Icon] Password</div>
-        <p class="text-body" style="text-align: right; font-weight: bold; margin-bottom: 24px;">Lupa Password?</p>
+        <!-- Form Card -->
+        <div class="wf-card" style="padding: 24px; background-color: #fafafa; border-radius: 24px;">
+          <!-- Email Input -->
+          <div style="margin-bottom: 20px;">
+            <p class="text-h3" style="margin-bottom: 8px;">Email</p>
+            <div class="wf-input" style="display: flex; align-items: center; gap: 12px; border-radius: 16px;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; flex: 1; font-weight: 500;">Masukkan email Anda</span>
+            </div>
+          </div>
 
-        <div class="wf-button">Masuk</div>
+          <!-- Password Input -->
+          <div style="margin-bottom: 24px;">
+            <p class="text-h3" style="margin-bottom: 8px;">Password</p>
+            <div class="wf-input" style="display: flex; align-items: center; gap: 12px; border-radius: 16px;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; flex: 1; font-weight: 500;">Masukkan password Anda</span>
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+            </div>
+          </div>
 
-        <p class="text-body text-center" style="margin-top: auto;">Belum punya akun? <b>Daftar di sini</b></p>
+          <!-- Login Button -->
+          <div class="wf-button" style="margin-top: 8px; margin-bottom: 24px; background-color: #fff; color: #000; border-radius: 16px;">
+            <span>Masuk</span>
+            <span style="margin-left: 8px;">→</span>
+          </div>
+
+          <!-- Divider -->
+          <div style="display: flex; align-items: center; margin-bottom: 24px;">
+            <div style="flex: 1; height: 1px; background-color: #ddd;"></div>
+            <p class="text-body" style="margin: 0 16px; color: #999; font-weight: 500;">atau</p>
+            <div style="flex: 1; height: 1px; background-color: #ddd;"></div>
+          </div>
+
+          <!-- Register Link -->
+          <p class="text-body" style="text-align: center; margin: 0; font-weight: 500;">
+            Belum punya akun? <span style="font-weight: 900; color: #000;">Daftar di sini</span>
+          </p>
+        </div>
       </div>
       <div class="screen-desc">Halaman untuk masuk ke dalam aplikasi. Pengguna yang sudah punya akun tinggal memasukkan
         email dan password mereka di sini untuk bisa mengakses materi dan simulasi.</div>
@@ -464,19 +541,78 @@
     <!-- 4. Register -->
     <div class="screen-container">
       <div class="screen-title">04. Register</div>
-      <div class="screen" id="screen-register">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Buat Akun</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" id="screen-register" style="padding-top: 16px; padding-bottom: 16px;">
+        <!-- Back Button -->
+        <div style="margin-bottom: 20px;">
+          <div style="width: 48px; height: 48px; border-radius: 24px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background-color: #fff;">
+            <span style="color: #000; font-weight: 900; font-size: 18px;">←</span>
+          </div>
         </div>
 
-        <div class="wf-input" style="margin-top: 24px;">[Icon] Nama Lengkap</div>
-        <div class="wf-input">[Icon] Email</div>
-        <div class="wf-input">[Icon] Password</div>
-        <div class="wf-input">[Icon] Konfirmasi Password</div>
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 24px;">
+          <p class="text-h1" style="margin-bottom: 8px;">Daftar Akun Baru</p>
+          <p class="text-body" style="color: #999; font-size: 12px;">Mulai perjalanan belajar Anda</p>
+        </div>
 
-        <div class="wf-button" style="margin-top: 32px;">Daftar Akun</div>
+        <!-- Form Card -->
+        <div class="wf-card" style="padding: 20px; background-color: #fafafa; border-radius: 24px;">
+          <!-- Name Input -->
+          <div style="margin-bottom: 12px;">
+            <p class="text-h3" style="margin-bottom: 6px; font-size: 12px;">Nama Lengkap</p>
+            <div class="wf-input" style="height: 48px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 0;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; font-weight: 500; font-size: 12px;">Masukkan nama lengkap</span>
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div style="margin-bottom: 12px;">
+            <p class="text-h3" style="margin-bottom: 6px; font-size: 12px;">Email</p>
+            <div class="wf-input" style="height: 48px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 0;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; font-weight: 500; font-size: 12px;">Masukkan email Anda</span>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div style="margin-bottom: 12px;">
+            <p class="text-h3" style="margin-bottom: 6px; font-size: 12px;">Password</p>
+            <div class="wf-input" style="height: 48px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 0;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; flex: 1; font-weight: 500; font-size: 12px;">Minimal 6 karakter</span>
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+            </div>
+          </div>
+
+          <!-- Confirm Password Input -->
+          <div style="margin-bottom: 16px;">
+            <p class="text-h3" style="margin-bottom: 6px; font-size: 12px;">Konfirmasi Password</p>
+            <div class="wf-input" style="height: 48px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 0;">
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+              <span style="color: #999; flex: 1; font-weight: 500; font-size: 12px;">Ketik ulang password</span>
+              <span style="color: #666; font-size: 10px; font-weight: 700;">[ icon ]</span>
+            </div>
+          </div>
+
+          <!-- Register Button -->
+          <div class="wf-button" style="margin-top: 4px; margin-bottom: 16px; background-color: #fff; color: #000; border-radius: 16px; height: 48px;">
+            <span>Daftar</span>
+            <span style="margin-left: 8px;">✓</span>
+          </div>
+
+          <!-- Divider -->
+          <div style="display: flex; align-items: center; margin-bottom: 16px;">
+            <div style="flex: 1; height: 1px; background-color: #ddd;"></div>
+            <p class="text-body" style="margin: 0 16px; color: #999; font-weight: 500; font-size: 11px;">atau</p>
+            <div style="flex: 1; height: 1px; background-color: #ddd;"></div>
+          </div>
+
+          <!-- Login Link -->
+          <p class="text-body" style="text-align: center; margin: 0; font-weight: 500; font-size: 12px;">
+            Sudah punya akun? <span style="font-weight: 900; color: #000;">Masuk di sini</span>
+          </p>
+        </div>
       </div>
       <div class="screen-desc">Kalau pengguna belum punya akun, mereka akan diarahkan ke halaman ini untuk mendaftar.
         Data yang diminta cukup sederhana, yaitu nama lengkap, email, dan password untuk membuat profil baru.</div>
@@ -488,7 +624,7 @@
       <div class="screen" style="padding-bottom: 60px;" id="screen-home">
         <div class="wf-header" style="border: none; padding-bottom: 0;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="wf-avatar-small" style="background-color: #EEE;">U</div>
+            <div class="wf-avatar-small" style="background-color: #fff;">U</div>
             <div>
               <p class="text-h3" style="margin: 0;">Hai, Pengguna!</p>
               <p class="text-small" style="font-weight: normal;">Yuk lanjutkan misi memilah harimu</p>
@@ -497,17 +633,16 @@
         </div>
 
         <!-- Tips Hari Ini -->
-        <div class="wf-card" style="background-color: #333; color: white; border-radius: 20px; padding: 12px;">
-          <div class="wf-badge"
-            style="background-color: #555; color: white; display: inline-block; margin-bottom: 8px;">Tips hari ini</div>
+        <div class="wf-card" style="border-radius: 16px; padding: 12px;">
+          <div class="wf-badge" style="display: inline-block; margin-bottom: 8px;">Tips hari ini</div>
           <div style="display: flex; gap: 8px;">
             <div style="flex: 1;">
-              <p class="text-h3" style="color: white; margin-bottom: 4px;">Tahukah kamu?</p>
-              <p class="text-body" style="color: #CCC; font-size: 10px;">Satu botol plastik yang didaur ulang dapat
+              <p class="text-h3" style="margin-bottom: 4px;">Tahukah kamu?</p>
+              <p class="text-body" style="font-size: 10px;">Satu botol plastik yang didaur ulang dapat
                 menghemat energi untuk menyalakan lampu 6 jam!</p>
             </div>
             <div
-              style="width: 40px; height: 40px; border: 1px dashed #FFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">
+              style="width: 40px; height: 40px; border: 2px dashed #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; font-weight: 700;">
               IMG</div>
           </div>
         </div>
@@ -522,22 +657,23 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="wf-grid-2" style="margin-bottom: 0;">
+        <div class="wf-grid-2" style="margin-bottom: 16px;">
           <div class="wf-box" style="border-radius: 16px; padding: 12px; text-align: left;">
             <p class="text-small" style="margin-bottom: 8px;">Skor rata-rata</p>
             <p class="text-h2" style="margin-bottom: 4px;">85</p>
-            <div style="display: flex; gap: 2px;">
-              <div style="width: 8px; height: 16px; background-color: #333; border-radius: 2px;"></div>
-              <div style="width: 8px; height: 24px; background-color: #333; border-radius: 2px;"></div>
-              <div style="width: 8px; height: 12px; background-color: #333; border-radius: 2px;"></div>
+            <div style="display: flex; gap: 2px; align-items: flex-end; height: 24px;">
+              <div style="width: 8px; height: 16px; background-color: #000; border-radius: 2px; border: 2px solid #000;"></div>
+              <div style="width: 8px; height: 24px; background-color: #000; border-radius: 2px; border: 2px solid #000;"></div>
+              <div style="width: 8px; height: 12px; background-color: #000; border-radius: 2px; border: 2px solid #000;"></div>
             </div>
           </div>
           <div class="wf-box" style="border-radius: 16px; padding: 12px; text-align: left;">
             <p class="text-small" style="margin-bottom: 8px;">Simulasi selesai</p>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
               <div class="wf-icon-square" style="width: 20px; height: 20px; font-size: 10px;">v</div>
               <p class="text-h2" style="margin: 0;">5</p>
             </div>
+            <p class="text-small" style="margin: 0; color: #666;">Level: <span style="font-weight: 700;">[ icon ] Ahli</span></p>
           </div>
         </div>
 
@@ -545,11 +681,11 @@
         <div class="wf-card" style="border-radius: 16px; padding: 12px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
             <p class="text-h3" style="margin: 0;">Misi hari ini</p>
-            <p class="text-small" style="font-weight: bold;">1/3 selesai</p>
+            <p class="text-small" style="font-weight: normal;">1/3 selesai</p>
           </div>
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
             <div class="wf-icon-circle"
-              style="width: 16px; height: 16px; border-radius: 8px; background-color: #333; color: white; font-size: 8px;">
+              style="width: 16px; height: 16px; border-radius: 8px; background-color: #000; color: #fff; font-size: 8px;">
               v</div>
             <p class="text-body" style="margin: 0;">Baca 1 materi baru</p>
           </div>
@@ -563,7 +699,7 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
           <div class="wf-button" style="margin: 0; flex: 1; font-size: 10px; height: 36px;">Lanjutkan Belajar</div>
           <div class="wf-button-outline" style="margin: 0; flex: 1; font-size: 10px; height: 36px;">Latihan Simulasi
           </div>
@@ -571,12 +707,12 @@
 
         <div class="wf-bottom-nav">
           <div class="wf-nav-item active">
-            <div class="wf-nav-icon" style="background-color: #333;"></div>Beranda
+            <div class="wf-nav-icon" style="background-color: #000;"></div>Beranda
           </div>
           <div class="wf-nav-item">
             <div class="wf-nav-icon"></div>Materi
           </div>
-          <div class="wf-nav-item" style="color: #333;">
+          <div class="wf-nav-item" style="color: #000;">
             <div class="wf-nav-center">Q</div>Kuesioner
           </div>
           <div class="wf-nav-item">
@@ -596,38 +732,85 @@
     <div class="screen-container">
       <div class="screen-title">06. List Materi Edukasi</div>
       <div class="screen" style="padding-bottom: 60px;" id="screen-edukasi">
-        <div class="wf-header">
-          <p class="text-h2" style="margin: 0;">Modul Edukasi</p>
-          <div class="wf-icon-circle">[s]</div>
+        <div class="wf-header" style="border: none; padding-bottom: 0; margin-bottom: 16px;">
+          <p class="text-h2" style="margin: 0;">Materi Edukasi</p>
+          <div class="wf-icon-circle" style="font-size: 12px;">[s]</div>
         </div>
 
-        <div class="wf-input" style="height: 36px; border-radius: 18px;">Cari materi pembelajaran...</div>
+        <div class="wf-input" style="height: 40px; border-radius: 20px; margin-bottom: 16px;">Cari materi pembelajaran...</div>
 
         <div style="display: flex; gap: 8px; margin-bottom: 20px;">
-          <div class="wf-badge" style="background-color: #333; color: white;">Semua</div>
-          <div class="wf-badge">Organik</div>
-          <div class="wf-badge">Anorganik</div>
+          <div class="wf-badge" style="background-color: #fff; color: #000; padding: 8px 16px; border: 2px solid #000;">Semua</div>
+          <div class="wf-badge" style="padding: 8px 16px;">Organik</div>
+          <div class="wf-badge" style="padding: 8px 16px;">Anorganik</div>
         </div>
 
-        <div class="wf-card"
-          style="display: flex; gap: 12px; padding: 12px; border: 2px solid #333; background-color: #FAFAFA;">
-          <div style="width: 60px; height: 60px; background-color: #EEE; border: 1px solid #CCC; border-radius: 4px;">
+        <!-- Grid 2 Columns -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <!-- Card 1 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">SISA NASI & MAKANAN ...</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ORGANIK
+            </p>
           </div>
-          <div style="flex: 1;">
-            <p class="text-small" style="font-weight: bold; margin-bottom: 4px; color: #333;">[ ORGANIK ] - <span
-                style="color: #666;">Sudah dibaca</span></p>
-            <p class="text-h3" style="margin-bottom: 4px;">Pengenalan Kompos</p>
-            <p class="text-body" style="font-size: 10px;">Cara mengolah sisa makanan...</p>
-          </div>
-        </div>
 
-        <div class="wf-card" style="display: flex; gap: 12px; padding: 12px;">
-          <div style="width: 60px; height: 60px; background-color: #EEE; border: 1px solid #CCC; border-radius: 4px;">
+          <!-- Card 2 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">KULIT BUAH & SISA BUAH-BUAHAN</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ORGANIK
+            </p>
           </div>
-          <div style="flex: 1;">
-            <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">[ ANORGANIK ]</p>
-            <p class="text-h3" style="margin-bottom: 4px;">Daur Ulang Plastik</p>
-            <p class="text-body" style="font-size: 10px;">Jenis plastik daur ulang...</p>
+
+          <!-- Card 3 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">DAUN KERING & RANTING POHON</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ORGANIK
+            </p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">CANGKANG TELUR</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ORGANIK
+            </p>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">PLASTIK KEMASAN</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ANORGANIK
+            </p>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="wf-card" style="padding: 12px; border-radius: 20px; background-color: #fafafa;">
+            <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 9px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+            </div>
+            <p class="text-h3" style="font-size: 11px; margin-bottom: 4px; line-height: 1.3;">BOTOL PLASTIK</p>
+            <p class="text-small" style="font-size: 9px; color: #666; display: flex; align-items: center; gap: 4px; margin: 0;">
+              <span style="font-size: 8px;">[ icon ]</span> ANORGANIK
+            </p>
           </div>
         </div>
 
@@ -636,9 +819,9 @@
             <div class="wf-nav-icon"></div>Beranda
           </div>
           <div class="wf-nav-item active">
-            <div class="wf-nav-icon" style="background-color: #333;"></div>Materi
+            <div class="wf-nav-icon" style="background-color: #000;"></div>Materi
           </div>
-          <div class="wf-nav-item" style="color: #333;">
+          <div class="wf-nav-item" style="color: #000;">
             <div class="wf-nav-center">Q</div>Kuesioner
           </div>
           <div class="wf-nav-item">
@@ -664,13 +847,13 @@
           <div class="wf-icon-circle">...</div>
         </div>
 
-        <div class="wf-image wf-image-large" style="border-style: solid;">[ BANNER GAMBAR ]</div>
+        <div class="wf-image wf-image-large" style="border-style: solid; border-width: 2px;">[ BANNER GAMBAR ]</div>
 
         <div class="wf-badge" style="display: inline-block; margin-bottom: 8px;">[ ORGANIK ]</div>
         <p class="text-h2">Pengenalan Kompos Rumah Tangga</p>
         <p class="text-small" style="margin-bottom: 16px;">Estimasi baca: 12 Menit</p>
 
-        <div style="width: 100%; height: 1px; background-color: #CCC; margin-bottom: 16px;"></div>
+        <div style="width: 100%; height: 2px; background-color: #ccc; margin-bottom: 16px;"></div>
 
         <p class="text-h3">Apa itu Kompos?</p>
         <p class="text-body" style="text-align: justify;">Sampah organik adalah barang yang dianggap sudah tidak
@@ -681,7 +864,7 @@
           tertutup yang kedap udara<br>• Masukkan tanah secukupnya<br>• Campurkan sisa potongan sayur dan kulit
           buah<br>• Tutup rapat dan tunggu 2 minggu</p>
 
-        <div class="wf-button" style="background-color: transparent; border: 2px solid #333; color: #333;">[ V ] Tandai
+        <div class="wf-button" style="background-color: #fff; border-width: 2px; color: #000;">[ V ] Tandai
           Telah Selesai Dibaca</div>
       </div>
       <div class="screen-desc">Ketika pengguna memilih materi, mereka akan masuk ke halaman ini untuk membacanya secara
@@ -693,40 +876,69 @@
     <div class="screen-container">
       <div class="screen-title">08. Daftar Evaluasi & Simulasi</div>
       <div class="screen" style="padding-bottom: 60px;" id="screen-kuis">
-        <div class="wf-header" style="border: none; padding-bottom: 0;">
+        <div class="wf-header" style="border: none; padding-bottom: 0; margin-bottom: 16px;">
           <p class="text-h2" style="margin: 0;">Evaluasi Pembelajaran</p>
         </div>
 
-        <div style="display: flex; gap: 4px; margin-bottom: 16px;">
-          <div
-            style="flex: 1; padding: 8px; border: 2px solid #333; border-radius: 8px; background-color: #333; color: white; text-align: center; font-size: 8px; font-weight: bold;">
-            Drag & Drop</div>
-          <div
-            style="flex: 1; padding: 8px; border: 2px solid #999; border-radius: 8px; background-color: transparent; color: #555; text-align: center; font-size: 8px; font-weight: bold;">
-            Klasifikasi</div>
-          <div
-            style="flex: 1; padding: 8px; border: 2px solid #999; border-radius: 8px; background-color: transparent; color: #555; text-align: center; font-size: 8px; font-weight: bold;">
-            Pilihan Ganda</div>
+        <!-- Tab Filter - Compact -->
+        <div style="display: flex; gap: 6px; margin-bottom: 16px; padding: 6px; border: 2px solid #000; border-radius: 12px; background-color: #fff;">
+          <div style="flex: 1; padding: 8px 8px; border: 2px solid #000; border-radius: 8px; background-color: #fff; color: #000; text-align: center; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span style="font-size: 8px;">[ icon ]</span> Drag & Drop
+          </div>
+          <div style="flex: 1; padding: 8px 8px; border: none; border-radius: 8px; background-color: transparent; color: #999; text-align: center; font-size: 9px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span style="font-size: 8px;">[ icon ]</span> Klasifikasi
+          </div>
+          <div style="flex: 1; padding: 8px 8px; border: none; border-radius: 8px; background-color: transparent; color: #999; text-align: center; font-size: 9px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <span style="font-size: 8px;">[ icon ]</span> Pilihan Ganda
+          </div>
         </div>
 
-        <div class="wf-card" style="border-left: 4px solid #333;">
-          <p class="text-h2">Simulasi Pemilahan Dasar</p>
-          <div style="display: flex; gap: 12px; margin-top: 4px; margin-bottom: 16px;">
-            <p class="text-small">5 menit</p>
-            <p class="text-small">10 poin/soal</p>
+        <!-- Card Level SULIT - Compact -->
+        <div class="wf-card" style="border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 2px solid #000; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <p class="text-h2" style="margin: 0; font-size: 14px;">SULIT</p>
+            <div class="wf-button" style="width: 100px; height: 36px; margin: 0; font-size: 12px; background-color: #fff; color: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">Mulai</div>
           </div>
-
-          <div class="wf-button" style="width: 100%; height: 32px; margin: 0; font-size: 12px;">Mulai</div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 4 menit
+            </p>
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 30 poin/soal
+            </p>
+          </div>
         </div>
 
-        <div class="wf-card" style="border-left: 4px solid #333;">
-          <p class="text-h2">Praktek Organik vs Anorganik</p>
-          <div style="display: flex; gap: 12px; margin-top: 4px; margin-bottom: 16px;">
-            <p class="text-small">10 menit</p>
-            <p class="text-small">20 poin/soal</p>
+        <!-- Card Level SEDANG - Compact -->
+        <div class="wf-card" style="border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 2px solid #000; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <p class="text-h2" style="margin: 0; font-size: 14px;">SEDANG</p>
+            <div class="wf-button" style="width: 100px; height: 36px; margin: 0; font-size: 12px; background-color: #fff; color: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">Mulai</div>
           </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 3 menit
+            </p>
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 25 poin/soal
+            </p>
+          </div>
+        </div>
 
-          <div class="wf-button" style="width: 100%; height: 32px; margin: 0; font-size: 12px;">Mulai</div>
+        <!-- Card Level MUDAH - Compact -->
+        <div class="wf-card" style="border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 2px solid #000; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <p class="text-h2" style="margin: 0; font-size: 14px;">MUDAH</p>
+            <div class="wf-button" style="width: 100px; height: 36px; margin: 0; font-size: 12px; background-color: #fff; color: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">Mulai</div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 2 menit
+            </p>
+            <p class="text-small" style="margin: 0; color: #666; display: flex; align-items: center; gap: 4px; font-size: 10px;">
+              <span style="font-size: 9px;">[ icon ]</span> 20 poin/soal
+            </p>
+          </div>
         </div>
 
         <div class="wf-bottom-nav">
@@ -740,7 +952,7 @@
             <div class="wf-nav-center">Q</div>Kuesioner
           </div>
           <div class="wf-nav-item active">
-            <div class="wf-nav-icon" style="background-color: #333;"></div>Simulasi
+            <div class="wf-nav-icon" style="background-color: #000;"></div>Simulasi
           </div>
           <div class="wf-nav-item">
             <div class="wf-nav-icon"></div>Profil
@@ -759,36 +971,53 @@
     <div class="screen-container">
       <div class="screen-title">09. Evaluasi (Pilihan Ganda)</div>
       <div class="screen" id="screen-play-mc">
-        <div class="wf-header" style="margin-bottom: 16px; border: none;">
-          <div class="wf-icon-circle">X</div>
-          <p class="text-h3" style="margin: 0;">Soal 1 dari 10</p>
-          <p class="text-h3" style="margin: 0;">[04:59]</p>
+        <!-- Header with 3 elements -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="wf-icon-circle" style="width: 40px; height: 40px; font-size: 16px; font-weight: 700;">X</div>
+          <div style="text-align: center;">
+            <p class="text-h3" style="margin: 0; font-size: 14px;">Soal 1 / 5</p>
+            <p class="text-small" style="margin: 0; color: #666; font-size: 11px;">Sulit</p>
+          </div>
+          <div style="background-color: #fff; color: #000; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 2px solid #000; display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 10px;">[ icon ]</span> 3:51
+          </div>
         </div>
 
-        <div class="wf-progress-bg">
-          <div class="wf-progress-fill" style="width: 10%;"></div>
+        <!-- Progress Bar -->
+        <div class="wf-progress-bg" style="margin-bottom: 20px;">
+          <div class="wf-progress-fill" style="width: 20%;"></div>
         </div>
 
-        <div class="wf-image" style="height: 140px; border: 2px solid #333; margin-top: 16px; margin-bottom: 16px;">[
-          GAMBAR REFERENSI SOAL ]</div>
-
-        <p class="text-h2" style="margin-bottom: 24px;">Manakah dari berikut ini yang BUKAN contoh sampah organik?</p>
-
-        <div class="wf-card" style="padding: 12px; display: flex; align-items: center; gap: 12px;">
-          <div class="wf-icon-circle">A</div>
-          <p class="text-body" style="margin: 0; font-weight: bold;">Kulit Pisang</p>
+        <!-- Image -->
+        <div style="width: 100%; height: 180px; border: 2px solid #000; border-radius: 20px; margin-bottom: 20px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+          <p style="font-size: 11px; color: #999; font-weight: 700; margin: 0;">[ GAMBAR REFERENSI ]</p>
         </div>
 
-        <div class="wf-card"
-          style="padding: 12px; display: flex; align-items: center; gap: 12px; border: 2px solid #333; background-color: #EEE;">
-          <div class="wf-icon-circle" style="background-color: #333; color: white;">B</div>
-          <p class="text-body" style="margin: 0; font-weight: bold;">Plastik Kresek</p>
-          <p style="margin: 0 0 0 auto;">[V]</p>
+        <!-- Question -->
+        <p class="text-h2" style="margin-bottom: 20px; font-size: 15px; line-height: 1.4;">Di antara 4 benda berikut, manakah yang akan paling hancur total menyatu dengan tanah dalam waktu kurang dari 1 tahun jika ditimbun di kedalaman 1 meter?</p>
+
+        <!-- Option A -->
+        <div class="wf-card" style="padding: 14px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 10px;">
+          <div class="wf-icon-circle" style="width: 36px; height: 36px; font-size: 14px;">A</div>
+          <p class="text-body" style="margin: 0; font-weight: 500; font-size: 13px;">Kantong teh celup sintetis</p>
         </div>
 
-        <div class="wf-card" style="padding: 12px; display: flex; align-items: center; gap: 12px;">
-          <div class="wf-icon-circle">C</div>
-          <p class="text-body" style="margin: 0; font-weight: bold;">Daun Kering</p>
+        <!-- Option B -->
+        <div class="wf-card" style="padding: 14px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 10px;">
+          <div class="wf-icon-circle" style="width: 36px; height: 36px; font-size: 14px;">B</div>
+          <p class="text-body" style="margin: 0; font-weight: 500; font-size: 13px;">Kulit cangkang telur rebus</p>
+        </div>
+
+        <!-- Option C -->
+        <div class="wf-card" style="padding: 14px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 10px;">
+          <div class="wf-icon-circle" style="width: 36px; height: 36px; font-size: 14px;">C</div>
+          <p class="text-body" style="margin: 0; font-weight: 500; font-size: 13px; line-height: 1.3;">Sedotan biodegradable (plastik ramah lingkungan abal-abal)</p>
+        </div>
+
+        <!-- Option D -->
+        <div class="wf-card" style="padding: 14px; display: flex; align-items: center; gap: 12px; border-radius: 16px; margin-bottom: 10px;">
+          <div class="wf-icon-circle" style="width: 36px; height: 36px; font-size: 14px;">D</div>
+          <p class="text-body" style="margin: 0; font-weight: 500; font-size: 13px;">Karet sol sepatu bekas</p>
         </div>
       </div>
       <div class="screen-desc">Ini adalah tampilan saat pengguna mengerjakan soal teori berbentuk pilihan ganda.
@@ -800,38 +1029,53 @@
     <div class="screen-container">
       <div class="screen-title">10. Simulasi (Drag & Drop)</div>
       <div class="screen" id="screen-play-dd">
-        <div class="wf-header" style="margin-bottom: 16px; border: none;">
-          <div class="wf-icon-circle">X</div>
-          <p class="text-h3" style="margin: 0;">Simulasi Item: 2 / 10</p>
-          <div style="width: 28px;"></div>
+        <!-- Header with 3 elements -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="wf-icon-circle" style="width: 40px; height: 40px; font-size: 16px; font-weight: 700;">X</div>
+          <div style="text-align: center;">
+            <p class="text-h3" style="margin: 0; font-size: 14px;">Simulasi Item: 1 / 5</p>
+            <p class="text-small" style="margin: 0; color: #666; font-size: 11px;">SULIT</p>
+          </div>
+          <div style="background-color: #fff; color: #000; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 2px solid #000; display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 10px;">[ icon ]</span> 3:54
+          </div>
         </div>
 
-        <div class="wf-progress-bg">
+        <!-- Progress Bar -->
+        <div class="wf-progress-bg" style="margin-bottom: 20px;">
           <div class="wf-progress-fill" style="width: 20%;"></div>
         </div>
 
-        <p class="text-h2 text-center" style="margin-bottom: 24px;">Praktek Pemilahan:<br>Seret objek ke tong yang
-          tepat!</p>
+        <!-- Title -->
+        <p class="text-h2 text-center" style="margin-bottom: 32px; font-size: 16px; line-height: 1.4;"><strong>Praktek Pemilahan:</strong><br>Seret objek ke tong yang tepat!</p>
 
         <!-- Draggable Item -->
-        <div
-          style="width: 120px; height: 120px; border: 2px solid #333; border-radius: 8px; margin: 0 auto 60px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FFF;">
-          <div class="wf-image" style="width: 60px; height: 60px; margin-bottom: 8px;">IMG</div>
-          <p class="text-h3" style="margin: 0;">Sisa Apel</p>
-          <p class="text-small" style="margin-top: 4px;">[ Tahan & Geser ]</p>
+        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
+          <div style="width: 120px; height: 120px; background-color: #f5f5f5; border: 2px solid #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+            <p style="font-size: 11px; color: #999; margin: 0; font-weight: 700;">[ FOTO ]</p>
+          </div>
+          <p class="text-h2" style="margin: 0 0 4px 0; font-size: 15px; text-align: center;">Batok Kelapa<br>Kering</p>
+          <p class="text-small" style="margin: 0; color: #999; font-size: 11px;">[ Tahan & Geser ]</p>
         </div>
 
         <!-- Drop Zones -->
         <div style="display: flex; justify-content: space-between; gap: 16px;">
-          <div
-            style="flex: 1; height: 120px; border: 3px dashed #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAFAFA;">
-            <p class="text-h2" style="margin: 0 0 8px 0;">[ TONG ]</p>
-            <p style="font-weight: bold; font-size: 14px;">ORGANIK</p>
+          <!-- Zone Organik -->
+          <div style="flex: 1; height: 140px; border: 2px dashed #000; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #fff; padding: 16px;">
+            <div style="width: 50px; height: 50px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <p style="font-size: 11px; margin: 0; font-weight: 700;">[ icon ]</p>
+            </div>
+            <p class="text-h3" style="margin: 0 0 4px 0; font-size: 13px;">ORGANIK</p>
+            <p class="text-small" style="margin: 0; color: #999; font-size: 10px;">Seret ke sini</p>
           </div>
-          <div
-            style="flex: 1; height: 120px; border: 3px dashed #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAFAFA;">
-            <p class="text-h2" style="margin: 0 0 8px 0;">[ TONG ]</p>
-            <p style="font-weight: bold; font-size: 14px;">ANORG</p>
+          
+          <!-- Zone Anorganik -->
+          <div style="flex: 1; height: 140px; border: 2px dashed #000; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #fff; padding: 16px;">
+            <div style="width: 50px; height: 50px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <p style="font-size: 11px; margin: 0; font-weight: 700;">[ icon ]</p>
+            </div>
+            <p class="text-h3" style="margin: 0 0 4px 0; font-size: 13px;">ANORGANIK</p>
+            <p class="text-small" style="margin: 0; color: #999; font-size: 10px;">Seret ke sini</p>
           </div>
         </div>
       </div>
@@ -844,35 +1088,52 @@
     <div class="screen-container">
       <div class="screen-title">11. Simulasi (Klasifikasi Cepat)</div>
       <div class="screen" id="screen-play-bin">
-        <div class="wf-header" style="margin-bottom: 16px; border: none;">
-          <div class="wf-icon-circle">X</div>
-          <p class="text-h3" style="margin: 0;">Item: 3 / 10</p>
-          <div style="width: 28px;"></div>
+        <!-- Header with 3 elements -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div class="wf-icon-circle" style="width: 40px; height: 40px; font-size: 16px; font-weight: 700;">X</div>
+          <div style="text-align: center;">
+            <p class="text-h3" style="margin: 0; font-size: 14px;">Klasifikasi: 1 / 5</p>
+            <p class="text-small" style="margin: 0; color: #666; font-size: 11px;">SULIT</p>
+          </div>
+          <div style="background-color: #fff; color: #000; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; border: 2px solid #000; display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 10px;">[ icon ]</span> 3:54
+          </div>
         </div>
 
-        <div class="wf-progress-bg">
-          <div class="wf-progress-fill" style="width: 30%;"></div>
+        <!-- Progress Bar -->
+        <div class="wf-progress-bg" style="margin-bottom: 20px;">
+          <div class="wf-progress-fill" style="width: 20%;"></div>
         </div>
+
+        <!-- Title -->
+        <p class="text-h2 text-center" style="margin-bottom: 20px; font-size: 16px; line-height: 1.4;"><strong>Klasifikasi Cepat:</strong><br>Pilih kategori yang tepat!</p>
 
         <!-- Big Image -->
-        <div class="wf-image wf-image-large" style="height: 180px; border: 2px solid #333;">[ GAMBAR OBJEK RESOLUSI
-          TINGGI ]</div>
+        <div style="width: 100%; height: 180px; border: 2px solid #000; border-radius: 20px; margin-bottom: 20px; background-color: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+          <p style="font-size: 11px; color: #999; margin: 0; font-weight: 700;">[ GAMBAR OBJEK RESOLUSI TINGGI ]</p>
+        </div>
 
-        <p class="text-h1 text-center" style="margin-bottom: 4px;">Botol Kaca</p>
-        <p class="text-body text-center" style="margin-bottom: 32px;">Masuk kategori apakah benda ini?</p>
+        <!-- Object Name -->
+        <p class="text-h1 text-center" style="margin-bottom: 32px; font-size: 18px;">Sandal Jepit Karet (Spons)</p>
 
         <!-- 2 Big Buttons -->
         <div style="display: flex; justify-content: space-between; gap: 16px;">
-          <div
-            style="flex: 1; height: 120px; border: 2px solid #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #FFF;">
-            <p class="text-h1" style="margin: 0 0 8px 0;">[ O ]</p>
-            <p style="font-weight: bold; font-size: 14px;">ORGANIK</p>
+          <!-- Button Organik -->
+          <div style="flex: 1; height: 140px; border: 2px solid #000; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #fff; padding: 16px;">
+            <div style="width: 50px; height: 50px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <p style="font-size: 10px; margin: 0; font-weight: 700;">[ icon ]</p>
+            </div>
+            <p class="text-h2" style="margin: 0 0 4px 0; font-size: 15px;">ORGANIK</p>
+            <p class="text-small" style="margin: 0; color: #666; font-size: 10px;">Sampah alami</p>
           </div>
-          <div
-            style="flex: 1; height: 120px; border: 2px solid #333; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #EEE; box-shadow: inset 0 0 0 4px #333;">
-            <!-- Selected State -->
-            <p class="text-h1" style="margin: 0 0 8px 0;">[ A ]</p>
-            <p style="font-weight: bold; font-size: 14px;">ANORGANIK</p>
+          
+          <!-- Button Anorganik -->
+          <div style="flex: 1; height: 140px; border: 2px solid #000; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background-color: #fff; padding: 16px;">
+            <div style="width: 50px; height: 50px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <p style="font-size: 10px; margin: 0; font-weight: 700;">[ icon ]</p>
+            </div>
+            <p class="text-h2" style="margin: 0 0 4px 0; font-size: 15px;">ANORGANIK</p>
+            <p class="text-small" style="margin: 0; color: #666; font-size: 10px;">Sampah buatan</p>
           </div>
         </div>
       </div>
@@ -884,30 +1145,42 @@
     <!-- 12. Hasil Kuis (No Gamification) -->
     <div class="screen-container">
       <div class="screen-title">12. Hasil Evaluasi Akhir</div>
-      <div class="screen" style="justify-content: center;" id="screen-hasil-kuis">
-        <div class="wf-image-circle" style="width: 120px; height: 120px; border: 4px solid #333;">[ ICON CENTANG ]</div>
-        <p class="text-h1 text-center">Evaluasi Selesai</p>
-        <p class="text-body text-center" style="margin-bottom: 32px;">Simulasi Praktek Pemilahan</p>
-
-        <div class="wf-card" style="text-align: center; border: 2px solid #333; background-color: #F9F9F9;">
-          <p class="text-h3">Nilai Akhir Anda</p>
-          <p style="font-size: 48px; font-weight: bold; margin: 8px 0;">80</p>
-          <div class="wf-badge" style="display: inline-block;">LULUS EVALUASI</div>
+      <div class="screen" style="display: flex; flex-direction: column; justify-content: flex-start; padding: 20px 24px;" id="screen-hasil-kuis">
+        <!-- Trophy Icon - Perfect Circle -->
+        <div style="width: 90px; height: 90px; border: 2px solid #000; border-radius: 50%; background-color: #fff; display: flex; align-items: center; justify-content: center; margin: 12px auto 12px auto; flex-shrink: 0;">
+          <p style="font-size: 12px; margin: 0; font-weight: 700;">[ icon ]</p>
         </div>
 
-        <div class="wf-grid-2" style="margin-bottom: 32px;">
-          <div class="wf-box" style="border: 2px solid #333;">
-            <p class="text-h2">8</p>
-            <p class="text-small">Jawaban Benar</p>
+        <!-- Title -->
+        <p class="text-h1 text-center" style="margin-bottom: 4px; font-size: 16px; line-height: 1.2;">Luar Biasa! Kerja Bagus!</p>
+        <p class="text-h3 text-center" style="margin-bottom: 8px; color: #666; font-size: 11px;">Evaluasi Pilihan Ganda</p>
+
+        <!-- Message -->
+        <p class="text-body text-center" style="margin-bottom: 12px; color: #666; font-size: 9px; line-height: 1.3; padding: 0 12px;">Kamu berhasil menyelesaikan evaluasi ini dengan nilai memuaskan. Pertahankan prestasimu dan terus jadi pahlawan lingkungan!</p>
+
+        <!-- Score Card -->
+        <div class="wf-card" style="text-align: center; border: 2px solid #000; background-color: #fff; padding: 16px; border-radius: 20px; margin-bottom: 12px; flex-shrink: 0;">
+          <p class="text-h3" style="margin-bottom: 8px; font-size: 12px;">Nilai Akhir Anda</p>
+          <p style="font-size: 48px; font-weight: 900; margin: 4px 0; line-height: 1;">60</p>
+          <div class="wf-badge" style="display: inline-block; border: 2px solid #000; padding: 5px 12px; border-radius: 12px; font-size: 10px; background-color: #fff;">LULUS EVALUASI</div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="wf-grid-2" style="margin-bottom: 12px; gap: 10px; flex-shrink: 0;">
+          <div class="wf-box" style="border: 2px solid #000; padding: 14px; border-radius: 12px; background-color: #fff;">
+            <p class="text-h1" style="font-size: 28px; margin-bottom: 4px; line-height: 1;">3</p>
+            <p class="text-small" style="color: #666; font-size: 10px;">Jawaban Benar</p>
           </div>
-          <div class="wf-box" style="border: 2px dashed #999;">
-            <p class="text-h2">2</p>
-            <p class="text-small">Kesalahan Pemilahan</p>
+          <div class="wf-box" style="border: 2px dashed #999; padding: 14px; border-radius: 12px; background-color: #fff;">
+            <p class="text-h1" style="font-size: 28px; margin-bottom: 4px; color: #999; line-height: 1;">2</p>
+            <p class="text-small" style="color: #999; font-size: 10px;">Kesalahan Pemilahan</p>
           </div>
         </div>
 
-        <div class="wf-button">Lihat Riwayat Pembahasan</div>
-        <div class="wf-button-outline">Tutup & Kembali</div>
+        <!-- Buttons -->
+        <div class="wf-button" style="margin-bottom: 8px; background-color: #fff; color: #000; border-radius: 12px; height: 42px; font-size: 12px; flex-shrink: 0;">Lihat Riwayat Pembahasan</div>
+        <div class="wf-button-outline" style="margin-bottom: 8px; border-radius: 12px; height: 42px; font-size: 12px; flex-shrink: 0;">Isi Kuesioner UEQ</div>
+        <div style="text-align: center; color: #666; font-size: 12px; padding: 8px 0; cursor: pointer;">Tutup & Kembali</div>
       </div>
       <div class="screen-desc">Setelah selesai mengerjakan simulasi atau kuis, halaman ini akan muncul untuk menampilkan
         hasil akhirnya. Pengguna bisa melihat total skor dari skala 0-100, beserta statistik jumlah jawaban mereka yang
@@ -917,35 +1190,105 @@
     <!-- 12B. Riwayat Ujian (List History) -->
     <div class="screen-container">
       <div class="screen-title">12B. Riwayat Ujian (List)</div>
-      <div class="screen" id="screen-riwayat-list">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Riwayat Ujian</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-riwayat-list">
+        <div class="wf-header" style="margin-bottom: 16px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 20px;">Riwayat</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 20px;">
-          <div class="wf-badge" style="background-color: #333; color: white;">Semua</div>
-          <div class="wf-badge">Evaluasi</div>
-          <div class="wf-badge">Simulasi</div>
-        </div>
-
-        <div class="wf-card" style="border-left: 4px solid #333;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <p class="text-h3" style="margin: 0;">Evaluasi Teori Organik</p>
-            <p class="text-h3" style="margin: 0; color: #333;">80</p>
+        <!-- Stats Row -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <div style="flex: 1; border: 2px solid #000; border-radius: 12px; padding: 10px 8px; text-align: center; background-color: #fff;">
+            <p style="font-size: 26px; font-weight: 900; margin: 0 0 2px 0; line-height: 1;">2</p>
+            <p style="font-size: 9px; color: #666; font-weight: 700; margin: 0;">Total Ujian</p>
           </div>
-          <p class="text-small" style="color: #666; margin-bottom: 12px;">12 Agustus 2026 • 10 Soal</p>
-          <div class="wf-button-outline" style="height: 32px; font-size: 10px; margin: 0;">Lihat Pembahasan</div>
+          <div style="flex: 1; border: 2px solid #000; border-radius: 12px; padding: 10px 8px; text-align: center; background-color: #fff;">
+            <p style="font-size: 26px; font-weight: 900; margin: 0 0 2px 0; line-height: 1;">80</p>
+            <p style="font-size: 9px; color: #666; font-weight: 700; margin: 0;">Rata-rata</p>
+          </div>
+          <div style="flex: 1; border: 2px solid #000; border-radius: 12px; padding: 10px 8px; text-align: center; background-color: #fff;">
+            <p style="font-size: 26px; font-weight: 900; margin: 0 0 2px 0; line-height: 1;">100</p>
+            <p style="font-size: 9px; color: #666; font-weight: 700; margin: 0;">Tertinggi</p>
+          </div>
         </div>
 
-        <div class="wf-card" style="border-left: 4px solid #999;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <p class="text-h3" style="margin: 0;">Simulasi Praktek Pemilahan</p>
-            <p class="text-h3" style="margin: 0; color: #333;">60</p>
+        <!-- Filter Tabs -->
+        <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+          <div style="background-color: #000; color: #fff; padding: 6px 10px; display: flex; align-items: center; gap: 4px; font-size: 11px; border-radius: 10px;">
+            <span style="font-size: 10px;">[ icon ]</span>
+            <span style="font-weight: 700;">Semua</span>
           </div>
-          <p class="text-small" style="color: #666; margin-bottom: 12px;">10 Agustus 2026 • 15 Item</p>
-          <div class="wf-button-outline" style="height: 32px; font-size: 10px; margin: 0;">Lihat Pembahasan</div>
+          <div style="background-color: transparent; color: #000; padding: 6px 10px; display: flex; align-items: center; gap: 4px; font-size: 11px; border-radius: 10px;">
+            <span style="font-size: 10px;">[ icon ]</span>
+            <span style="font-weight: 700;">Simulasi</span>
+          </div>
+          <div style="background-color: transparent; color: #000; padding: 6px 10px; display: flex; align-items: center; gap: 4px; font-size: 11px; border-radius: 10px;">
+            <span style="font-size: 10px;">[ icon ]</span>
+            <span style="font-weight: 700;">Klasifikasi</span>
+          </div>
+        </div>
+
+        <!-- History Card 1 -->
+        <div class="wf-card" style="border: 2px solid #000; background-color: #fff; padding: 12px; margin-bottom: 10px; border-radius: 16px;">
+          <!-- Type Badge -->
+          <div style="display: inline-block; background-color: #fff; border: 2px solid #000; padding: 4px 10px; border-radius: 10px; margin-bottom: 10px;">
+            <p style="font-size: 10px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 4px;">
+              <span>[ icon ]</span> Pilihan Ganda
+            </p>
+          </div>
+
+          <!-- Score -->
+          <div style="text-align: center; margin-bottom: 10px;">
+            <p style="font-size: 44px; font-weight: 900; margin: 0 0 2px 0; line-height: 1;">100</p>
+            <p style="font-size: 10px; color: #666; font-weight: 700; margin: 0;">Nilai</p>
+          </div>
+
+          <!-- Details -->
+          <div style="margin-bottom: 10px;">
+            <p style="font-size: 11px; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+              <span>[ icon ]</span> 5 / 5 Benar
+            </p>
+            <p style="font-size: 11px; color: #666; margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+              <span>[ icon ]</span> 27 Agu 2026, 21:59
+            </p>
+          </div>
+
+          <!-- Status Badge -->
+          <div style="background-color: #fff; border: 2px solid #000; padding: 8px; border-radius: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0;">✓ LULUS</p>
+          </div>
+        </div>
+
+        <!-- History Card 2 -->
+        <div class="wf-card" style="border: 2px solid #000; background-color: #fff; padding: 12px; margin-bottom: 0; border-radius: 16px;">
+          <!-- Type Badge -->
+          <div style="display: inline-block; background-color: #fff; border: 2px solid #000; padding: 4px 10px; border-radius: 10px; margin-bottom: 10px;">
+            <p style="font-size: 10px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 4px;">
+              <span>[ icon ]</span> Pilihan Ganda
+            </p>
+          </div>
+
+          <!-- Score -->
+          <div style="text-align: center; margin-bottom: 10px;">
+            <p style="font-size: 44px; font-weight: 900; margin: 0 0 2px 0; line-height: 1;">60</p>
+            <p style="font-size: 10px; color: #666; font-weight: 700; margin: 0;">Nilai</p>
+          </div>
+
+          <!-- Details -->
+          <div style="margin-bottom: 10px;">
+            <p style="font-size: 11px; margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+              <span>[ icon ]</span> 3 / 5 Benar
+            </p>
+            <p style="font-size: 11px; color: #666; margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 600;">
+              <span>[ icon ]</span> 27 Agu 2026, 21:43
+            </p>
+          </div>
+
+          <!-- Status Badge -->
+          <div style="background-color: #fff; border: 2px solid #000; padding: 8px; border-radius: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0;">✓ LULUS</p>
+          </div>
         </div>
       </div>
       <div class="screen-desc">Halaman ini menampilkan daftar seluruh ujian atau simulasi yang pernah dikerjakan oleh
@@ -956,46 +1299,51 @@
     <!-- 13. Riwayat Pembahasan (NEW FEATURE) -->
     <div class="screen-container">
       <div class="screen-title">13. Detail Pembahasan Salah</div>
-      <div class="screen" id="screen-pembahasan">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Pembahasan Salah</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-pembahasan">
+        <div class="wf-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <div style="text-align: center; flex: 1;">
+            <p class="text-h2" style="margin: 0; font-size: 18px;">Pembahasan Salah</p>
+            <p style="font-size: 10px; color: #666; margin: 2px 0 0 0; font-weight: 600;">Evaluasi Pilihan Ganda</p>
+          </div>
+          <div style="width: 32px;"></div>
         </div>
 
-        <p class="text-body" style="margin-bottom: 16px;">Tinjau kembali kesalahan Anda pada sesi simulasi sebelumnya
-          untuk evaluasi perbaikan.</p>
+        <!-- Info Banner -->
+        <div style="background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+          <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #000; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 900; flex-shrink: 0;">!</div>
+          <p style="font-size: 10px; margin: 0; font-weight: 600;">Terdapat 2 soal yang perlu ditinjau ulang.</p>
+        </div>
 
         <!-- Wrong Item 1 -->
-        <div class="wf-card"
-          style="border: 2px dashed #999; border-left: 4px solid #333; padding: 12px; margin-bottom: 16px;">
-          <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-            <div class="wf-image" style="width: 48px; height: 48px; margin: 0;">IMG</div>
-            <div>
-              <p class="text-h3" style="margin: 0;">Botol Kaca Bekas</p>
-              <p class="text-small" style="color: #666;">Anda menjawab: Organik (SALAH)</p>
-            </div>
+        <div class="wf-card" style="border: 2px dashed #999; border-left: 2px solid #000; padding: 12px; margin-bottom: 0; background-color: #fff; border-radius: 16px;">
+          <!-- Question Number Badge -->
+          <div style="width: 24px; height: 24px; border-radius: 50%; background-color: #000; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 900; margin-bottom: 8px;">1</div>
+          
+          <!-- Question Text -->
+          <p style="font-size: 11px; font-weight: 700; margin: 0 0 10px 0; line-height: 1.4;">Di antara 4 benda berikut, manakah yang akan paling hancur total menya...</p>
+          
+          <!-- Image -->
+          <div class="wf-image" style="width: 100%; height: 140px; margin: 0 0 10px 0; border-radius: 12px;">[ GAMBAR REFERENSI ]</div>
+          
+          <!-- Wrong Answer -->
+          <div style="background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 8px 10px; margin-bottom: 6px;">
+            <p style="font-size: 10px; margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 700;">
+              <span style="color: #000;">[ icon ]</span> <span style="color: #000;">Salah:</span> <span style="font-weight: 600;">C. Sedotan biodegradable (plastik ramah lingkungan abal-abal)</span>
+            </p>
           </div>
-          <div style="background-color: #EEE; padding: 8px; border-radius: 4px;">
-            <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">Jawaban Benar: ANORGANIK</p>
-            <p class="text-body" style="font-size: 10px; margin: 0;">Penjelasan: Kaca tidak dapat diurai oleh
-              mikroorganisme secara alami dalam waktu singkat. Harus dilebur di pabrik daur ulang.</p>
+          
+          <!-- Correct Answer -->
+          <div style="background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px;">
+            <p style="font-size: 10px; margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 700;">
+              <span style="color: #000;">[ icon ]</span> <span style="color: #000;">Benar:</span> <span style="font-weight: 600;">B. Kulit cangkang telur rebus</span>
+            </p>
           </div>
-        </div>
-
-        <!-- Wrong Item 2 -->
-        <div class="wf-card" style="border: 2px dashed #999; border-left: 4px solid #333; padding: 12px;">
-          <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-            <div class="wf-image" style="width: 48px; height: 48px; margin: 0;">IMG</div>
-            <div>
-              <p class="text-h3" style="margin: 0;">Kulit Jeruk</p>
-              <p class="text-small" style="color: #666;">Anda menjawab: Anorganik (SALAH)</p>
-            </div>
-          </div>
-          <div style="background-color: #EEE; padding: 8px; border-radius: 4px;">
-            <p class="text-small" style="font-weight: bold; margin-bottom: 4px;">Jawaban Benar: ORGANIK</p>
-            <p class="text-body" style="font-size: 10px; margin: 0;">Penjelasan: Semua sisa buah-buahan termasuk kulit
-              jeruk sangat mudah hancur dan cocok dijadikan bahan kompos nabati.</p>
+          
+          <!-- Explanation -->
+          <div style="background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 10px; padding: 10px;">
+            <p style="font-size: 9px; font-weight: 800; margin: 0 0 4px 0; text-transform: uppercase;">Penjelasan</p>
+            <p style="font-size: 9px; margin: 0; line-height: 1.5; font-weight: 500;">Kurang teliti menganalisis material! Kantong teh, sedotan, dan sol sepatu karet punya unsur plastik sintetis (buata kimiawi pabrik). Hanya kulit cangkang telur yang 100% material biologi alam sehingga pasti diurai tuntas oleh ribuan bakteri tanah menjadi mineral tanpa sisa.</p>
           </div>
         </div>
       </div>
@@ -1007,66 +1355,104 @@
     <!-- 14. UEQ Form / Evaluasi (NEW FEATURE - Crucial for Thesis Title) -->
     <div class="screen-container">
       <div class="screen-title">14. Formulir UEQ (Pengguna)</div>
-      <div class="screen" style="overflow-y: hidden;" id="screen-ueq">
-        <div class="wf-header" style="margin-bottom: 16px;">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Evaluasi Aplikasi (UEQ)</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px; overflow-y: hidden;" id="screen-ueq">
+        <div class="wf-header" style="margin-bottom: 16px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Evaluasi Aplikasi (UEQ)</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <p class="text-body" style="text-align: justify; margin-bottom: 24px;">Mohon luangkan waktu Anda menilai kesan
-          penggunaan aplikasi ini. Pertanyaan 1 dari 26.</p>
+        <!-- Category Title -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;">
+          <p style="font-size: 12px; font-weight: 800; margin: 0;">Daya Tarik (Attractiveness)</p>
+        </div>
 
-        <div class="wf-block"
-          style="border: 2px solid #333; background-color: #FFF; padding: 24px 12px; text-align: center;">
-          <p class="text-h2" style="margin-bottom: 24px;">Bagaimana menurut Anda desain aplikasi EduSampah ini?</p>
-
-          <div
-            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: bold; font-size: 12px;">
-            <div style="width: 80px; text-align: left;">Menyusahkan</div>
-            <div style="width: 80px; text-align: right;">Menyenangkan</div>
+        <!-- Item 1 -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 1</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
+            <span>menyusahkan</span>
+            <span>menyenangkan</span>
           </div>
-
-          <!-- 7-Point Likert / Semantic Scale -->
+          
+          <!-- Radio Scale -->
           <div style="display: flex; justify-content: space-between; position: relative;">
-            <!-- Connecting Line -->
-            <div
-              style="position: absolute; top: 50%; left: 10px; right: 10px; height: 2px; background-color: #CCC; z-index: 1;">
-            </div>
-
-            <!-- Radio circles -->
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-            <div
-              style="width: 24px; height: 24px; border-radius: 50%; border: 3px solid #333; background-color: #333; z-index: 2; margin-top: -2px;">
-            </div> <!-- Selected: Neutral -->
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-            <div
-              style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #999; background-color: #FFF; z-index: 2;">
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #999;">
-            <span>1</span><span>2</span><span>3</span><span
-              style="color:#333; font-weight:bold;">4</span><span>5</span><span>6</span><span>7</span>
+            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
           </div>
         </div>
 
-        <div style="display: flex; gap: 12px; margin-top: auto;">
-          <div class="wf-button-outline" style="flex: 1;">&lt; Kembali</div>
-          <div class="wf-button" style="flex: 2;">Lanjut &gt;</div>
+        <!-- Item 12 -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 12</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
+            <span>baik</span>
+            <span>buruk</span>
+          </div>
+          
+          <!-- Radio Scale -->
+          <div style="display: flex; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
+          </div>
+        </div>
+
+        <!-- Item 14 -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 14</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
+            <span>tidak disukai</span>
+            <span>menggembirakan</span>
+          </div>
+          
+          <!-- Radio Scale -->
+          <div style="display: flex; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
+          </div>
+        </div>
+
+        <!-- Item 16 -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 0;">
+          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 16</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
+            <span>tidak nyaman</span>
+            <span>nyaman</span>
+          </div>
+          
+          <!-- Radio Scale -->
+          <div style="display: flex; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
+          </div>
         </div>
       </div>
       <div class="screen-desc">Di dalam aplikasi ini, saya menyediakan halaman khusus untuk kuesioner UEQ agar sesuai
@@ -1078,37 +1464,59 @@
     <!-- 15. Profil User (LMS Focused) -->
     <div class="screen-container">
       <div class="screen-title">15. Pengaturan Akun (Profil)</div>
-      <div class="screen" style="padding-bottom: 60px;" id="screen-profil">
-        <div class="wf-header" style="justify-content: flex-end;">
-          <div class="wf-icon-square">[cfg]</div>
+      <div class="screen" style="padding: 20px 24px 60px 24px;" id="screen-profil">
+        <!-- Title Only (No Header) -->
+        <p class="text-h1" style="text-align: center; margin: 20px 0 24px 0; font-size: 24px;">Profil</p>
+
+        <!-- Profile Avatar Circle -->
+        <div style="width: 100px; height: 100px; border: 2px solid #000; border-radius: 50%; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; background-color: #fff;">
+          <p style="font-size: 48px; font-weight: 900; margin: 0;">T</p>
         </div>
 
-        <div class="wf-image-circle" style="border: 2px solid #333;">U</div>
-        <p class="text-h1 text-center">Budi Santoso</p>
-        <p class="text-body text-center" style="margin-bottom: 32px;">budi@email.com • Terdaftar 2026</p>
+        <!-- User Info -->
+        <p class="text-h2" style="text-align: center; margin: 0 0 6px 0; font-size: 20px;">testing</p>
+        <p style="text-align: center; font-size: 11px; color: #666; margin: 0 0 32px 0; font-weight: 600;">testing@gmail.com • Terdaftar 2026</p>
 
-        <div style="margin-top: 16px;">
-          <div class="wf-row">
-            <div class="wf-icon-square">[E]</div>
-            <p class="text-h3" style="flex: 1; margin: 0;">Edit Data Diri</p>
-            <div style="font-weight: bold;">&gt;</div>
+        <!-- Menu Container -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 20px; padding: 0; overflow: hidden;">
+          <!-- Menu Item 1 -->
+          <div style="display: flex; align-items: center; padding: 16px; border-bottom: 2px solid #ddd; gap: 12px;">
+            <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+              <span style="font-size: 12px; font-weight: 700;">[ icon ]</span>
+            </div>
+            <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Edit Data Diri</p>
+            <span style="font-size: 16px; font-weight: 700; color: #000;">&gt;</span>
           </div>
-          <div class="wf-row">
-            <div class="wf-icon-square" style="border: 1px solid #333;">[Q]</div>
-            <p class="text-h3" style="flex: 1; margin: 0;">Isi Kuesioner Evaluasi (UEQ)</p>
-            <div style="font-weight: bold;">&gt;</div>
+
+          <!-- Menu Item 2 -->
+          <div style="display: flex; align-items: center; padding: 16px; border-bottom: 2px solid #ddd; gap: 12px;">
+            <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+              <span style="font-size: 12px; font-weight: 700;">[ icon ]</span>
+            </div>
+            <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Isi Kuesioner Evaluasi (UEQ)</p>
+            <span style="font-size: 16px; font-weight: 700; color: #000;">&gt;</span>
           </div>
-          <div class="wf-row">
-            <div class="wf-icon-square" style="border: 1px solid #333;">[H]</div>
-            <p class="text-h3" style="flex: 1; margin: 0;">Riwayat Ujian & Simulasi</p>
-            <div style="font-weight: bold;">&gt;</div>
+
+          <!-- Menu Item 3 -->
+          <div style="display: flex; align-items: center; padding: 16px; border-bottom: 2px solid #ddd; gap: 12px;">
+            <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+              <span style="font-size: 12px; font-weight: 700;">[ icon ]</span>
+            </div>
+            <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Riwayat Ujian & Simulasi</p>
+            <span style="font-size: 16px; font-weight: 700; color: #000;">&gt;</span>
           </div>
-          <div class="wf-row" style="border: none;">
-            <div class="wf-icon-square" style="background-color: #333; color: white;">[!]</div>
-            <p class="text-h3" style="flex: 1; margin: 0;">Keluar Sesi (Logout)</p>
+
+          <!-- Menu Item 4 (Logout) -->
+          <div style="display: flex; align-items: center; padding: 16px; gap: 12px;">
+            <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+              <span style="font-size: 12px; font-weight: 700;">[ icon ]</span>
+            </div>
+            <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700; color: #000;">Keluar Sesi (Logout)</p>
+            <span style="font-size: 16px; font-weight: 700; color: #000;">&gt;</span>
           </div>
         </div>
 
+        <!-- Bottom Navigation -->
         <div class="wf-bottom-nav">
           <div class="wf-nav-item">
             <div class="wf-nav-icon"></div>Beranda
@@ -1135,85 +1543,178 @@
     <!-- 15B. Edit Profil User -->
     <div class="screen-container">
       <div class="screen-title">15B. Edit Profil User</div>
-      <div class="screen" id="screen-edit-profil">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Edit Data Diri</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-edit-profil">
+        <div class="wf-header" style="margin-bottom: 20px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Edit Data Diri</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <div class="wf-image-circle" style="border: 2px solid #333; margin-top: 16px;">U</div>
-        <p class="text-body text-center"
-          style="margin-top: -16px; margin-bottom: 24px; color: #333; font-weight: bold;">Ubah Foto</p>
+        <!-- Profile Avatar with Camera Button -->
+        <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 8px auto;">
+          <div style="width: 100px; height: 100px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff;">
+            <p style="font-size: 48px; font-weight: 900; margin: 0;">T</p>
+          </div>
+          <!-- Camera Icon -->
+          <div style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; background-color: #fff; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 12px; font-weight: 700;">[ icon ]</span>
+          </div>
+        </div>
+        
+        <p style="text-align: center; font-size: 10px; color: #666; margin: 0 0 24px 0; font-weight: 600;">Ketuk ikon kamera untuk mengubah foto</p>
 
-        <p class="text-h3">Nama Lengkap</p>
-        <div class="wf-input" style="margin-bottom: 16px;">Budi Santoso</div>
+        <!-- Form Container -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 20px; padding: 20px; margin-bottom: 16px;">
+          <!-- Nama Lengkap -->
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0;">Nama Lengkap *</p>
+            <div style="border: 2px solid #000; border-radius: 12px; padding: 12px 14px; background-color: #fff;">
+              <p style="font-size: 12px; margin: 0; font-weight: 600;">testing</p>
+            </div>
+          </div>
 
-        <p class="text-h3">Email</p>
-        <div class="wf-input" style="margin-bottom: 32px; background-color: #EEE;">budi@email.com (Terkunci)</div>
+          <!-- Email -->
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0;">Email (tidak dapat diubah)</p>
+            <div style="border: 2px solid #000; border-radius: 12px; padding: 12px 14px; background-color: #f5f5f5;">
+              <p style="font-size: 12px; margin: 0; font-weight: 600; color: #666;">testing@gmail.com</p>
+            </div>
+          </div>
 
-        <div class="wf-button" style="margin-top: auto;">Simpan Perubahan</div>
+          <!-- Nomor Telepon -->
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0;">Nomor Telepon</p>
+            <div style="border: 2px solid #000; border-radius: 12px; padding: 12px 14px; background-color: #fff;">
+              <p style="font-size: 12px; margin: 0; font-weight: 600; color: #999;">Contoh: 081234567890</p>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div style="margin-bottom: 0;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0 0 6px 0;">Bio / Tentang Saya</p>
+            <div style="border: 2px solid #000; border-radius: 12px; padding: 12px 14px; background-color: #fff; min-height: 80px;">
+              <p style="font-size: 12px; margin: 0; font-weight: 600; color: #999;">Ceritakan sedikit tentang diri Anda...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px; text-align: center;">
+          <p style="font-size: 13px; font-weight: 800; margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>[ icon ]</span> Simpan Perubahan
+          </p>
+        </div>
       </div>
-      <div class="screen-desc">Halaman khusus untuk pengguna jika mereka ingin mengubah nama lengkap atau memperbarui
-        foto profil mereka. Email dibuat terkunci (tidak bisa diubah) sebagai langkah keamanan basis data.</div>
+      <div class="screen-desc">Halaman ini memungkinkan pengguna untuk mengedit informasi profil mereka termasuk nama, foto profil, nomor telepon, dan bio singkat. Email tidak dapat diubah karena digunakan sebagai identifier akun.</div>
     </div>
 
     <!-- 16. Admin Dashboard -->
     <div class="screen-container">
       <div class="screen-title">16. Dasbor Admin (CMS Utama)</div>
-      <div class="screen" id="screen-admin-dash">
-        <div class="wf-header">
+      <div class="screen" style="padding: 20px 24px;" id="screen-admin-dash">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
           <div>
-            <p class="text-h2" style="margin: 0;">Admin Portal</p>
-            <p class="text-small">Manajemen Data & Evaluasi</p>
+            <p style="font-size: 20px; font-weight: 900; margin: 0 0 2px 0;">Admin Portal</p>
+            <p style="font-size: 11px; color: #666; margin: 0; font-weight: 600;">Manajemen Data & Evaluasi</p>
           </div>
-          <div class="wf-icon-circle">[!]</div>
-        </div>
-
-        <div class="wf-grid-2" style="margin-top: 16px;">
-          <div class="wf-box" style="border: 2px solid #333; background-color: #EEE;">
-            <p class="text-h2" style="font-size: 24px;">42</p>
-            <p class="text-small">Siswa Terdaftar</p>
-          </div>
-          <div class="wf-box">
-            <p class="text-h2" style="font-size: 24px;">8</p>
-            <p class="text-small">Modul Edukasi</p>
-          </div>
-          <div class="wf-box">
-            <p class="text-h2" style="font-size: 24px;">12</p>
-            <p class="text-small">Paket Simulasi</p>
-          </div>
-          <div class="wf-box" style="border: 2px solid #333; background-color: #FAFAFA;">
-            <p class="text-h2" style="font-size: 24px;">38</p>
-            <p class="text-small">Responden UEQ</p>
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #fff;">
+            <span style="font-size: 14px; font-weight: 700;">[ icon ]</span>
           </div>
         </div>
 
-        <p class="text-h3" style="margin: 24px 0 16px 0;">Modul Navigasi Utama</p>
-
-        <div class="wf-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-          <div class="wf-icon-square" style="width: 32px; height: 32px;">[M]</div>
-          <div style="flex: 1;">
-            <p class="text-h3" style="margin: 0;">Manajemen Modul Materi</p>
+        <!-- Stats Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+          <!-- Total User (Highlighted) -->
+          <div style="border: 2px solid #000; border-radius: 16px; padding: 16px; text-align: center; background-color: #fff;">
+            <p style="font-size: 36px; font-weight: 900; margin: 0 0 4px 0; line-height: 1;">52</p>
+            <p style="font-size: 11px; color: #666; font-weight: 700; margin: 0;">Total User</p>
           </div>
-          <div style="font-weight: bold;">&gt;</div>
+          
+          <!-- Modul Edukasi -->
+          <div style="border: 2px solid #000; border-radius: 16px; padding: 16px; text-align: center; background-color: #fff;">
+            <p style="font-size: 36px; font-weight: 900; margin: 0 0 4px 0; line-height: 1;">10</p>
+            <p style="font-size: 11px; color: #666; font-weight: 700; margin: 0;">Modul Edukasi</p>
+          </div>
+          
+          <!-- Paket Simulasi -->
+          <div style="border: 2px solid #000; border-radius: 16px; padding: 16px; text-align: center; background-color: #fff;">
+            <p style="font-size: 36px; font-weight: 900; margin: 0 0 4px 0; line-height: 1;">45</p>
+            <p style="font-size: 11px; color: #666; font-weight: 700; margin: 0;">Paket Simulasi</p>
+          </div>
+          
+          <!-- Responden UEQ -->
+          <div style="border: 2px solid #000; border-radius: 16px; padding: 16px; text-align: center; background-color: #fff;">
+            <p style="font-size: 36px; font-weight: 900; margin: 0 0 4px 0; line-height: 1;">50</p>
+            <p style="font-size: 11px; color: #666; font-weight: 700; margin: 0;">Responden UEQ</p>
+          </div>
         </div>
 
-        <div class="wf-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-          <div class="wf-icon-square" style="width: 32px; height: 32px;">[K]</div>
-          <div style="flex: 1;">
-            <p class="text-h3" style="margin: 0;">Manajemen Bank Simulasi</p>
+        <!-- Section Title -->
+        <p style="font-size: 14px; font-weight: 900; margin: 0 0 12px 0;">Modul Navigasi Utama</p>
+
+        <!-- Menu Items -->
+        <!-- Manajemen Data User -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ S ]</span>
           </div>
-          <div style="font-weight: bold;">&gt;</div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Manajemen Data User</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
         </div>
 
-        <div class="wf-card"
-          style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px; border: 2px solid #333; background-color: #EEE;">
-          <div class="wf-icon-square" style="width: 32px; height: 32px; background-color: #333; color: white;">[A]</div>
-          <div style="flex: 1;">
-            <p class="text-h3" style="margin: 0;">Analisis Data UEQ Baru</p>
+        <!-- Manajemen Modul Materi -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ M ]</span>
           </div>
-          <div style="font-weight: bold;">&gt;</div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Manajemen Modul Materi</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
+        </div>
+
+        <!-- Manajemen Bank Simulasi -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ K ]</span>
+          </div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Manajemen Bank Simulasi</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
+        </div>
+
+        <!-- Kelola Level Soal -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ L ]</span>
+          </div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 700;">Kelola Level Soal</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
+        </div>
+
+        <!-- Analisis Data UEQ (Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ A ]</span>
+          </div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 900;">Analisis Data UEQ</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
+        </div>
+
+        <!-- Bot Generator Kuesioner (Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ G ]</span>
+          </div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 900;">Bot Generator Kuesioner</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
+        </div>
+
+        <!-- Backup & Restore Data (Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px 16px; margin-bottom: 0; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #000; color: #fff; flex-shrink: 0;">
+            <span style="font-size: 12px; font-weight: 700;">[ ! ]</span>
+          </div>
+          <p style="flex: 1; margin: 0; font-size: 13px; font-weight: 900;">Backup & Restore Data</p>
+          <span style="font-size: 16px; font-weight: 700;">&gt;</span>
         </div>
       </div>
       <div class="screen-desc">Beralih ke sisi Admin, ini adalah beranda utama untuk pengelola aplikasi. Admin bisa
@@ -1228,176 +1729,357 @@
     <!-- 17. Admin Manage Materi -->
     <div class="screen-container">
       <div class="screen-title">17. Admin Manage Materi</div>
-      <div class="screen" id="screen-admin-manage-materi">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Daftar Modul</p>
-          <div class="wf-icon-square">[+]</div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-admin-manage-materi">
+        <div class="wf-header" style="margin-bottom: 20px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Daftar Modul</p>
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; background-color: #fff;">[ + ]</div>
         </div>
 
-        <div class="wf-input" style="height: 36px; border-radius: 18px;">Cari materi edukasi...</div>
-
-        <div class="wf-card" style="padding: 12px; border-left: 4px solid #333;">
-          <div style="display: flex; justify-content: space-between;">
-            <p class="text-h3" style="margin: 0;">Pengenalan Kompos</p>
-            <p class="text-small" style="font-weight: bold;">ORGANIK</p>
+        <!-- Materi Card 1 (ORGANIK - Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <!-- Image -->
+          <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
           </div>
-
-          <div style="display: flex; gap: 8px; margin-top: 16px;">
-            <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Edit Konten</div>
-            <div class="wf-button-outline"
-              style="height: 32px; margin: 0; width: 40px; font-size: 12px; border-style: dashed;">[x]</div>
+          
+          <!-- Title & Badge -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <p style="font-size: 12px; font-weight: 900; margin: 0; flex: 1; line-height: 1.3;">KULIT BUAH & SISA BUAH-BUAHAN</p>
+            <span style="font-size: 10px; font-weight: 800; color: #000; margin-left: 8px;">ORGANIK</span>
+          </div>
+          
+          <!-- Description -->
+          <p style="font-size: 9px; color: #666; margin: 0 0 10px 0; line-height: 1.4;">Setiap kali kamu menikmati semangka dingin, pisang manis, atau man...</p>
+          
+          <!-- Buttons -->
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 10px; text-align: center;">
+              <p style="font-size: 11px; font-weight: 800; margin: 0;">Edit Konten</p>
+            </div>
+            <div style="width: 44px; background-color: #fff; border: 2px solid #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 14px; font-weight: 700; color: #000;">[ x ]</span>
+            </div>
           </div>
         </div>
 
-        <div class="wf-card" style="padding: 12px; border-left: 4px solid #999;">
-          <div style="display: flex; justify-content: space-between;">
-            <p class="text-h3" style="margin: 0;">Daur Ulang Plastik</p>
-            <p class="text-small" style="font-weight: bold;">ANORGANIK</p>
+        <!-- Materi Card 2 (ANORGANIK) -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <!-- Image -->
+          <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
           </div>
-
-          <div style="display: flex; gap: 8px; margin-top: 16px;">
-            <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Edit Konten</div>
-            <div class="wf-button-outline"
-              style="height: 32px; margin: 0; width: 40px; font-size: 12px; border-style: dashed;">[x]</div>
+          
+          <!-- Title & Badge -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <p style="font-size: 12px; font-weight: 900; margin: 0; flex: 1; line-height: 1.3;">KALENG BEKAS MINUMAN</p>
+            <span style="font-size: 10px; font-weight: 800; color: #666; margin-left: 8px;">ANORGANIK</span>
+          </div>
+          
+          <!-- Buttons -->
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <div style="flex: 1; background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 10px; text-align: center;">
+              <p style="font-size: 11px; font-weight: 800; margin: 0;">Edit Konten</p>
+            </div>
+            <div style="width: 44px; background-color: #fff; border: 2px solid #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 14px; font-weight: 700; color: #000;">[ x ]</span>
+            </div>
           </div>
         </div>
 
-        <div class="wf-button" style="margin-top: auto;">+ Susun Modul Baru</div>
+        <!-- Materi Card 3 (ORGANIK - Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <!-- Image -->
+          <div style="width: 100%; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
+          </div>
+          
+          <!-- Title & Badge -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+            <p style="font-size: 12px; font-weight: 900; margin: 0; flex: 1; line-height: 1.3;">SISA SAYURAN DAPUR</p>
+            <span style="font-size: 10px; font-weight: 800; color: #000; margin-left: 8px;">ORGANIK</span>
+          </div>
+          
+          <!-- Description -->
+          <p style="font-size: 9px; color: #666; margin: 0 0 10px 0; line-height: 1.4;">banananjskakamnnanamanaan aamakakmnakarananaannamamma nun...</p>
+          
+          <!-- Buttons -->
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 10px; text-align: center;">
+              <p style="font-size: 11px; font-weight: 800; margin: 0;">Edit Konten</p>
+            </div>
+            <div style="width: 44px; background-color: #fff; border: 2px solid #000; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 14px; font-weight: 700; color: #000;">[ x ]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Button -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 0;">
+          <p style="font-size: 13px; font-weight: 800; margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>+</span> Susun Modul Baru
+          </p>
+        </div>
       </div>
-      <div class="screen-desc">Ini adalah halaman daftar materi edukasi khusus untuk panel Admin. Di sini admin punya
-        kendali penuh untuk mengelola konten pembelajaran. Admin bisa mencari materi, mengedit tulisan materi yang sudah
-        ada, menghapusnya jika sudah tidak relevan, atau menambahkan modul pelajaran yang baru.</div>
+      <div class="screen-desc">Admin dapat melihat seluruh daftar modul edukasi yang sudah dibuat, lengkap dengan kategori (Organik/Anorganik). Setiap card materi memiliki tombol Edit untuk mengubah isi konten dan tombol hapus (x) untuk menghapus modul. Tombol tambah (+) di atas untuk membuat modul baru.</div>
     </div>
 
     <!-- 18. Admin Form Materi -->
     <div class="screen-container">
       <div class="screen-title">18. Admin Form Materi</div>
-      <div class="screen" id="screen-admin-form-materi" style="overflow-y: hidden;">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Pembuatan Modul</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px; overflow-y: hidden;" id="screen-admin-form-materi">
+        <div class="wf-header" style="margin-bottom: 20px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Pembuatan Modul</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <p class="text-h3">Judul Bahasan</p>
-        <div class="wf-input">Input teks judul di sini...</div>
+        <!-- Judul Bahasan -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 8px 0;">Judul Bahasan</p>
+        <div style="border: 2px solid #000; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; background-color: #fff;">
+          <p style="font-size: 12px; margin: 0; font-weight: 600; color: #999;">Input teks judul di sini...</p>
+        </div>
 
-        <p class="text-h3">Kategori Klasifikasi</p>
-        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-          <div
-            style="flex: 1; padding: 12px; border: 2px solid #333; text-align: center; font-weight: bold; background-color: #EEE;">
-            [O] Organik</div>
-          <div style="flex: 1; padding: 12px; border: 1px solid #999; text-align: center; color: #666;">[O] Anorganik
+        <!-- Kategori Klasifikasi -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 8px 0;">Kategori Klasifikasi</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <div style="flex: 1; padding: 12px; border: 2px solid #000; background-color: #fff; color: #000; text-align: center; border-radius: 12px; font-weight: 800; font-size: 11px;">
+            [O] Organik
+          </div>
+          <div style="flex: 1; padding: 12px; border: 2px solid #ddd; background-color: #fff; text-align: center; color: #666; border-radius: 12px; font-size: 11px; font-weight: 700;">
+            [O] Anorganik
           </div>
         </div>
 
-        <p class="text-h3" style="margin-top: 16px;">Seksi Konten 1</p>
-        <div class="wf-input" style="height: 36px; margin-bottom: 8px;">Sub-judul (Opsional)</div>
-        <div class="wf-input wf-textarea">Isi paragraf atau langkah-langkah...</div>
-        <div class="wf-button-outline" style="height: 32px; font-size: 10px; margin-bottom: 16px;">+ Tambah Seksi Konten
+        <!-- Isi Konten Pelajaran -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Isi Konten Pelajaran</p>
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; display: flex; gap: 6px; align-items: center;">
+          <span style="font-size: 10px; font-weight: 700;">[ icon ]</span>
+          <p style="font-size: 8px; margin: 0; line-height: 1.3; font-style: italic; color: #666;">Tambahkan beberapa paragraf atau sub-judul. Mode Penomoran cocok untuk langkah-langkah atau poin penting.</p>
         </div>
 
-        <p class="text-h3">Unggah Aset Visual</p>
-        <div class="wf-image" style="height: 60px;">[ Upload Foto Header via Cloud ]</div>
+        <!-- Paragraf 1 -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <p style="font-size: 11px; font-weight: 800; margin: 0;">Paragraf 1</p>
+            <div style="padding: 4px 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 9px; font-weight: 700; color: #666; background-color: #fff;">
+              📝 Paragraf
+            </div>
+          </div>
+          
+          <!-- Sub-judul -->
+          <div style="border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; background-color: #fff;">
+            <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">Sub-judul (opsional)</p>
+          </div>
+          
+          <!-- Textarea -->
+          <div style="border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; background-color: #fff; min-height: 70px;">
+            <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">Tulis isi paragraf di sini...</p>
+          </div>
+        </div>
 
-        <div class="wf-button" style="margin-top: 16px;">Simpan (*Publish*)</div>
+        <!-- Tambah Paragraf Baru -->
+        <div style="border: 2px dashed #ddd; border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 16px; background-color: #fff;">
+          <p style="font-size: 11px; font-weight: 700; margin: 0; color: #999;">+ Tambah Paragraf Baru</p>
+        </div>
+
+        <!-- Unggah Aset Visual -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 8px 0;">Unggah Aset Visual</p>
+        <div style="border: 2px dashed #ddd; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 16px; background-color: #fff;">
+          <p style="font-size: 11px; margin: 0 0 4px 0; color: #999; font-weight: 700;">[ Pilih Foto Header dari Galeri ]</p>
+          <p style="font-size: 9px; margin: 0; color: #999;">Akan diunggah ke Cloudinary</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div style="background-color: #000; color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px; text-align: center;">
+          <p style="font-size: 13px; font-weight: 800; margin: 0;">Simpan (*Publish*)</p>
+        </div>
       </div>
-      <div class="screen-desc">Jika admin ingin membuat materi baru, mereka akan menggunakan halaman form ini.
-        Tampilannya cukup ringkas namun fleksibel; admin mengetik judul materi, memilih kategori, lalu menyusun konten
-        menjadi beberapa seksi terpisah (bisa pakai sub-judul atau poin-poin). Terakhir, unggah gambar sampul dan simpan
-        ke database.</div>
+      <div class="screen-desc">Jika admin ingin membuat materi edukasi baru atau mengedit konten yang sudah ada, mereka
+        akan masuk ke form ini. Admin tinggal mengisi judul materi, memilih apakah termasuk kategori Organik atau
+        Anorganik, menulis isi konten berupa paragraf dan penjelasan, lalu menyisipkan gambar banner untuk memperjelas
+        pembelajaran.</div>
     </div>
 
     <!-- 19. Admin Manage Kuis -->
     <div class="screen-container">
       <div class="screen-title">19. Admin Manajemen Bank Soal</div>
-      <div class="screen" id="screen-admin-kuis">
-        <div class="wf-header">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Bank Simulasi</p>
-          <div class="wf-icon-square">[+]</div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-admin-kuis">
+        <div class="wf-header" style="margin-bottom: 20px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Bank Soal Simulasi</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <div class="wf-input" style="height: 36px; border-radius: 18px;">Penelusuran paket evaluasi...</div>
-
-        <div class="wf-card" style="border-left: 4px solid #333;">
-          <div style="display: flex; justify-content: space-between;">
-            <p class="text-h3" style="margin: 0;">Simulasi Praktik Organik</p>
-            <p class="text-small" style="font-weight: bold;">10 Item Tinjauan</p>
+        <!-- Filter Tabs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <div style="background-color: #000; color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800;">
+            Drag & Drop
           </div>
-          <p class="text-body" style="margin: 4px 0 12px 0;">Terhubung ke: Pengenalan Kompos</p>
+          <div style="background-color: transparent; color: #999; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 700;">
+            Klasifikasi
+          </div>
+          <div style="background-color: transparent; color: #999; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 700;">
+            Pilihan Ganda
+          </div>
+        </div>
 
-          <div style="display: flex; gap: 8px;">
-            <div class="wf-button-outline" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">Kelola Item Uji
+        <!-- Soal Card 1 (Highlighted) -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <!-- Image -->
+            <div style="flex: 1; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
             </div>
-            <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px;">E</div>
-            <div class="wf-button-outline"
-              style="height: 32px; margin: 0; width: 32px; font-size: 12px; border-style: dashed;">X</div>
+            
+            <!-- Buttons (Right Side, Vertical) -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="background-color: #fff; border: 2px solid #000; border-radius: 8px; padding: 8px 12px;">
+                <p style="font-size: 10px; font-weight: 800; margin: 0;">Edit</p>
+              </div>
+              <div style="background-color: #fff; border: 2px solid #999; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 12px; font-weight: 700; color: #999;">[x]</span>
+              </div>
+            </div>
           </div>
+          
+          <!-- Title & Level -->
+          <p style="font-size: 13px; font-weight: 900; margin: 0 0 4px 0; line-height: 1.3;">Batok Kelapa Kering</p>
+          <p style="font-size: 10px; color: #666; margin: 0; font-weight: 600;">Level: SULIT</p>
         </div>
 
-        <div class="wf-card" style="border-left: 4px dashed #999;">
-          <div style="display: flex; justify-content: space-between;">
-            <p class="text-h3" style="margin: 0;">Evaluasi Teori Plastik</p>
-            <p class="text-small" style="font-weight: bold;">0 Item (Kosong)</p>
+        <!-- Soal Card 2 -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <!-- Image -->
+            <div style="flex: 1; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
+            </div>
+            
+            <!-- Buttons (Right Side, Vertical) -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="background-color: #fff; border: 2px solid #000; border-radius: 8px; padding: 8px 12px;">
+                <p style="font-size: 10px; font-weight: 800; margin: 0;">Edit</p>
+              </div>
+              <div style="background-color: #fff; border: 2px solid #999; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 12px; font-weight: 700; color: #999;">[x]</span>
+              </div>
+            </div>
           </div>
-          <p class="text-body" style="margin: 4px 0 12px 0;">Terhubung ke: Daur Ulang Plastik</p>
+          
+          <!-- Title & Level -->
+          <p style="font-size: 13px; font-weight: 900; margin: 0 0 4px 0; line-height: 1.3;">Kulit Pisang</p>
+          <p style="font-size: 10px; color: #666; margin: 0; font-weight: 600;">Level: MUDAH</p>
+        </div>
 
-          <div style="display: flex; gap: 8px;">
-            <div class="wf-button" style="height: 32px; margin: 0; font-size: 10px; flex: 1;">+ Suntik Item Uji</div>
-            <div class="wf-button-outline" style="height: 32px; margin: 0; width: 32px; font-size: 12px;">E</div>
-            <div class="wf-button-outline"
-              style="height: 32px; margin: 0; width: 32px; font-size: 12px; border-style: dashed;">X</div>
+        <!-- Soal Card 3 -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <!-- Image -->
+            <div style="flex: 1; height: 100px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <p style="font-size: 11px; margin: 0; color: #999; font-weight: 700;">[ GAMBAR REFERENCE ]</p>
+            </div>
+            
+            <!-- Buttons (Right Side, Vertical) -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="background-color: #fff; border: 2px solid #000; border-radius: 8px; padding: 8px 12px;">
+                <p style="font-size: 10px; font-weight: 800; margin: 0;">Edit</p>
+              </div>
+              <div style="background-color: #fff; border: 2px solid #999; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 12px; font-weight: 700; color: #999;">[x]</span>
+              </div>
+            </div>
           </div>
+          
+          <!-- Title & Level -->
+          <p style="font-size: 13px; font-weight: 900; margin: 0 0 4px 0; line-height: 1.3;">Kertas Struk Belanja / Kasir</p>
+          <p style="font-size: 10px; color: #666; margin: 0; font-weight: 600;">Level: SEDANG</p>
+        </div>
+
+        <!-- Add Button -->
+        <div style="background-color: #000; color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 0;">
+          <p style="font-size: 13px; font-weight: 800; margin: 0;">+ Susun Drag & Drop Baru</p>
         </div>
       </div>
-      <div class="screen-desc">Halaman ini digunakan admin untuk mengelola semua paket soal evaluasi dan simulasi. Admin
-        bisa melihat daftar ujian yang tersedia, mengetahui berapa jumlah butir soal di dalamnya, dan melihat ke materi
-        mana kuis tersebut terhubung. Dari sini, admin bisa masuk untuk mengedit soalnya.</div>
+      <div class="screen-desc">Sama seperti manajemen materi tadi, di sini admin bisa mengelola bank soal untuk evaluasi
+        dan simulasi. Admin bisa mencari soal tertentu berdasarkan tipe-nya (Pilihan Ganda, Drag & Drop, atau Binary),
+        lalu mengedit atau menghapusnya jika tidak relevan lagi. Ada juga tombol untuk membuat soal baru.</div>
     </div>
 
     <!-- 20. Admin Form Soal -->
     <div class="screen-container">
       <div class="screen-title">20. Form Penyusun Instrumen</div>
-      <div class="screen" style="overflow-y: hidden;" id="screen-admin-question">
-        <div class="wf-header" style="padding-bottom: 8px; margin-bottom: 16px;">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Rancang Item Soal</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-admin-question">
+        <div class="wf-header" style="margin-bottom: 20px; padding-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 18px;">Form Soal Pilihan Ganda</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <p class="text-h3">1. Arsitektur Evaluasi</p>
-        <div class="wf-card"
-          style="padding: 8px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-          <div class="wf-icon-square" style="border-radius: 50%;"></div>
-          <div>
-            <p class="text-h3" style="margin: 0; font-size: 12px;">Pilihan Ganda Textual</p>
-          </div>
-        </div>
-        <div class="wf-card"
-          style="padding: 8px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; border: 2px solid #333; background-color: #EEE;">
-          <div class="wf-icon-square" style="border-radius: 50%; background-color: #333; color: white;">v</div>
-          <div>
-            <p class="text-h3" style="margin: 0; font-size: 12px;">Simulasi (Drag Drop / Biner)</p>
-          </div>
+        <!-- Level Soal Dropdown -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Level Soal</p>
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">Pilih tingkat kesulitan...</p>
+          <span style="font-size: 10px; font-weight: 700; color: #999;">[ icon ]</span>
         </div>
 
-        <p class="text-h3" style="margin-top: 16px;">2. Objek Studi Kasus</p>
-        <div class="wf-input" style="height: 36px; margin-bottom: 8px;">Misal: Botol Kaca Transparan</div>
-        <div class="wf-image" style="height: 60px; margin-bottom: 16px;">[ Foto Resolusi Fokus ]</div>
+        <!-- Pertanyaan -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Pertanyaan</p>
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; min-height: 60px;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">Tulis pertanyaan soal di sini...</p>
+        </div>
 
-        <p class="text-h3">3. Pemetaan Jawaban Mutlak</p>
+        <!-- Unggah Gambar -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Unggah Gambar (Opsional)</p>
+        <div style="border: 2px dashed #ddd; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 14px; background-color: #fff;">
+          <p style="font-size: 11px; margin: 0 0 4px 0; color: #999; font-weight: 700;">[ icon ] Pilih Gambar</p>
+          <p style="font-size: 9px; margin: 0; color: #999;">JPG, PNG (max 2MB)</p>
+        </div>
+
+        <!-- Pilihan Jawaban -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Pilihan Jawaban</p>
+        
+        <!-- Pilihan A -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">A. Tulis pilihan A...</p>
+        </div>
+
+        <!-- Pilihan B -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">B. Tulis pilihan B...</p>
+        </div>
+
+        <!-- Pilihan C -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">C. Tulis pilihan C...</p>
+        </div>
+
+        <!-- Pilihan D -->
+        <div style="background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px 12px; margin-bottom: 14px;">
+          <p style="font-size: 11px; margin: 0; font-weight: 600; color: #999;">D. Tulis pilihan D...</p>
+        </div>
+
+        <!-- Jawaban Benar -->
+        <p style="font-size: 12px; font-weight: 900; margin: 0 0 6px 0;">Jawaban Benar</p>
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-          <div
-            style="flex: 1; padding: 8px; border-radius: 4px; background-color: #FFF; border: 1px solid #999; text-align: center; font-size: 12px;">
-            Tong Organik</div>
-          <div
-            style="flex: 1; padding: 8px; border-radius: 4px; background-color: #333; color: white; border: 2px solid #333; text-align: center; font-weight: bold; font-size: 12px;">
-            Tong Anorganik</div>
+          <div style="flex: 1; background-color: #fff; border: 2px solid #000; border-radius: 10px; padding: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 800; margin: 0;">A</p>
+          </div>
+          <div style="flex: 1; background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 700; margin: 0; color: #999;">B</p>
+          </div>
+          <div style="flex: 1; background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 700; margin: 0; color: #999;">C</p>
+          </div>
+          <div style="flex: 1; background-color: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 10px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 700; margin: 0; color: #999;">D</p>
+          </div>
         </div>
 
-        <div class="wf-button" style="margin-top: auto;">Injeksi ke Basis Data</div>
+        <!-- Submit Button -->
+        <div style="background-color: #000; color: #fff; border: 2px solid #000; border-radius: 12px; padding: 14px; text-align: center;">
+          <p style="font-size: 13px; font-weight: 800; margin: 0;">Simpan Soal</p>
+        </div>
       </div>
       <div class="screen-desc">Ini adalah halaman khusus bagi admin untuk membuat soal baru. Form ini dibuat dinamis
         menyesuaikan kebutuhan aplikasinya; admin cukup memilih apakah ingin membuat soal Pilihan Ganda biasa atau
@@ -1408,85 +2090,183 @@
     <!-- 21. Admin Analitik UEQ (NEW FEATURE) -->
     <div class="screen-container">
       <div class="screen-title">21. Data Analitik UEQ (Skripsi)</div>
-      <div class="screen" id="screen-admin-ueq">
-        <div class="wf-header" style="margin-bottom: 16px;">
-          <div class="wf-icon-circle">&lt;</div>
-          <p class="text-h2" style="margin: 0;">Rekap Kuesioner UX</p>
-          <div style="width: 28px;"></div>
+      <div class="screen" style="padding: 20px 24px;" id="screen-admin-ueq">
+        <div class="wf-header" style="margin-bottom: 12px; padding-bottom: 8px;">
+          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
+          <p class="text-h2" style="margin: 0; font-size: 16px;">Rekap Kuesioner UX</p>
+          <div style="width: 32px;"></div>
         </div>
 
-        <p class="text-body" style="text-align: center; margin-bottom: 24px;">Ringkasan nilai rata-rata dari <br><b>38
-            Responden (N=38)</b></p>
+        <!-- Ringkasan Responden -->
+        <p style="font-size: 10px; text-align: center; color: #666; margin: 0 0 2px 0; font-weight: 600;">Ringkasan nilai rata-rata dari</p>
+        <p style="font-size: 12px; text-align: center; color: #000; margin: 0 0 10px 0; font-weight: 900;">50 Responden (N=50)</p>
 
-        <div class="wf-card" style="border: 2px solid #333; background-color: #FAFAFA;">
-          <p class="text-h3" style="text-align: center; margin-bottom: 16px;">Skala Pengalaman Pengguna</p>
-
-          <!-- Chart Bars (Draw.io style representation) -->
-          <div style="margin-bottom: 12px;">
-            <div
-              style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
-              <span>Daya Tarik (Attractiveness)</span><span>1.85 (Positif)</span>
-            </div>
-            <div
-              style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
-              <!-- Zero line is at middle (3.5 for 1-7 scale, or 0 for -3 to +3) -->
-              <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;">
-              </div>
-              <!-- Bar extending right from center -->
-              <div
-                style="position: absolute; left: 50%; top: 0; bottom: 0; width: 35%; background-color: #333; z-index: 1;">
-              </div>
-            </div>
+        <!-- Karakteristik Responden Table -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 10px; margin-bottom: 10px;">
+          <p style="font-size: 12px; font-weight: 900; margin: 0 0 4px 0; text-align: center;">Karakteristik Responden</p>
+          <p style="font-size: 8px; color: #666; margin: 0 0 6px 0; text-align: center; font-weight: 600;">Distribusi Demografis dari 50 Responden</p>
+          
+          <!-- Table Header -->
+          <div style="display: flex; gap: 6px; margin-bottom: 4px; padding-bottom: 3px; border-bottom: 2px solid #ddd;">
+            <div style="flex: 2; font-size: 9px; font-weight: 900;">Kategori</div>
+            <div style="flex: 1; font-size: 9px; font-weight: 900; text-align: center;">Jumlah</div>
+            <div style="flex: 1; font-size: 9px; font-weight: 900; text-align: right;">%</div>
           </div>
 
-          <div style="margin-bottom: 12px;">
-            <div
-              style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
-              <span>Kejelasan (Perspicuity)</span><span>2.10 (Positif)</span>
-            </div>
-            <div
-              style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
-              <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;">
-              </div>
-              <div
-                style="position: absolute; left: 50%; top: 0; bottom: 0; width: 40%; background-color: #333; z-index: 1;">
-              </div>
-            </div>
+          <!-- Jenis Kelamin Section -->
+          <div style="background-color: #f5f5f5; padding: 3px 6px; margin-bottom: 2px; border-radius: 4px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0;">Jenis Kelamin</p>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 1px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">Laki-laki</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">19</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">38.0%</div>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 4px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">Perempuan</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">31</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">62.0%</div>
           </div>
 
-          <div style="margin-bottom: 12px;">
-            <div
-              style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
-              <span>Efisiensi (Efficiency)</span><span>1.75 (Positif)</span>
-            </div>
-            <div
-              style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
-              <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;">
-              </div>
-              <div
-                style="position: absolute; left: 50%; top: 0; bottom: 0; width: 30%; background-color: #333; z-index: 1;">
-              </div>
-            </div>
+          <!-- Usia Section -->
+          <div style="background-color: #f5f5f5; padding: 3px 6px; margin-bottom: 2px; border-radius: 4px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0;">Usia</p>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 1px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">&lt; 18 Tahun</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">7</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">14.0%</div>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 1px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">18-25 Tahun</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">32</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">64.0%</div>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 4px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">&gt; 25 Tahun</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">11</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">22.0%</div>
           </div>
 
-          <div style="margin-bottom: 12px;">
-            <div
-              style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: bold;">
-              <span>Ketepatan (Dependability)</span><span>1.20 (Positif)</span>
-            </div>
-            <div
-              style="width: 100%; height: 16px; background-color: #EEE; border: 1px solid #CCC; border-radius: 2px; position: relative;">
-              <div style="position: absolute; left: 50%; width: 1px; height: 100%; background-color: #999; z-index: 2;">
-              </div>
-              <div
-                style="position: absolute; left: 50%; top: 0; bottom: 0; width: 22%; background-color: #333; z-index: 1;">
-              </div>
-            </div>
+          <!-- Pendidikan Terakhir Section -->
+          <div style="background-color: #f5f5f5; padding: 3px 6px; margin-bottom: 2px; border-radius: 4px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0;">Pendidikan Terakhir</p>
           </div>
-
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 1px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">SMA/Sederajat</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">13</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">26.0%</div>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0; margin-bottom: 1px;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">Diploma/Sarjana</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">33</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">66.0%</div>
+          </div>
+          
+          <div style="display: flex; gap: 6px; padding: 2px 0;">
+            <div style="flex: 2; font-size: 8px; padding-left: 6px;">Lainnya</div>
+            <div style="flex: 1; font-size: 8px; text-align: center; font-weight: 700;">4</div>
+            <div style="flex: 1; font-size: 8px; text-align: right;">8.0%</div>
+          </div>
         </div>
 
-        <div class="wf-button" style="margin-top: auto;">[ EXCEL ] Ekspor Data Mentah</div>
+        <!-- Skala Pengalaman Pengguna -->
+        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 10px;">
+          <p style="font-size: 12px; font-weight: 900; margin: 0 0 3px 0; text-align: center;">Skala Pengalaman Pengguna</p>
+          <p style="font-size: 8px; color: #666; margin: 0 0 6px 0; text-align: center; font-weight: 600;">Skala: -3 (Sangat Buruk) hingga +3 (Sangat Baik)</p>
+          
+          <!-- Scale Labels -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px; padding: 0 4px;">
+            <span style="font-size: 8px; font-weight: 700; color: #666;">-3</span>
+            <span style="font-size: 8px; font-weight: 700; color: #666;">0</span>
+            <span style="font-size: 8px; font-weight: 700; color: #666;">+3</span>
+          </div>
+
+          <!-- Daya Tarik -->
+          <div style="margin-bottom: 6px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Daya Tarik (Attractiveness)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 23%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+1.4</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Good</span>
+            </div>
+          </div>
+
+          <!-- Kejelasan -->
+          <div style="margin-bottom: 6px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Kejelasan (Perspicuity)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 29%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+1.74</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Excellent</span>
+            </div>
+          </div>
+
+          <!-- Efisiensi -->
+          <div style="margin-bottom: 6px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Efisiensi (Efficiency)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 17%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+1.0</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Good</span>
+            </div>
+          </div>
+
+          <!-- Ketergantungan -->
+          <div style="margin-bottom: 6px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Ketergantungan (Dependability)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 30%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+1.75</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Excellent</span>
+            </div>
+          </div>
+
+          <!-- Stimulasi -->
+          <div style="margin-bottom: 6px;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Stimulasi (Stimulation)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 35%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+2.15</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Excellent</span>
+            </div>
+          </div>
+
+          <!-- Kebaruan -->
+          <div style="margin-bottom: 0;">
+            <p style="font-size: 9px; font-weight: 900; margin: 0 0 2px 0;">Kebaruan (Novelty)</p>
+            <div style="width: 100%; height: 14px; background-color: #f5f5f5; border: 2px solid #ddd; border-radius: 4px; position: relative; margin-bottom: 2px;">
+              <div style="position: absolute; left: 50%; width: 2px; height: 100%; background-color: #999; z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 17%; background-color: #000; z-index: 2; border-radius: 0 2px 2px 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0 2px;">
+              <span style="font-size: 8px; font-weight: 700; color: #000;">+0.92</span>
+              <span style="font-size: 8px; font-weight: 700; color: #666;">Good</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="screen-desc">Terakhir, ini adalah fitur unggulan untuk mempermudah pengerjaan skripsi. Alih-alih
         menghitung manual, aplikasi secara otomatis menghitung nilai dari pengguna yang mengisi kuesioner UEQ tadi, lalu
@@ -1507,12 +2287,11 @@
 
       for (let i = 0; i < screens.length; i++) {
         try {
-          // Buat wrapper sementara untuk memberi padding aman (agar border tidak terpotong)
+          // Buat wrapper sementara untuk memberi padding aman (agar border-radius tidak terpotong)
           const wrapper = document.createElement('div');
-          wrapper.style.padding = '24px';
-          wrapper.style.backgroundColor = '#F0F0F0';
+          wrapper.style.padding = '50px'; // Padding lebih besar agar tidak terpotong
+          wrapper.style.backgroundColor = 'transparent';
           wrapper.style.display = 'inline-block';
-          wrapper.style.borderRadius = '8px'; // Opsional agar ujung gambar tidak tajam
 
           // Pindahkan screen ke dalam wrapper sementara
           screens[i].parentNode.insertBefore(wrapper, screens[i]);
@@ -1520,7 +2299,7 @@
 
           const canvas = await html2canvas(wrapper, {
             scale: 2,
-            backgroundColor: '#F0F0F0',
+            backgroundColor: null,
             logging: false
           });
 
@@ -1532,7 +2311,9 @@
 
           const a = document.createElement('a');
           a.href = url;
-          a.download = `wireframe_edusampah_${i + 1}.png`;
+          // Format nama file dengan zero-padding (01, 02, dst)
+          const paddedNumber = String(i + 1).padStart(2, '0');
+          a.download = `wireframe_edusampah_${paddedNumber}.png`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);

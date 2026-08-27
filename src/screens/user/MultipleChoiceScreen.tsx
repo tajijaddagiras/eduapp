@@ -28,6 +28,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   const [score, setScore] = useState(0);
   const [wrongAnswers, setWrongAnswers] = useState<any[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
+  const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
   
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
@@ -100,6 +101,13 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   }, [timeRemaining, currentIndex]);
 
   const finishGame = async (finalCorrectCount: number, finalWrongAnswers: any[]) => {
+    // Prevent double save
+    if (gameFinished) {
+      console.log('⚠️ Game already finished, skipping save');
+      return;
+    }
+    setGameFinished(true);
+    
     const totalQuestions = questions.length;
     const poinPerSoal = nilaiPerSoal || 10;
     
@@ -114,6 +122,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
     
     try {
       if (user) {
+        console.log('💾 Saving progress: Pilihan Ganda, Score:', finalScore);
         await addDoc(collection(db, 'progress'), {
           userId: user.uid,
           type: 'pilihan-ganda',
@@ -122,8 +131,11 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
           totalItems: totalQuestions,
           completedAt: new Date(),
         });
+        console.log('✅ Progress saved successfully');
       }
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      console.error('❌ Error saving progress:', e); 
+    }
 
     navigation.replace('HasilEvaluasi', {
       score: finalScore,
