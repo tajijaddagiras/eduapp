@@ -9,32 +9,32 @@ import { useFocusEffect } from '@react-navigation/native';
 
 // 26 Item UEQ Standar (Bahasa Indonesia)
 const UEQ_ITEMS = [
-  { id: 1, left: 'menyusahkan', right: 'menyenangkan', dimension: 'attractiveness', reverse: false },
-  { id: 2, left: 'tidak dapat dipahami', right: 'dapat dipahami', dimension: 'perspicuity', reverse: false },
-  { id: 3, left: 'kreatif', right: 'monoton', dimension: 'novelty', reverse: true },
-  { id: 4, left: 'mudah dipelajari', right: 'sulit dipelajari', dimension: 'perspicuity', reverse: true },
-  { id: 5, left: 'bernilai', right: 'tidak bernilai', dimension: 'stimulation', reverse: true },
-  { id: 6, left: 'membosankan', right: 'mengasyikkan', dimension: 'stimulation', reverse: false },
-  { id: 7, left: 'tidak menarik', right: 'menarik', dimension: 'stimulation', reverse: false },
-  { id: 8, left: 'tidak dapat diprediksi', right: 'dapat diprediksi', dimension: 'dependability', reverse: false },
-  { id: 9, left: 'cepat', right: 'lambat', dimension: 'efficiency', reverse: true },
-  { id: 10, left: 'berdaya cipta', right: 'konvensional', dimension: 'novelty', reverse: true },
-  { id: 11, left: 'menghalangi', right: 'mendukung', dimension: 'dependability', reverse: false },
-  { id: 12, left: 'baik', right: 'buruk', dimension: 'attractiveness', reverse: true },
-  { id: 13, left: 'rumit', right: 'sederhana', dimension: 'perspicuity', reverse: false },
-  { id: 14, left: 'tidak disukai', right: 'menggembirakan', dimension: 'attractiveness', reverse: false },
-  { id: 15, left: 'biasa', right: 'inovatif', dimension: 'novelty', reverse: false },
-  { id: 16, left: 'tidak nyaman', right: 'nyaman', dimension: 'attractiveness', reverse: false },
-  { id: 17, left: 'aman', right: 'tidak aman', dimension: 'dependability', reverse: true },
-  { id: 18, left: 'memotivasi', right: 'tidak memotivasi', dimension: 'stimulation', reverse: true },
-  { id: 19, left: 'memenuhi ekspektasi', right: 'tidak memenuhi ekspektasi', dimension: 'dependability', reverse: true },
-  { id: 20, left: 'tidak efisien', right: 'efisien', dimension: 'efficiency', reverse: false },
-  { id: 21, left: 'jelas', right: 'membingungkan', dimension: 'perspicuity', reverse: true },
-  { id: 22, left: 'tidak praktis', right: 'praktis', dimension: 'efficiency', reverse: false },
-  { id: 23, left: 'terorganisasi', right: 'berantakan', dimension: 'efficiency', reverse: true },
-  { id: 24, left: 'menarik', right: 'tidak menarik', dimension: 'attractiveness', reverse: true },
-  { id: 25, left: 'ramah pengguna', right: 'tidak ramah pengguna', dimension: 'attractiveness', reverse: true },
-  { id: 26, left: 'konservatif', right: 'inovatif', dimension: 'novelty', reverse: false },
+  { id: 1,  question: 'Bagaimana kesan Anda saat menggunakan aplikasi bimbingan belajar ini secara keseluruhan?', left: 'menyusahkan', right: 'menyenangkan', dimension: 'attractiveness', reverse: false },
+  { id: 2,  question: 'Seberapa mudah konten materi di aplikasi ini dapat Anda pahami?', left: 'tidak dapat dipahami', right: 'dapat dipahami', dimension: 'perspicuity', reverse: false },
+  { id: 3,  question: 'Bagaimana Anda menilai kreativitas tampilan dan fitur-fitur yang tersedia di aplikasi ini?', left: 'monoton', right: 'kreatif', dimension: 'novelty', reverse: false },
+  { id: 4,  question: 'Seberapa mudah Anda mempelajari cara menggunakan fitur-fitur di aplikasi ini?', left: 'sulit dipelajari', right: 'mudah dipelajari', dimension: 'perspicuity', reverse: false },
+  { id: 5,  question: 'Bagaimana Anda menilai manfaat aplikasi ini untuk mendukung proses belajar Anda?', left: 'tidak bernilai', right: 'bernilai', dimension: 'stimulation', reverse: false },
+  { id: 6,  question: 'Bagaimana perasaan Anda saat mengerjakan soal latihan di aplikasi ini?', left: 'membosankan', right: 'mengasyikkan', dimension: 'stimulation', reverse: false },
+  { id: 7,  question: 'Bagaimana Anda menilai daya tarik konten belajar yang disajikan dalam aplikasi ini?', left: 'tidak menarik', right: 'menarik', dimension: 'stimulation', reverse: false },
+  { id: 8,  question: 'Seberapa konsisten perilaku aplikasi ini saat Anda menggunakannya?', left: 'tidak dapat diprediksi', right: 'dapat diprediksi', dimension: 'dependability', reverse: false },
+  { id: 9,  question: 'Bagaimana kecepatan respons aplikasi saat Anda berpindah menu atau mengakses materi?', left: 'lambat', right: 'cepat', dimension: 'efficiency', reverse: false },
+  { id: 10, question: 'Bagaimana Anda menilai pendekatan baru yang ditawarkan aplikasi ini dalam proses belajar?', left: 'konvensional', right: 'berdaya cipta', dimension: 'novelty', reverse: false },
+  { id: 11, question: 'Apakah fitur-fitur di aplikasi ini membantu atau justru menghambat aktivitas belajar Anda?', left: 'menghalangi', right: 'mendukung', dimension: 'dependability', reverse: false },
+  { id: 12, question: 'Secara keseluruhan, bagaimana Anda menilai kualitas aplikasi bimbingan belajar ini?', left: 'buruk', right: 'baik', dimension: 'attractiveness', reverse: false },
+  { id: 13, question: 'Bagaimana tingkat kerumitan antarmuka aplikasi ini menurut Anda?', left: 'rumit', right: 'sederhana', dimension: 'perspicuity', reverse: false },
+  { id: 14, question: 'Bagaimana perasaan Anda setelah menggunakan aplikasi ini dalam sesi belajar?', left: 'tidak disukai', right: 'menggembirakan', dimension: 'attractiveness', reverse: false },
+  { id: 15, question: 'Bagaimana Anda menilai keunggulan fitur aplikasi ini dibanding metode belajar konvensional?', left: 'biasa', right: 'inovatif', dimension: 'novelty', reverse: false },
+  { id: 16, question: 'Bagaimana tingkat kenyamanan Anda saat menggunakan aplikasi ini dalam jangka waktu lama?', left: 'tidak nyaman', right: 'nyaman', dimension: 'attractiveness', reverse: false },
+  { id: 17, question: 'Seberapa aman Anda merasa dalam menggunakan dan mempercayakan data belajar Anda di aplikasi ini?', left: 'tidak aman', right: 'aman', dimension: 'dependability', reverse: false },
+  { id: 18, question: 'Apakah aplikasi ini memberikan dorongan semangat bagi Anda untuk terus belajar?', left: 'tidak memotivasi', right: 'memotivasi', dimension: 'stimulation', reverse: false },
+  { id: 19, question: 'Apakah pengalaman belajar melalui aplikasi ini sesuai dengan harapan Anda?', left: 'tidak memenuhi ekspektasi', right: 'memenuhi ekspektasi', dimension: 'dependability', reverse: false },
+  { id: 20, question: 'Bagaimana efisiensi Anda dalam menyelesaikan aktivitas belajar menggunakan aplikasi ini?', left: 'tidak efisien', right: 'efisien', dimension: 'efficiency', reverse: false },
+  { id: 21, question: 'Seberapa jelas informasi dan instruksi yang tersedia di dalam aplikasi ini?', left: 'membingungkan', right: 'jelas', dimension: 'perspicuity', reverse: false },
+  { id: 22, question: 'Seberapa praktis penggunaan aplikasi ini dalam mendukung kegiatan belajar sehari-hari?', left: 'tidak praktis', right: 'praktis', dimension: 'efficiency', reverse: false },
+  { id: 23, question: 'Bagaimana tingkat keteraturan tampilan dan struktur menu di aplikasi ini?', left: 'berantakan', right: 'terorganisasi', dimension: 'efficiency', reverse: false },
+  { id: 24, question: 'Bagaimana daya tarik tampilan visual aplikasi bimbingan belajar ini secara keseluruhan?', left: 'tidak menarik', right: 'menarik', dimension: 'attractiveness', reverse: false },
+  { id: 25, question: 'Seberapa mudah aplikasi ini dioperasikan tanpa memerlukan panduan tambahan?', left: 'tidak ramah pengguna', right: 'ramah pengguna', dimension: 'attractiveness', reverse: false },
+  { id: 26, question: 'Bagaimana Anda menilai kebaruan dan inovasi yang ditawarkan oleh aplikasi ini?', left: 'konservatif', right: 'inovatif', dimension: 'novelty', reverse: false },
 ];
 
 const DIMENSION_LABELS: Record<string, string> = {
@@ -162,13 +162,41 @@ export default function UEQFormScreen({ navigation, route }: any) {
           <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
         </View>
 
+        {/* Panduan Skala */}
+        <View style={styles.guideBox}>
+          <Text style={styles.guideTitle}>📖 Cara Mengisi Kuesioner</Text>
+          <Text style={styles.guideDesc}>
+            Setiap pertanyaan memiliki dua kata yang berlawanan di kiri dan kanan. Pilih angka yang paling mewakili pendapat Anda.
+          </Text>
+          <View style={styles.guideScaleRow}>
+            <Text style={styles.guideScaleLabel}>Kata Kiri</Text>
+            <View style={styles.guideScaleBubbles}>
+              {['1','2','3','4','5','6','7'].map(n => (
+                <View key={n} style={[styles.guideScaleBubble, n === '4' && styles.guideScaleBubbleNeutral]}>
+                  <Text style={[styles.guideScaleNum, n === '4' && styles.guideScaleNumNeutral]}>{n}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={styles.guideScaleLabel}>Kata Kanan</Text>
+          </View>
+          <View style={styles.guideLegend}>
+            <Text style={styles.guideLegendItem}>🔴 <Text style={{fontWeight:'800'}}>1</Text> = Sangat negatif (sangat setuju kata kiri)</Text>
+            <Text style={styles.guideLegendItem}>🟠 <Text style={{fontWeight:'800'}}>2</Text> = Negatif</Text>
+            <Text style={styles.guideLegendItem}>🟡 <Text style={{fontWeight:'800'}}>3</Text> = Agak negatif</Text>
+            <Text style={styles.guideLegendItem}>⚪ <Text style={{fontWeight:'800'}}>4</Text> = Netral (tidak memihak keduanya)</Text>
+            <Text style={styles.guideLegendItem}>🔵 <Text style={{fontWeight:'800'}}>5</Text> = Agak positif</Text>
+            <Text style={styles.guideLegendItem}>🟢 <Text style={{fontWeight:'800'}}>6</Text> = Positif</Text>
+            <Text style={styles.guideLegendItem}>💚 <Text style={{fontWeight:'800'}}>7</Text> = Sangat positif (sangat setuju kata kanan)</Text>
+          </View>
+        </View>
+
         {/* Dimension Groups */}
         {Object.keys(DIMENSION_LABELS).map(dim => (
           <View key={dim} style={styles.dimGroup}>
             <Text style={styles.dimTitle}>{DIMENSION_LABELS[dim]}</Text>
             {UEQ_ITEMS.filter(i => i.dimension === dim).map(item => (
               <View key={item.id} style={styles.itemCard}>
-                <Text style={styles.itemNum}>Item {item.id}</Text>
+                <Text style={styles.itemQuestion}>{item.question}</Text>
                 <View style={styles.labelRow}>
                   <Text style={styles.labelLeft}>{item.left}</Text>
                   <Text style={styles.labelRight}>{item.right}</Text>
@@ -259,6 +287,72 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     margin: 2,
   },
+  guideBox: {
+    backgroundColor: '#eaf4ec',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#01190a',
+  },
+  guideTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#01190a',
+    marginBottom: 8,
+  },
+  guideDesc: {
+    fontSize: 12,
+    color: '#424843',
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  guideScaleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  guideScaleLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#01190a',
+    flexShrink: 1,
+  },
+  guideScaleBubbles: {
+    flexDirection: 'row',
+    gap: 4,
+    marginHorizontal: 6,
+  },
+  guideScaleBubble: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: '#01190a',
+    backgroundColor: '#f1eee3',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  guideScaleBubbleNeutral: {
+    backgroundColor: '#142e1d',
+  },
+  guideScaleNum: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#424843',
+  },
+  guideScaleNumNeutral: {
+    color: '#cbead0',
+  },
+  guideLegend: {
+    gap: 4,
+  },
+  guideLegendItem: {
+    fontSize: 12,
+    color: '#1c1c15',
+    lineHeight: 20,
+  },
   dimGroup: { 
     marginBottom: 24 
   },
@@ -283,12 +377,14 @@ const styles = StyleSheet.create({
     borderWidth: 2, 
     borderColor: '#01190a' // primary
   },
-  itemNum: { 
-    fontSize: 12, 
-    color: '#424843', // on-surface-variant
-    marginBottom: 10,
+  itemQuestion: {
+    fontSize: 13,
     fontWeight: '700',
+    color: '#1c1c15',
+    marginBottom: 14,
+    lineHeight: 20,
   },
+
   labelRow: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
