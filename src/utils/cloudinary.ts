@@ -14,7 +14,15 @@ export const uploadToCloudinary = async (uri: string, folder: string = 'profiles
   // Di Web atau jika URI adalah data URI (base64)
   if (Platform.OS === 'web' || uri.startsWith('data:')) {
     const formData = new FormData();
-    formData.append('file', uri);
+    
+    if (Platform.OS === 'web' && uri.startsWith('blob:')) {
+      const blobRes = await fetch(uri);
+      const blobData = await blobRes.blob();
+      formData.append('file', blobData, 'upload.jpg');
+    } else {
+      formData.append('file', uri);
+    }
+
     formData.append('upload_preset', UPLOAD_PRESET);
     formData.append('folder', folder);
 
