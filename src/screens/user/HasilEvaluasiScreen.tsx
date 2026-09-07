@@ -20,7 +20,7 @@ const ConfettiPiece = ({ index }: { index: number }) => {
   const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const explode = () => {
       // Tipe tembakan: 0 = Kiri, 1 = Kanan, 2 = Bawah Tengah

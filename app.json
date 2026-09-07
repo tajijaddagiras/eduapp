@@ -30,6 +30,11 @@
         "projectId": "f15e4841-4e3f-4c60-bab3-df1342b748cf"
       }
     },
-    "owner": "appsedus-team"
+    "owner": "appsedus-team",
+    "plugins": [
+      "expo-font",
+      "expo-sharing",
+      "expo-status-bar"
+    ]
   }
 }
