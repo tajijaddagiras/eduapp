@@ -6,6 +6,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 export interface NumberedItem {
   title: string;
@@ -19,30 +20,6 @@ export interface ContentSection {
   numberedSectionDescription?: string; // Deskripsi sebelum daftar nomor
   numberedItems?: NumberedItem[];      // Item dengan judul + penjelasan
 }
-
-const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
-const uploadToCloudinary = async (uri: string): Promise<string> => {
-  const formData = new FormData();
-  
-  if (Platform.OS === 'web' || uri.startsWith('data:')) {
-    formData.append('file', uri); // Cloudinary accepts raw data URIs
-  } else {
-    formData.append('file', { uri, type: 'image/jpeg', name: 'materi.jpg' } as any);
-  }
-  
-  formData.append('upload_preset', UPLOAD_PRESET!);
-  formData.append('folder', 'edusampah/materi');
-
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-    method: 'POST',
-    body: formData,
-  });
-  const data = await res.json();
-  if (!data.secure_url) throw new Error('Upload gagal');
-  return data.secure_url;
-};
 
 const emptySection = (): ContentSection => ({
   subtitle: '',
@@ -177,7 +154,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
     try {
       let finalImageUrl = formImageUri;
       if (formImageUri && !formImageUri.startsWith('http')) {
-        finalImageUrl = await uploadToCloudinary(formImageUri);
+        finalImageUrl = await uploadToCloudinary(formImageUri, 'edusampah/materi');
       }
 
       const filteredSections = formSections.filter(s => {

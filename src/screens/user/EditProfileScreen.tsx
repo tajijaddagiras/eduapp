@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 export default function EditProfileScreen({ navigation }: any) {
   const { user, userData } = useAuth();
@@ -40,28 +40,6 @@ export default function EditProfileScreen({ navigation }: any) {
     }
   };
 
-  const uploadToCloudinary = async (localUri: string): Promise<string> => {
-    const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const UPLOAD_PRESET = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
-    const formData = new FormData();
-    formData.append('file', {
-      uri: localUri,
-      type: 'image/jpeg',
-      name: `profile_${user?.uid}_${Date.now()}.jpg`,
-    } as any);
-    formData.append('upload_preset', UPLOAD_PRESET!);
-    formData.append('folder', 'profiles');
-
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: 'POST', body: formData }
-    );
-    const data = await response.json();
-    if (!data.secure_url) throw new Error('Upload gagal');
-    return data.secure_url;
-  };
-
   const handleSave = async () => {
     if (!name.trim()) {
       Alert.alert('Validasi', 'Nama tidak boleh kosong');
@@ -77,9 +55,8 @@ export default function EditProfileScreen({ navigation }: any) {
       };
 
       // Jika ada foto baru (URI lokal yang berbeda dari yang tersimpan)
-      if (photoUri && photoUri !== userData?.photoUrl && photoUri.startsWith('file')) {
-        Alert.alert('Mengunggah', 'Sedang mengunggah foto profil...');
-        const cloudUrl = await uploadToCloudinary(photoUri);
+      if (photoUri && photoUri !== userData?.photoUrl && !photoUri.startsWith('http')) {
+        const cloudUrl = await uploadToCloudinary(photoUri, 'profiles');
         updateData.photoUrl = cloudUrl;
       }
 

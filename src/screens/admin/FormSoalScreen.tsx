@@ -6,9 +6,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { collection, addDoc, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-
-const CLOUD_NAME = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 interface Level {
   id: string;
@@ -17,27 +15,6 @@ interface Level {
   durasi?: number;
   nilaiPerSoal?: number;
 }
-
-const uploadToCloudinary = async (uri: string): Promise<string> => {
-  const formData = new FormData();
-
-  if (Platform.OS === 'web' || uri.startsWith('data:')) {
-    formData.append('file', uri);
-  } else {
-    formData.append('file', { uri, type: 'image/jpeg', name: 'soal.jpg' } as any);
-  }
-  
-  formData.append('upload_preset', UPLOAD_PRESET!);
-  formData.append('folder', 'edusampah/soal');
-
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-    method: 'POST',
-    body: formData,
-  });
-  const data = await res.json();
-  if (!data.secure_url) throw new Error('Upload gagal');
-  return data.secure_url;
-};
 
 export default function FormSoalScreen({ route, navigation }: any) {
   const { gameType, editItem } = route.params;
@@ -140,7 +117,7 @@ export default function FormSoalScreen({ route, navigation }: any) {
       let finalImageUrl = formImageUri;
       
       if (formImageUri && !formImageUri.startsWith('http')) {
-        finalImageUrl = await uploadToCloudinary(formImageUri);
+        finalImageUrl = await uploadToCloudinary(formImageUri, 'edusampah/soal');
       }
 
       const baseData = {
