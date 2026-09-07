@@ -12,15 +12,20 @@ interface Stats {
   totalUEQ: number;
 }
 
-const menuItems = [
+// Set ke true jika ingin memunculkan kembali tombol Bot Generator di menu admin
+const SHOW_BOT_GENERATOR = false;
+
+const ALL_MENU_ITEMS = [
   { icon: '[S]', label: 'Manajemen Data User',      nav: 'DataSiswa' },
   { icon: '[M]', label: 'Manajemen Modul Materi',    nav: 'ManageMateri' },
   { icon: '[K]', label: 'Manajemen Bank Simulasi',   nav: 'ManageSoal' },
   { icon: '[L]', label: 'Kelola Level Soal',         nav: 'ManageLevel' },
   { icon: '[A]', label: 'Analisis Data UEQ',         nav: 'UEQAnalitik', highlight: true },
-  { icon: '[🤖]', label: 'Bot Generator Kuesioner',  nav: 'BotGenerator', highlight: true },
+  { icon: '[🤖]', label: 'Bot Generator Kuesioner',  nav: 'BotGenerator', highlight: true, isBot: true },
   { icon: '[💾]', label: 'Backup & Restore Data',   nav: 'BackupRestore', highlight: true },
 ];
+
+const menuItems = ALL_MENU_ITEMS.filter(item => !item.isBot || SHOW_BOT_GENERATOR);
 
 export default function AdminDashboardScreen({ navigation }: any) {
   const [stats, setStats] = useState<Stats>({ totalUsers: 0, totalMateri: 0, totalSoal: 0, totalUEQ: 0 });
@@ -61,10 +66,14 @@ export default function AdminDashboardScreen({ navigation }: any) {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View>
+        {/* Tekan tahan (long press) pada judul untuk akses rahasia ke Bot Generator jika SHOW_BOT_GENERATOR bernilai false */}
+        <TouchableOpacity
+          activeOpacity={1}
+          onLongPress={() => navigation.navigate('BotGenerator')}
+        >
           <Text style={styles.headerTitle}>Admin Portal</Text>
           <Text style={styles.headerSub}>Manajemen Data & Evaluasi</Text>
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.logoutIcon} onPress={handleLogout}>
           <Text style={styles.logoutText}>[!]</Text>
         </TouchableOpacity>
