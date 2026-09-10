@@ -1355,111 +1355,99 @@
     <!-- 14. UEQ Form / Evaluasi (NEW FEATURE - Crucial for Thesis Title) -->
     <div class="screen-container">
       <div class="screen-title">14. Formulir UEQ (Pengguna)</div>
-      <div class="screen" style="padding: 20px 24px; overflow-y: hidden;" id="screen-ueq">
-        <div class="wf-header" style="margin-bottom: 16px; padding-bottom: 10px;">
-          <div style="width: 32px; height: 32px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fff;">[ icon ]</div>
-          <p class="text-h2" style="margin: 0; font-size: 18px;">Evaluasi Aplikasi (UEQ)</p>
+      <div class="screen" style="padding: 20px 24px; overflow-y: hidden; background-color: #fcf9ee;" id="screen-ueq">
+        <!-- Header -->
+        <div class="wf-header" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #01190a;">
+          <div style="width: 32px; height: 32px; border: 2px solid #01190a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background-color: #fcf9ee;">&lt;</div>
+          <p style="margin: 0; font-size: 14px; font-weight: 800; color: #1c1c15;">Evaluasi Aplikasi (UEQ)</p>
           <div style="width: 32px;"></div>
         </div>
 
+        <!-- Progress Bar -->
+        <div style="font-size: 10px; font-weight: 600; color: #424843; margin-bottom: 6px;">Progres: 0/26 pertanyaan (0%)</div>
+        <div style="height: 8px; background-color: #e5e2d8; border-radius: 4px; border: 2px solid #01190a; margin-bottom: 10px;">
+          <div style="height: 4px; width: 0%; background-color: #b0ceb5; border-radius: 2px; margin: 2px;"></div>
+        </div>
+
+        <!-- Guide Box -->
+        <div style="background-color: #eaf4ec; border: 2px solid #01190a; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px;">
+          <p style="font-size: 11px; font-weight: 800; color: #01190a; margin: 0 0 4px 0;">📖 Cara Mengisi Kuesioner</p>
+          <p style="font-size: 10px; color: #424843; margin: 0 0 6px 0; line-height: 1.4;">Pilih angka yang paling mewakili pendapat Anda.</p>
+          <!-- Scale Preview -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <span style="font-size: 9px; font-weight: 800; color: #01190a;">Kata Kiri</span>
+            <div style="display: flex; gap: 3px;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">1</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">2</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">3</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #142e1d; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #cbead0;">4</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">5</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">6</div>
+              <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800;">7</div>
+            </div>
+            <span style="font-size: 9px; font-weight: 800; color: #01190a;">Kata Kanan</span>
+          </div>
+          <!-- Legend -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; font-size: 8.5px; color: #1c1c15; line-height: 1.4; margin-top: 5px; border-top: 1px dashed #b0ceb5; padding-top: 5px;">
+            <div>🔴 <b>1</b>: Sangat negatif</div>
+            <div>🔵 <b>5</b>: Agak positif</div>
+            <div>🟠 <b>2</b>: Negatif</div>
+            <div>🟢 <b>6</b>: Positif</div>
+            <div>🟡 <b>3</b>: Agak negatif</div>
+            <div>💚 <b>7</b>: Sangat positif</div>
+            <div style="grid-column: span 2;">⚪ <b>4</b>: Netral (tidak memihak)</div>
+          </div>
+        </div>
+
         <!-- Category Title -->
-        <div style="background-color: #fff; border: 2px solid #000; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;">
-          <p style="font-size: 12px; font-weight: 800; margin: 0;">Daya Tarik (Attractiveness)</p>
+        <div style="background-color: #f1eee3; border: 2px solid #01190a; border-left: 4px solid #01190a; border-radius: 12px; padding: 8px 12px; margin-bottom: 8px;">
+          <p style="font-size: 11px; font-weight: 800; color: #01190a; margin: 0;">Daya Tarik (Attractiveness)</p>
         </div>
 
-        <!-- Item 1 -->
-        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
-          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 1</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
-            <span>menyusahkan</span>
-            <span>menyenangkan</span>
+        <!-- Item Card 1 (with question) -->
+        <div style="background-color: #ffffff; border: 2px solid #01190a; border-radius: 16px; padding: 12px; margin-bottom: 8px;">
+          <p style="font-size: 10px; font-weight: 700; color: #1c1c15; margin: 0 0 6px 0; line-height: 1.4;">Bagaimana kesan Anda saat menggunakan aplikasi bimbingan belajar ini secara keseluruhan?</p>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 10px; font-weight: 700;">
+            <span style="color: #1c1c15;">menyusahkan</span>
+            <span style="color: #1c1c15;">menyenangkan</span>
           </div>
-          
-          <!-- Radio Scale -->
-          <div style="display: flex; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
+          <div style="display: flex; justify-content: space-between;">
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">1</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">2</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">3</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">4</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">5</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #142e1d; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #cbead0; box-shadow: 2px 2px 0 #000;">6</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">7</div>
           </div>
         </div>
 
-        <!-- Item 12 -->
-        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
-          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 12</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
-            <span>baik</span>
-            <span>buruk</span>
+        <!-- Item Card 2 (with question) -->
+        <div style="background-color: #ffffff; border: 2px solid #01190a; border-radius: 16px; padding: 12px; margin-bottom: 0;">
+          <p style="font-size: 10px; font-weight: 700; color: #1c1c15; margin: 0 0 6px 0; line-height: 1.4;">Secara keseluruhan, bagaimana Anda menilai kualitas aplikasi bimbingan belajar ini?</p>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 10px; font-weight: 700;">
+            <span style="color: #1c1c15;">buruk</span>
+            <span style="color: #1c1c15;">baik</span>
           </div>
-          
-          <!-- Radio Scale -->
-          <div style="display: flex; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
+          <div style="display: flex; justify-content: space-between;">
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">1</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">2</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">3</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">4</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">5</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">6</div>
+            <div style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #01190a; background-color: #f1eee3; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;">7</div>
           </div>
         </div>
 
-        <!-- Item 14 -->
-        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 12px;">
-          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 14</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
-            <span>tidak disukai</span>
-            <span>menggembirakan</span>
-          </div>
-          
-          <!-- Radio Scale -->
-          <div style="display: flex; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
-          </div>
-        </div>
-
-        <!-- Item 16 -->
-        <div style="background-color: #fff; border: 2px solid #000; border-radius: 16px; padding: 12px; margin-bottom: 0;">
-          <p style="font-size: 10px; font-weight: 700; margin: 0 0 8px 0;">Item 16</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; font-weight: 600;">
-            <span>tidak nyaman</span>
-            <span>nyaman</span>
-          </div>
-          
-          <!-- Radio Scale -->
-          <div style="display: flex; justify-content: space-between; position: relative;">
-            <div style="position: absolute; top: 50%; left: 12px; right: 12px; height: 1px; background-color: #ddd; z-index: 1;"></div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">1</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">2</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">3</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">4</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">5</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">6</div>
-            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid #999; background-color: #fff; z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #999;">7</div>
-          </div>
+        <!-- Submit Button -->
+        <div style="margin-top: 10px; background-color: #142e1d; border: 2px solid #01190a; border-radius: 12px; height: 38px; display: flex; align-items: center; justify-content: center; color: #cbead0; font-size: 11px; font-weight: 800; box-shadow: 2px 2px 0 #000;">
+          Submit Kuesioner UEQ
         </div>
       </div>
-      <div class="screen-desc">Di dalam aplikasi ini, saya menyediakan halaman khusus untuk kuesioner UEQ agar sesuai
-        dengan judul riset. Pengguna tinggal menekan bulatan pada skala 1 sampai 7 untuk menilai seberapa baik
-        pengalaman mereka menggunakan aplikasi, misalnya apakah menurut mereka aplikasinya 'Menyusahkan' atau
-        'Menyenangkan'.</div>
+      <div class="screen-desc">Halaman kuesioner UEQ yang telah diperbarui. Terdapat kotak panduan cara mengisi di bagian atas yang menjelaskan arti skala 1–7 (sangat negatif hingga sangat positif). Setiap kartu pertanyaan kini menampilkan pertanyaan kontekstual di atas pasangan kata berlawanan, dengan kata negatif selalu di kiri dan kata positif di kanan secara konsisten pada seluruh 26 item.</div>
     </div>
+
 
     <!-- 15. Profil User (LMS Focused) -->
     <div class="screen-container">
