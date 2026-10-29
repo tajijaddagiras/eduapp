@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Speech from 'expo-speech';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -185,16 +186,71 @@ export default function HasilEvaluasiScreen({ navigation, route }: any) {
     score: 0, totalItems: 0, correctCount: 0, wrongAnswers: [], evaluasiName: 'Simulasi'
   };
   const lulus = score >= 60;
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const titleText = lulus ? 'Luar Biasa! Kerja Bagus! 🎉' : 'Jangan Menyerah! Tetap Semangat! 💪';
   const messageText = lulus 
     ? 'Kamu berhasil menyelesaikan evaluasi ini dengan nilai memuaskan. Pertahankan prestasimu dan terus jadi pahlawan lingkungan!'
     : 'Nilaimu memang belum mencapai target, tapi tidak apa-apa. Kegagalan adalah awal dari keberhasilan. Yuk, baca lagi materinya dan coba lagi!';
 
+  const playVoiceFeedback = () => {
+    Speech.stop();
+    setIsSpeaking(true);
+    const speechMessage = lulus
+      ? `Luar biasa! Kerja bagus! Kamu berhasil menyelesaikan evaluasi ${evaluasiName} dengan nilai ${score}. Selamat, kamu lulus evaluasi!`
+      : `Nilaimu ${score}. Jangan menyerah, tetap semangat! Kegagalan adalah awal dari keberhasilan. Yuk pelajari lagi materinya dan coba kembali!`;
+
+    Speech.speak(speechMessage, {
+      language: 'id-ID',
+      rate: 0.95,
+      pitch: lulus ? 1.05 : 0.95,
+      onDone: () => setIsSpeaking(false),
+      onStopped: () => setIsSpeaking(false),
+      onError: () => setIsSpeaking(false),
+    });
+  };
+
+  useEffect(() => {
+    // Jalankan narasi suara secara otomatis setelah animasi muncul
+    const timer = setTimeout(() => {
+      playVoiceFeedback();
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      Speech.stop();
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Background Animations */}
       {lulus ? <Confetti /> : <Rain />}
+
+      {/* Top Floating Speaker Button */}
+      <TouchableOpacity
+        style={[
+          styles.topSpeakerBtn,
+          lulus ? styles.topSpeakerBtnLulus : styles.topSpeakerBtnGagal,
+          isSpeaking && (lulus ? styles.topSpeakerBtnActiveLulus : styles.topSpeakerBtnActiveGagal),
+        ]}
+        onPress={() => {
+          if (isSpeaking) {
+            Speech.stop();
+            setIsSpeaking(false);
+          } else {
+            playVoiceFeedback();
+          }
+        }}
+        activeOpacity={0.7}
+        accessibilityLabel={isSpeaking ? "Hentikan Suara" : "Dengarkan Ulasan Suara"}
+      >
+        <Ionicons
+          name={isSpeaking ? "stop" : "volume-high"}
+          size={20}
+          color={isSpeaking ? "#ffffff" : (lulus ? "#15803d" : "#dc2626")}
+        />
+      </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Animated Icon */}
@@ -417,5 +473,38 @@ const styles = StyleSheet.create({
     color: '#424843', // on-surface-variant
     fontSize: 15,
     fontWeight: '700',
+  },
+  topSpeakerBtn: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 50,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#01190a',
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 6,
+  },
+  topSpeakerBtnLulus: {
+    backgroundColor: '#ffffff',
+  },
+  topSpeakerBtnGagal: {
+    backgroundColor: '#ffffff',
+  },
+  topSpeakerBtnActiveLulus: {
+    backgroundColor: '#15803d',
+    borderColor: '#01190a',
+  },
+  topSpeakerBtnActiveGagal: {
+    backgroundColor: '#dc2626',
+    borderColor: '#01190a',
   },
 });

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
+import * as Speech from 'expo-speech';
 
 interface Question {
   id: string;
@@ -29,9 +30,41 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
   const [wrongAnswers, setWrongAnswers] = useState<any[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
   const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
+
+  useEffect(() => {
+    return () => {
+      Speech.stop();
+    };
+  }, []);
+
+  useEffect(() => {
+    Speech.stop();
+    setIsSpeaking(false);
+  }, [currentIndex]);
+
+  const toggleQuestionSpeech = () => {
+    if (isSpeaking) {
+      Speech.stop();
+      setIsSpeaking(false);
+    } else {
+      const current = questions[currentIndex];
+      if (!current) return;
+      setIsSpeaking(true);
+      const speechText = `Soal nomor ${currentIndex + 1}. ${current.question}. Pilihan A: ${current.optionA}. Pilihan B: ${current.optionB}. Pilihan C: ${current.optionC}. Pilihan D: ${current.optionD}.`;
+      Speech.speak(speechText, {
+        language: 'id-ID',
+        rate: 0.95,
+        pitch: 1.0,
+        onDone: () => setIsSpeaking(false),
+        onStopped: () => setIsSpeaking(false),
+        onError: () => setIsSpeaking(false),
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -261,8 +294,29 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
           </View>
         )}
 
-        {/* Question Text */}
-        <Text style={styles.title}>{currentQuestion.question}</Text>
+        {/* Question Text with Audio Speaker Button */}
+        <View style={styles.questionCard}>
+          <View style={styles.questionHeaderRow}>
+            <View style={styles.questionBadge}>
+              <Text style={styles.questionBadgeText}>SOAL #{currentIndex + 1}</Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.speakerBtn, isSpeaking && styles.speakerBtnActive]}
+              onPress={toggleQuestionSpeech}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={isSpeaking ? "volume-high" : "volume-medium-outline"}
+                size={18}
+                color={isSpeaking ? "#fff" : "#1e40af"}
+              />
+              <Text style={[styles.speakerBtnText, isSpeaking && styles.speakerBtnTextActive]}>
+                {isSpeaking ? 'Berhenti' : 'Baca Soal'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.title}>{currentQuestion.question}</Text>
+        </View>
 
         {/* Options */}
         <View style={styles.optionsContainer}>
@@ -394,11 +448,67 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 8,
   },
+  questionCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#01190a',
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  questionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  questionBadge: {
+    backgroundColor: '#eff6ff',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#bfdbfe',
+  },
+  questionBadgeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#1d4ed8',
+    letterSpacing: 0.5,
+  },
+  speakerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#dbeafe',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#93c5fd',
+  },
+  speakerBtnActive: {
+    backgroundColor: '#dc2626',
+    borderColor: '#b91c1c',
+  },
+  speakerBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#1e40af',
+  },
+  speakerBtnTextActive: {
+    color: '#ffffff',
+  },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
     color: '#1c1c15',
-    marginBottom: 24,
+    marginBottom: 6,
     lineHeight: 28,
   },
   optionsContainer: { 

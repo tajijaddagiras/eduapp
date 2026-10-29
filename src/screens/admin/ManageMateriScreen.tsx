@@ -28,6 +28,7 @@ interface Materi {
   content?: string;
   readTime?: string;
   imageUrl?: string;
+  videoUrl?: string;
   sections?: ContentSection[];
 }
 
@@ -104,7 +105,14 @@ export default function ManageMateriScreen({ navigation }: any) {
                 <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
               )}
               <View style={styles.cardTop}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
+                <View style={{ flex: 1, paddingRight: 8 }}>
+                  <Text style={styles.cardTitle}>{item.title}</Text>
+                  {item.videoUrl && (
+                    <Text style={{ fontSize: 11, color: '#dc2626', fontWeight: 'bold', marginTop: 2 }}>
+                      🎥 Video Terpasang
+                    </Text>
+                  )}
+                </View>
                 <Text style={[styles.catBadge, { color: item.category === 'Organik' ? '#2e7d32' : '#6b7280' }]}>
                   {item.category.toUpperCase()}
                 </Text>

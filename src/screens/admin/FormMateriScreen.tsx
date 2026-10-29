@@ -40,6 +40,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
 
   const [formTitle, setFormTitle] = useState('');
   const [formCategory, setFormCategory] = useState('Organik');
+  const [formVideoUrl, setFormVideoUrl] = useState('');
   const [formImageUri, setFormImageUri] = useState<string | null>(null);
   const [formSections, setFormSections] = useState<ContentSection[]>([emptySection()]);
 
@@ -47,6 +48,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
     if (isEditMode && editItem) {
       setFormTitle(editItem.title || '');
       setFormCategory(editItem.category || 'Organik');
+      setFormVideoUrl(editItem.videoUrl || '');
       setFormImageUri(editItem.imageUrl || null);
 
       if (editItem.sections && editItem.sections.length > 0) {
@@ -170,6 +172,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
         content: filteredSections.length > 0 ? filteredSections[0].content : '',
         sections: filteredSections,
         imageUrl: finalImageUrl,
+        videoUrl: formVideoUrl.trim(),
       };
 
       if (isEditMode) {
@@ -354,6 +357,17 @@ export default function FormMateriScreen({ route, navigation }: any) {
             </>
           )}
         </TouchableOpacity>
+
+        <Text style={styles.fieldLabel}>Tautan Video Edukasi (YouTube)</Text>
+        <Text style={styles.fieldHint}>🎥 Masukkan URL video YouTube (opsional). Format: https://www.youtube.com/watch?v=... atau https://youtu.be/... Video akan langsung disematkan (embed) pada modul siswa.</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="https://www.youtube.com/watch?v=..."
+          value={formVideoUrl}
+          onChangeText={setFormVideoUrl}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={uploading}>
           {uploading ? (

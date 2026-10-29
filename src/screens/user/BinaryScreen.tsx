@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
+import * as Speech from 'expo-speech';
 
 interface Item {
   id: string;
@@ -27,6 +28,36 @@ export default function BinaryScreen({ route, navigation }: any) {
   const [timeLeft, setTimeLeft] = useState(duration ? duration * 60 : 120);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      Speech.stop();
+    };
+  }, []);
+
+  useEffect(() => {
+    Speech.stop();
+    setIsSpeaking(false);
+  }, [currentIndex]);
+
+  const toggleItemSpeech = () => {
+    if (isSpeaking) {
+      Speech.stop();
+      setIsSpeaking(false);
+    } else {
+      const current = items[currentIndex];
+      if (!current) return;
+      setIsSpeaking(true);
+      Speech.speak(`Klasifikasi sampah: ${current.name}. Apakah sampah organik atau anorganik?`, {
+        language: 'id-ID',
+        rate: 0.95,
+        onDone: () => setIsSpeaking(false),
+        onStopped: () => setIsSpeaking(false),
+        onError: () => setIsSpeaking(false),
+      });
+    }
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -249,7 +280,23 @@ export default function BinaryScreen({ route, navigation }: any) {
       )}
 
       <View style={styles.body}>
-        <Text style={styles.itemName}>{items[currentIndex]?.name}</Text>
+        <View style={styles.itemRow}>
+          <Text style={styles.itemName}>{items[currentIndex]?.name}</Text>
+          <TouchableOpacity
+            style={[styles.miniSpeakerBtn, isSpeaking && styles.miniSpeakerBtnActive]}
+            onPress={toggleItemSpeech}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={isSpeaking ? "volume-high" : "volume-medium-outline"}
+              size={18}
+              color={isSpeaking ? "#fff" : "#15803d"}
+            />
+            <Text style={[styles.miniSpeakerText, isSpeaking && styles.miniSpeakerTextActive]}>
+              {isSpeaking ? 'Stop' : 'Suara'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Binary Choice Buttons */}
@@ -394,13 +441,54 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  itemRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#01190a',
+    shadowColor: '#000',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 4,
   },
   itemName: { 
-    fontSize: 22, 
+    fontSize: 20, 
     fontWeight: '800', 
     color: '#1c1c15', // on-background
-    lineHeight: 28,
-    marginBottom: 24,
+    lineHeight: 26,
+    flex: 1,
+    paddingRight: 10,
+  },
+  miniSpeakerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#dcfce7',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#86efac',
+  },
+  miniSpeakerBtnActive: {
+    backgroundColor: '#dc2626',
+    borderColor: '#b91c1c',
+  },
+  miniSpeakerText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#15803d',
+  },
+  miniSpeakerTextActive: {
+    color: '#ffffff',
   },
   buttonContainer: { 
     flexDirection: 'row', 

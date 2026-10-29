@@ -13,6 +13,7 @@ interface Materi {
   category: string;
   status: string;
   imageUrl?: string;
+  videoUrl?: string;
   createdAt?: any;
 }
 
@@ -136,6 +137,12 @@ export default function MateriScreen({ navigation }: any) {
             <Text style={[styles.cardCategory, { color: cardColor.text }]}>
               {item.category.toUpperCase()}
             </Text>
+            {item.videoUrl ? (
+              <View style={styles.videoPill}>
+                <Ionicons name="play" size={8} color="#fff" />
+                <Text style={styles.videoPillText}>Video</Text>
+              </View>
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>
@@ -165,6 +172,12 @@ export default function MateriScreen({ navigation }: any) {
                 color="#d1fae5"
               />
               <Text style={styles.newModuleCategoryText}>{item.category}</Text>
+              {item.videoUrl ? (
+                <View style={[styles.videoPill, { backgroundColor: '#ef4444' }]}>
+                  <Ionicons name="play" size={8} color="#fff" />
+                  <Text style={styles.videoPillText}>Video</Text>
+                </View>
+              ) : null}
             </View>
           </View>
           
@@ -502,5 +515,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     letterSpacing: 0.5,
+  },
+  videoPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: '#dc2626',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginLeft: 6,
+  },
+  videoPillText: {
+    color: '#fff',
+    fontSize: 9,
+    fontWeight: 'bold',
   },
 });

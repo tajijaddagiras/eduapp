@@ -1,9 +1,11 @@
-/*  */import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image, Platform } from 'react-native';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import * as Speech from 'expo-speech';
+import { WebView } from 'react-native-webview';
 
 interface NumberedItem {
   title?: string;
@@ -24,16 +26,71 @@ const getNumberColor = (index: number) => {
   return colors[index % colors.length];
 };
 
+const getYouTubeId = (url?: string): string | null => {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+};
+
 export default function DetailMateriScreen({ route, navigation }: any) {
   const { materi } = route.params;
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      Speech.stop();
+    };
+  }, []);
+
+  const youtubeId = getYouTubeId(materi?.videoUrl);
 
   // Parse content sections - jika ada array sections, gunakan itu; jika tidak, convert content jadi section pertama
   const contentSections: ContentSection[] = materi.sections || [
     { subtitle: '', content: materi.content || `Ini adalah materi tentang ${materi.title}.` }
   ];
+
+  const generateSpeechText = () => {
+    let text = `Materi pembelajaran: ${materi.title}. Kategori sampah: ${materi.category}. `;
+    contentSections.forEach((section, idx) => {
+      if (section.subtitle) text += `${section.subtitle}. `;
+      if (section.numberedSectionDescription) text += `${section.numberedSectionDescription}. `;
+      if (section.isNumbered && section.numberedItems) {
+        section.numberedItems.forEach((item: any, itemIdx: number) => {
+          if (typeof item === 'string') {
+            text += `Poin ${itemIdx + 1}: ${item}. `;
+          } else {
+            if (item.title) text += `Poin ${itemIdx + 1}: ${item.title}. `;
+            if (item.description) text += `${item.description}. `;
+          }
+        });
+      } else if (section.content) {
+        text += `${section.content}. `;
+      }
+    });
+    return text;
+  };
+
+  const toggleSpeech = async () => {
+    if (isSpeaking) {
+      Speech.stop();
+      setIsSpeaking(false);
+    } else {
+      setIsSpeaking(true);
+      const textToSpeak = generateSpeechText();
+      Speech.speak(textToSpeak, {
+        language: 'id-ID',
+        rate: 0.95,
+        pitch: 1.0,
+        onDone: () => setIsSpeaking(false),
+        onStopped: () => setIsSpeaking(false),
+        onError: () => setIsSpeaking(false),
+      });
+    }
+  };
 
   const handleMarkDone = async () => {
     if (!user || done) return;
@@ -62,9 +119,24 @@ export default function DetailMateriScreen({ route, navigation }: any) {
             <Ionicons name="chevron-back" size={24} color="#111827" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Materi</Text>
-          <TouchableOpacity style={styles.menuBtn}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="#111827" />
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={[styles.audioHeaderBtn, isSpeaking && styles.audioHeaderBtnActive]}
+              onPress={toggleSpeech}
+              activeOpacity={0.7}
+              accessibilityLabel={isSpeaking ? "Hentikan Suara" : "Putar Suara Narasi"}
+            >
+              <Ionicons
+                name={isSpeaking ? "stop" : "play"}
+                size={18}
+                color={isSpeaking ? "#fff" : "#142e1d"}
+                style={!isSpeaking ? { marginLeft: 2 } : {}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuBtn}>
+              <Ionicons name="ellipsis-horizontal" size={24} color="#111827" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Banner Image with rounded corners and border */}
@@ -90,6 +162,47 @@ export default function DetailMateriScreen({ route, navigation }: any) {
 
           {/* Title */}
           <Text style={styles.title}>{materi.title}</Text>
+
+          {/* Video Edukasi Interaktif Card (Multimedia) */}
+          {materi.videoUrl ? (
+            <View style={styles.videoCard}>
+              <View style={styles.videoHeader}>
+                <View style={styles.videoHeaderBadge}>
+                  <Ionicons name="videocam" size={14} color="#fff" />
+                  <Text style={styles.videoHeaderBadgeText}>VIDEO EDUKASI</Text>
+                </View>
+                <Text style={styles.videoHeaderTitle}>Tonton Pembelajaran Visual</Text>
+              </View>
+              {youtubeId ? (
+                Platform.OS === 'web' ? (
+                  <View style={styles.videoContainer}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${youtubeId}?playsinline=1`}
+                      style={{ width: '100%', height: 210, border: 'none', borderRadius: 12 }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.videoContainer}>
+                    <WebView
+                      style={styles.videoWebview}
+                      javaScriptEnabled={true}
+                      domStorageEnabled={true}
+                      allowsFullscreenVideo={true}
+                      source={{ uri: `https://www.youtube.com/embed/${youtubeId}?playsinline=1` }}
+                    />
+                  </View>
+                )
+              ) : (
+                <View style={styles.videoFallback}>
+                  <Ionicons name="film-outline" size={28} color="#dc2626" />
+                  <Text style={styles.videoFallbackText}>Tautan video:</Text>
+                  <Text style={styles.videoFallbackUrl} numberOfLines={1}>{materi.videoUrl}</Text>
+                </View>
+              )}
+            </View>
+          ) : null}
 
           {/* Content Sections */}
           {contentSections.map((section, index) => (
@@ -207,6 +320,30 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#1c1c15', // on-background
     lineHeight: 34,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  audioHeaderBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#dcfce7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#01190a', // primary
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+    elevation: 3,
+  },
+  audioHeaderBtnActive: {
+    backgroundColor: '#dc2626',
+    borderColor: '#01190a',
   },
   menuBtn: {
     width: 40,
@@ -401,5 +538,74 @@ const styles = StyleSheet.create({
     fontSize: 20, // headline-md
     color: '#cbead0', // primary-fixed
     lineHeight: 28,
+  },
+
+  // Video Card
+  videoCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 22,
+    borderWidth: 1.5,
+    borderColor: '#e5e7eb',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  videoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 12,
+  },
+  videoHeaderBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#dc2626',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  videoHeaderBadgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  videoHeaderTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  videoContainer: {
+    height: 210,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#000',
+  },
+  videoWebview: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  videoFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#fef2f2',
+    borderRadius: 12,
+  },
+  videoFallbackText: {
+    fontSize: 13,
+    color: '#991b1b',
+    marginTop: 8,
+    fontWeight: '600',
+  },
+  videoFallbackUrl: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginTop: 4,
   },
 });

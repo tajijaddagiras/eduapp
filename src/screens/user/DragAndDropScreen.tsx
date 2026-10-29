@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
+import * as Speech from 'expo-speech';
 
 interface Item {
   id: string;
@@ -28,6 +29,36 @@ export default function DragAndDropScreen({ route, navigation }: any) {
   const [gameStarted, setGameStarted] = useState(false);
   const [hoveringZone, setHoveringZone] = useState<'organik' | 'anorganik' | null>(null);
   const [gameFinished, setGameFinished] = useState(false); // Flag untuk prevent double save
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      Speech.stop();
+    };
+  }, []);
+
+  useEffect(() => {
+    Speech.stop();
+    setIsSpeaking(false);
+  }, [currentIndex]);
+
+  const toggleItemSpeech = () => {
+    if (isSpeaking) {
+      Speech.stop();
+      setIsSpeaking(false);
+    } else {
+      const current = items[currentIndex];
+      if (!current) return;
+      setIsSpeaking(true);
+      Speech.speak(`Simulasi sampah: ${current.name}. Seret dan masukkan ke dalam tong sampah organik atau anorganik.`, {
+        language: 'id-ID',
+        rate: 0.95,
+        onDone: () => setIsSpeaking(false),
+        onStopped: () => setIsSpeaking(false),
+        onError: () => setIsSpeaking(false),
+      });
+    }
+  };
 
   const pan = useRef(new Animated.ValueXY()).current;
   const organikZoneRef = useRef<any>(null);
@@ -369,8 +400,24 @@ export default function DragAndDropScreen({ route, navigation }: any) {
         <View style={[styles.progressFill, { width: `${progress}%` }]} />
       </View>
 
-      {/* Instruction */}
-      <Text style={styles.instruction}>Praktek Pemilahan:{'\n'}Seret objek ke tong yang tepat!</Text>
+      {/* Instruction & Voice Button */}
+      <View style={styles.instructionContainer}>
+        <Text style={styles.instruction}>Praktek Pemilahan:{'\n'}Seret objek ke tong yang tepat!</Text>
+        <TouchableOpacity
+          style={[styles.miniSpeakerBtn, isSpeaking && styles.miniSpeakerBtnActive]}
+          onPress={toggleItemSpeech}
+          activeOpacity={0.7}
+        >
+          <Ionicons
+            name={isSpeaking ? "volume-high" : "volume-medium-outline"}
+            size={18}
+            color={isSpeaking ? "#fff" : "#1e40af"}
+          />
+          <Text style={[styles.miniSpeakerText, isSpeaking && styles.miniSpeakerTextActive]}>
+            {isSpeaking ? 'Stop' : 'Dengarkan Soal'}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Feedback overlay */}
       {feedback && (
@@ -538,14 +585,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#b0ceb5', // primary-fixed
     borderRadius: 4 
   },
+  instructionContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
   instruction: { 
     textAlign: 'center', 
-    fontSize: 19, 
+    fontSize: 18, 
     fontWeight: '800', 
     color: '#1c1c15', // on-background
-    lineHeight: 28, 
-    marginBottom: 24, 
-    paddingHorizontal: 20 
+    lineHeight: 26, 
+    marginBottom: 8, 
+  },
+  miniSpeakerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#dbeafe',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#93c5fd',
+  },
+  miniSpeakerBtnActive: {
+    backgroundColor: '#dc2626',
+    borderColor: '#b91c1c',
+  },
+  miniSpeakerText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1e40af',
+  },
+  miniSpeakerTextActive: {
+    color: '#ffffff',
   },
   feedbackBadge: { 
     alignSelf: 'center', 
