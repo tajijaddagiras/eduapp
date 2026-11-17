@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image, Platform } from 'react-native';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -20,7 +20,17 @@ interface ContentSection {
   numberedItems?: (string | NumberedItem)[];
 }
 
-// Helper function untuk variasi warna badge - sesuai HTML design system
+// Variasi warna-warni cerah ceria untuk animasi card per-kata (karaoke pill)
+const WORD_HIGHLIGHT_COLORS = [
+  '#fde047', // Kuning cerah
+  '#86efac', // Hijau mint segar
+  '#93c5fd', // Biru muda ceria
+  '#fca5a5', // Coral pink lembut
+  '#d8b4fe', // Ungu lavender
+  '#fed7aa', // Oranye peach
+];
+
+// Helper function untuk variasi warna badge - sesuai HTML design system asli
 const getNumberColor = (index: number) => {
   const colors = ['#f4bf3d', '#b0ceb5', '#ffb4a3']; // tertiary-fixed-dim, primary-fixed, secondary-fixed-dim
   return colors[index % colors.length];
@@ -40,56 +50,341 @@ export default function DetailMateriScreen({ route, navigation }: any) {
   const [done, setDone] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
+  // State sinkronisasi kata aktif (Word-by-word karaoke highlight)
+  const [activeWordId, setActiveWordId] = useState<number | null>(null);
+  const isSpeakingRef = useRef(false);
+  const activeSentenceIdxRef = useRef<number>(-1);
+  const sentenceTimerRef = useRef<any>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const blockYMap = useRef<{ [key: string]: number }>({});
+  const lastScrolledBlock = useRef<string>('');
+
   useEffect(() => {
     return () => {
-      Speech.stop();
+      stopSpeech();
     };
   }, []);
 
   const youtubeId = getYouTubeId(materi?.videoUrl);
 
-  // Parse content sections - jika ada array sections, gunakan itu; jika tidak, convert content jadi section pertama
+  // Parse content sections
   const contentSections: ContentSection[] = materi.sections || [
     { subtitle: '', content: materi.content || `Ini adalah materi tentang ${materi.title}.` }
   ];
 
-  const generateSpeechText = () => {
-    let text = `Materi pembelajaran: ${materi.title}. Kategori sampah: ${materi.category}. `;
-    contentSections.forEach((section, idx) => {
-      if (section.subtitle) text += `${section.subtitle}. `;
-      if (section.numberedSectionDescription) text += `${section.numberedSectionDescription}. `;
-      if (section.isNumbered && section.numberedItems) {
-        section.numberedItems.forEach((item: any, itemIdx: number) => {
-          if (typeof item === 'string') {
-            text += `Poin ${itemIdx + 1}: ${item}. `;
-          } else {
-            if (item.title) text += `Poin ${itemIdx + 1}: ${item.title}. `;
-            if (item.description) text += `${item.description}. `;
+  interface KaraokeWord {
+    id: number;
+    word: string;
+  }
+
+  interface KaraokeSentence {
+    id: number;
+    blockKey: string;
+    text: string;
+    words: KaraokeWord[];
+  }
+
+  // Pre-mapping teks per-kata dan kalimat untuk sinkronisasi kalimat-per-kalimat
+  // Ini mengunci sinkronisasi agar TIDAK AKAN PERNAH terjadi akumulasi keterlambatan (drift)
+  const { blockWordMap, sentences } = useMemo(() => {
+    let wordCounter = 0;
+    const map: { [blockKey: string]: KaraokeWord[] } = {};
+    const sentenceList: KaraokeSentence[] = [];
+
+    const processBlock = (rawText: string | undefined, blockKey: string) => {
+      if (!rawText || !rawText.trim()) return;
+      const clean = rawText.trim();
+      map[blockKey] = [];
+
+      // Pisahkan per kalimat (berdasarkan tanda titik, seru, tanya)
+      // agar setiap kalimat menjadi acoustic anchor independen
+      const sentenceStrings = clean.split(/(?<=[.!?])\s+/);
+
+      sentenceStrings.forEach((sStr) => {
+        if (!sStr.trim()) return;
+        const tokens = sStr.trim().split(/\s+/);
+        const sentenceWords: KaraokeWord[] = [];
+
+        tokens.forEach((token) => {
+          const id = wordCounter++;
+          const item = { id, word: token };
+          sentenceWords.push(item);
+          map[blockKey].push(item);
+        });
+
+        sentenceList.push({
+          id: sentenceList.length,
+          blockKey,
+          text: sStr.trim(),
+          words: sentenceWords,
+        });
+      });
+    };
+
+    // 1. Judul materi
+    processBlock(materi.title, 'title');
+
+    // 2. Sections materi
+    contentSections.forEach((sec, sIdx) => {
+      if (sec.isNumbered) {
+        if (sec.subtitle && sec.subtitle.trim()) {
+          processBlock(sec.subtitle, `sec-${sIdx}-sub`);
+        }
+        if (sec.numberedSectionDescription && sec.numberedSectionDescription.trim()) {
+          processBlock(sec.numberedSectionDescription, `sec-${sIdx}-desc`);
+        }
+        (sec.numberedItems || []).forEach((item: any, iIdx: number) => {
+          const isString = typeof item === 'string';
+          const titleStr = isString ? '' : (item.title || '');
+          const descStr = isString ? item : (item.description || '');
+
+          if (titleStr.trim()) {
+            processBlock(titleStr, `sec-${sIdx}-item-${iIdx}-title`);
+          }
+          if (descStr.trim()) {
+            processBlock(descStr, `sec-${sIdx}-item-${iIdx}-desc`);
           }
         });
-      } else if (section.content) {
-        text += `${section.content}. `;
+      } else {
+        if (sec.subtitle && sec.subtitle.trim()) {
+          processBlock(sec.subtitle, `sec-${sIdx}-sub`);
+        }
+        if (sec.content && sec.content.trim()) {
+          processBlock(sec.content, `sec-${sIdx}-content`);
+        }
       }
     });
-    return text;
+
+    return {
+      blockWordMap: map,
+      sentences: sentenceList,
+    };
+  }, [materi, contentSections]);
+
+  const recordBlockY = (blockKey: string, y: number) => {
+    blockYMap.current[blockKey] = y;
   };
 
-  const toggleSpeech = async () => {
-    if (isSpeaking) {
-      Speech.stop();
-      setIsSpeaking(false);
+  const scrollToBlock = (blockKey: string) => {
+    if (lastScrolledBlock.current === blockKey) return;
+    lastScrolledBlock.current = blockKey;
+
+    const y = blockYMap.current[blockKey];
+    if (y !== undefined && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({
+        y: Math.max(0, y - 80),
+        animated: true,
+      });
+    }
+  };
+
+  // Durasi kata di dalam kalimat (tempo natural TTS 0.95):
+  // Rata-rata 1 kata Bahasa Indonesia = ~360ms - 450ms
+  const getWordDuration = (word: string) => {
+    const clean = word.replace(/[^a-zA-Z0-9]/g, '');
+    const vowels = (clean.match(/[aiueoAIUEO]/g) || []).length;
+    const syllables = Math.max(1, vowels);
+
+    // 120ms + 160ms per suku kata
+    const wordBaseMs = 120 + syllables * 160;
+
+    let pauseMs = 0;
+    if (word.includes(',')) {
+      pauseMs = 200;
+    } else if (word.includes('.') || word.includes('!') || word.includes('?')) {
+      pauseMs = 280;
+    }
+
+    return wordBaseMs + pauseMs;
+  };
+
+  const stopSpeech = () => {
+    isSpeakingRef.current = false;
+    setIsSpeaking(false);
+    setActiveWordId(null);
+    activeSentenceIdxRef.current = -1;
+    lastScrolledBlock.current = '';
+
+    if (sentenceTimerRef.current) {
+      clearTimeout(sentenceTimerRef.current);
+      sentenceTimerRef.current = null;
+    }
+
+    if (Platform.OS === 'web' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
     } else {
-      setIsSpeaking(true);
-      const textToSpeak = generateSpeechText();
-      Speech.speak(textToSpeak, {
+      try {
+        Speech.stop();
+      } catch {}
+    }
+  };
+
+  const playSentence = (sIdx: number) => {
+    if (!isSpeakingRef.current || sIdx >= sentences.length) {
+      stopSpeech();
+      return;
+    }
+
+    activeSentenceIdxRef.current = sIdx;
+    const sentence = sentences[sIdx];
+    scrollToBlock(sentence.blockKey);
+
+    // 1. Jalankan stepper kata khusus untuk kalimat ini saja (tidak ada akumulasi keterlambatan!)
+    const words = sentence.words;
+    const stepWord = (wIdx: number) => {
+      if (!isSpeakingRef.current || activeSentenceIdxRef.current !== sIdx) return;
+      if (wIdx < words.length) {
+        setActiveWordId(words[wIdx].id);
+        const dur = getWordDuration(words[wIdx].word);
+        sentenceTimerRef.current = setTimeout(() => {
+          stepWord(wIdx + 1);
+        }, dur);
+      }
+    };
+
+    // 2. Putar audio untuk kalimat ini
+    if (Platform.OS === 'web' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(sentence.text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+
+      utterance.onstart = () => {
+        if (!isSpeakingRef.current || activeSentenceIdxRef.current !== sIdx) return;
+        stepWord(0);
+      };
+
+      // Saat kalimat ini selesai disuarakan oleh speaker browser:
+      // Reset timer kata dan langsung lanjutkan ke kalimat berikutnya!
+      utterance.onend = () => {
+        if (!isSpeakingRef.current || activeSentenceIdxRef.current !== sIdx) return;
+        if (sentenceTimerRef.current) clearTimeout(sentenceTimerRef.current);
+        // Jeda nafas alami 150ms antar kalimat
+        setTimeout(() => {
+          if (isSpeakingRef.current) {
+            playSentence(sIdx + 1);
+          }
+        }, 150);
+      };
+
+      utterance.onerror = (e: any) => {
+        if (e.error !== 'canceled' && e.error !== 'interrupted') {
+          console.warn('Speech error:', e.error);
+          if (isSpeakingRef.current) {
+            playSentence(sIdx + 1);
+          }
+        } else {
+          stopSpeech();
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } else {
+      // Native (Android/iOS)
+      stepWord(0);
+      Speech.speak(sentence.text, {
         language: 'id-ID',
         rate: 0.95,
         pitch: 1.0,
-        onDone: () => setIsSpeaking(false),
-        onStopped: () => setIsSpeaking(false),
-        onError: () => setIsSpeaking(false),
+        onDone: () => {
+          if (!isSpeakingRef.current || activeSentenceIdxRef.current !== sIdx) return;
+          if (sentenceTimerRef.current) clearTimeout(sentenceTimerRef.current);
+          setTimeout(() => {
+            if (isSpeakingRef.current) {
+              playSentence(sIdx + 1);
+            }
+          }, 150);
+        },
+        onStopped: () => stopSpeech(),
+        onError: () => stopSpeech(),
       });
     }
+  };
+
+  const startSpeech = () => {
+    stopSpeech();
+
+    if (!sentences.length) return;
+
+    isSpeakingRef.current = true;
+    setIsSpeaking(true);
+
+    playSentence(0);
+  };
+
+  const toggleSpeech = () => {
+    if (isSpeaking) {
+      stopSpeech();
+    } else {
+      startSpeech();
+    }
+  };
+
+  // Helper render teks: Menjaga desain asli 100% utuh tanpa horizontal padding agar teks tidak bergeser/turun baris!
+  const renderHighlightedText = (
+    text: string | undefined,
+    blockKey: string,
+    baseStyle: any
+  ) => {
+    if (!text) return null;
+    if (!isSpeaking || activeWordId === null) {
+      return (
+        <Text
+          style={baseStyle}
+          onLayout={(e) => recordBlockY(blockKey, e.nativeEvent.layout.y)}
+        >
+          {text}
+        </Text>
+      );
+    }
+
+    const blockWords = blockWordMap[blockKey];
+    if (!blockWords || blockWords.length === 0) {
+      return (
+        <Text
+          style={baseStyle}
+          onLayout={(e) => recordBlockY(blockKey, e.nativeEvent.layout.y)}
+        >
+          {text}
+        </Text>
+      );
+    }
+
+    return (
+      <Text
+        style={baseStyle}
+        onLayout={(e) => recordBlockY(blockKey, e.nativeEvent.layout.y)}
+      >
+        {blockWords.map((item) => {
+          const isActive = activeWordId === item.id;
+          const color = WORD_HIGHLIGHT_COLORS[item.id % WORD_HIGHLIGHT_COLORS.length];
+
+          if (isActive) {
+            return (
+              <React.Fragment key={item.id}>
+                <Text
+                  style={[
+                    styles.karaokeWordCard,
+                    { backgroundColor: color }
+                  ]}
+                >
+                  {item.word}
+                </Text>
+                <Text>{' '}</Text>
+              </React.Fragment>
+            );
+          }
+
+          return (
+            <Text key={item.id}>
+              {item.word}{' '}
+            </Text>
+          );
+        })}
+      </Text>
+    );
   };
 
   const handleMarkDone = async () => {
@@ -112,7 +407,11 @@ export default function DetailMateriScreen({ route, navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -161,7 +460,7 @@ export default function DetailMateriScreen({ route, navigation }: any) {
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>{materi.title}</Text>
+          {renderHighlightedText(materi.title, 'title', styles.title)}
 
           {/* Video Edukasi Interaktif Card (Multimedia) */}
           {materi.videoUrl ? (
@@ -208,15 +507,18 @@ export default function DetailMateriScreen({ route, navigation }: any) {
           {contentSections.map((section, index) => (
             <View key={index}>
               {section.isNumbered ? (
-                // Render numbered section in a card
-                <View style={styles.numberedCard}>
+                // Render numbered section in a card (Desain Asli Utuh)
+                <View
+                  style={styles.numberedCard}
+                  onLayout={(e) => recordBlockY(`sec-${index}-sub`, e.nativeEvent.layout.y)}
+                >
                   {section.subtitle && section.subtitle.trim() !== '' && (
-                    <Text style={styles.numberedCardTitle}>{section.subtitle}</Text>
+                    renderHighlightedText(section.subtitle, `sec-${index}-sub`, styles.numberedCardTitle)
                   )}
 
                   {/* Deskripsi pembuka sebelum daftar nomor */}
                   {section.numberedSectionDescription && section.numberedSectionDescription.trim() !== '' && (
-                    <Text style={styles.numberedCardDescription}>{section.numberedSectionDescription}</Text>
+                    renderHighlightedText(section.numberedSectionDescription, `sec-${index}-desc`, styles.numberedCardDescription)
                   )}
 
                   <View style={styles.numberedListContainer}>
@@ -245,10 +547,10 @@ export default function DetailMateriScreen({ route, navigation }: any) {
                           <View style={{ flex: 1 }}>
                             {/* Title poin */}
                             {!isString && titleStr.trim() !== '' && (
-                              <Text style={styles.numberedItemTitle}>{titleStr}</Text>
+                              renderHighlightedText(titleStr, `sec-${index}-item-${itemIndex}-title`, styles.numberedItemTitle)
                             )}
                             {/* Penjelasan / legacy string */}
-                            <Text style={styles.numberedText}>{descStr}</Text>
+                            {renderHighlightedText(descStr, `sec-${index}-item-${itemIndex}-desc`, styles.numberedText)}
                           </View>
                         </View>
                       );
@@ -256,12 +558,15 @@ export default function DetailMateriScreen({ route, navigation }: any) {
                   </View>
                 </View>
               ) : (
-                // Render normal paragraph section
-                <View style={styles.contentSection}>
+                // Render normal paragraph section (Desain Asli Utuh)
+                <View
+                  style={styles.contentSection}
+                  onLayout={(e) => recordBlockY(`sec-${index}-content`, e.nativeEvent.layout.y)}
+                >
                   {section.subtitle && section.subtitle.trim() !== '' && (
-                    <Text style={styles.sectionTitle}>{section.subtitle}</Text>
+                    renderHighlightedText(section.subtitle, `sec-${index}-sub`, styles.sectionTitle)
                   )}
-                  <Text style={styles.sectionContent}>{section.content}</Text>
+                  {renderHighlightedText(section.content, `sec-${index}-content`, styles.sectionContent)}
                 </View>
               )}
             </View>
@@ -501,6 +806,14 @@ const styles = StyleSheet.create({
     fontSize: 16, // body-md
     color: '#424843', // on-surface-variant
     lineHeight: 24,
+  },
+
+  // Animasi Card Per-1-Kata (Karaoke Word Card Highlight) - Zero Horizontal Padding agar layout 100% stabil
+  karaokeWordCard: {
+    color: '#000000',
+    borderRadius: 4,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
 
   // Footer Button with neo-shadow
