@@ -284,7 +284,7 @@ export default function MultipleChoiceScreen({ route, navigation }: any) {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Banner Image */}
-        {currentQuestion.imageUrl && (
+        {!!currentQuestion.imageUrl && (
           <View style={styles.bannerContainer}>
             <Image 
               source={{ uri: currentQuestion.imageUrl }} 

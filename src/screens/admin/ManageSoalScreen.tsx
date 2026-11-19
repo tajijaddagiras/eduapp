@@ -126,7 +126,7 @@ export default function ManageSoalScreen({ navigation }: any) {
           ) : null}
           <Text style={styles.cardTitle} numberOfLines={2}>{mcItem.question}</Text>
           <Text style={styles.cardSubtext}>Jawaban: {mcItem.correctAnswer}</Text>
-          {mcItem.levelName && (
+          {!!mcItem.levelName && (
             <Text style={styles.cardSubtext}>Level: {mcItem.levelName}</Text>
           )}
         </>
@@ -139,7 +139,7 @@ export default function ManageSoalScreen({ navigation }: any) {
             <Image source={{ uri: simpleItem.imageUrl }} style={styles.cardImage} />
           ) : null}
           <Text style={styles.cardTitle}>{simpleItem.name}</Text>
-          {simpleItem.levelName && (
+          {!!simpleItem.levelName && (
             <Text style={styles.cardSubtext}>Level: {simpleItem.levelName}</Text>
           )}
         </>

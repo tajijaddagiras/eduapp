@@ -493,11 +493,45 @@ export default function DetailMateriScreen({ route, navigation }: any) {
                     />
                   </View>
                 )
+              ) : Platform.OS === 'web' ? (
+                <View style={styles.videoContainer}>
+                  <video
+                    src={materi.videoUrl}
+                    controls
+                    playsInline
+                    style={{
+                      width: '100%',
+                      height: 210,
+                      backgroundColor: '#000',
+                      borderRadius: 12,
+                      objectFit: 'contain',
+                    }}
+                  />
+                </View>
               ) : (
-                <View style={styles.videoFallback}>
-                  <Ionicons name="film-outline" size={28} color="#dc2626" />
-                  <Text style={styles.videoFallbackText}>Tautan video:</Text>
-                  <Text style={styles.videoFallbackUrl} numberOfLines={1}>{materi.videoUrl}</Text>
+                <View style={styles.videoContainer}>
+                  <WebView
+                    style={styles.videoWebview}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    allowsFullscreenVideo={true}
+                    source={{
+                      html: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+      video { width: 100%; height: 100%; max-height: 100%; object-fit: contain; }
+    </style>
+  </head>
+  <body>
+    <video src="${materi.videoUrl}" controls playsinline webkit-playsinline></video>
+  </body>
+</html>`,
+                    }}
+                  />
                 </View>
               )}
             </View>

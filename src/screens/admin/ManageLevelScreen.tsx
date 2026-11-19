@@ -129,10 +129,10 @@ export default function ManageLevelScreen({ navigation }: any) {
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.name}</Text>
                 <View style={styles.cardMeta}>
-                  {item.durasi && (
+                  {!!item.durasi && (
                     <Text style={styles.cardMetaText}>⏱ {item.durasi} menit</Text>
                   )}
-                  {item.nilaiPerSoal && (
+                  {!!item.nilaiPerSoal && (
                     <Text style={styles.cardMetaText}>⭐ {item.nilaiPerSoal} poin/soal</Text>
                   )}
                 </View>

@@ -4,9 +4,10 @@ import {
   ActivityIndicator, Alert, ScrollView, Image, Platform
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { uploadToCloudinary } from '../../utils/cloudinary';
+import { uploadToCloudinary, uploadVideoToCloudinary } from '../../utils/cloudinary';
 
 export interface NumberedItem {
   title: string;
@@ -37,10 +38,14 @@ export default function FormMateriScreen({ route, navigation }: any) {
 
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgressText, setUploadProgressText] = useState<string | null>(null);
 
   const [formTitle, setFormTitle] = useState('');
   const [formCategory, setFormCategory] = useState('Organik');
+  const [videoSourceType, setVideoSourceType] = useState<'youtube' | 'upload'>('youtube');
   const [formVideoUrl, setFormVideoUrl] = useState('');
+  const [localVideoUri, setLocalVideoUri] = useState<string | null>(null);
+  const [videoFileName, setVideoFileName] = useState<string | null>(null);
   const [formImageUri, setFormImageUri] = useState<string | null>(null);
   const [formSections, setFormSections] = useState<ContentSection[]>([emptySection()]);
 
@@ -48,8 +53,29 @@ export default function FormMateriScreen({ route, navigation }: any) {
     if (isEditMode && editItem) {
       setFormTitle(editItem.title || '');
       setFormCategory(editItem.category || 'Organik');
-      setFormVideoUrl(editItem.videoUrl || '');
       setFormImageUri(editItem.imageUrl || null);
+
+      if (editItem.videoUrl) {
+        const isYt = editItem.videoUrl.includes('youtube.com') || editItem.videoUrl.includes('youtu.be');
+        if (isYt) {
+          setVideoSourceType('youtube');
+          setFormVideoUrl(editItem.videoUrl);
+        } else {
+          setVideoSourceType('upload');
+          setLocalVideoUri(editItem.videoUrl);
+          try {
+            const parts = editItem.videoUrl.split('/');
+            const lastPart = parts[parts.length - 1];
+            setVideoFileName(decodeURIComponent(lastPart.split('?')[0]) || 'video.mp4');
+          } catch (_) {
+            setVideoFileName('video.mp4');
+          }
+        }
+      } else {
+        setFormVideoUrl('');
+        setLocalVideoUri(null);
+        setVideoFileName(null);
+      }
 
       if (editItem.sections && editItem.sections.length > 0) {
         setFormSections(editItem.sections.map((s: any) => ({
@@ -87,6 +113,26 @@ export default function FormMateriScreen({ route, navigation }: any) {
       } else {
         setFormImageUri(result.assets[0].uri);
       }
+    }
+  };
+
+  const pickVideo = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['videos'],
+        allowsEditing: false,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        setLocalVideoUri(asset.uri);
+        setVideoFileName(asset.fileName || 'video-edukasi.mp4');
+      }
+    } catch (err) {
+      console.error('Gagal memilih video:', err);
+      if (Platform.OS === 'web') window.alert('Gagal memilih berkas video.');
+      else Alert.alert('Error', 'Gagal memilih berkas video.');
     }
   };
 
@@ -153,10 +199,26 @@ export default function FormMateriScreen({ route, navigation }: any) {
     }
     setLoading(true);
     setUploading(true);
+    setUploadProgressText('Menyimpan materi...');
     try {
       let finalImageUrl = formImageUri;
       if (formImageUri && !formImageUri.startsWith('http')) {
+        setUploadProgressText('Mengunggah gambar sampul...');
         finalImageUrl = await uploadToCloudinary(formImageUri, 'edusampah/materi');
+      }
+
+      let finalVideoUrl = '';
+      if (videoSourceType === 'youtube') {
+        finalVideoUrl = formVideoUrl.trim();
+      } else if (videoSourceType === 'upload') {
+        if (localVideoUri) {
+          if (localVideoUri.startsWith('http')) {
+            finalVideoUrl = localVideoUri;
+          } else {
+            setUploadProgressText('Mengunggah video MP4 ke Cloudinary...');
+            finalVideoUrl = await uploadVideoToCloudinary(localVideoUri, 'edusampah/videos');
+          }
+        }
       }
 
       const filteredSections = formSections.filter(s => {
@@ -172,7 +234,7 @@ export default function FormMateriScreen({ route, navigation }: any) {
         content: filteredSections.length > 0 ? filteredSections[0].content : '',
         sections: filteredSections,
         imageUrl: finalImageUrl,
-        videoUrl: formVideoUrl.trim(),
+        videoUrl: finalVideoUrl,
       };
 
       if (isEditMode) {
@@ -193,13 +255,15 @@ export default function FormMateriScreen({ route, navigation }: any) {
           { text: 'OK', onPress: () => navigation.goBack() }
         ]);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      if (Platform.OS === 'web') window.alert('Error: Gagal menyimpan materi. Pastikan koneksi internet stabil.');
-      else Alert.alert('Error', 'Gagal menyimpan materi. Pastikan koneksi internet stabil.');
+      const errMsg = e?.message || 'Gagal menyimpan materi. Pastikan koneksi internet stabil.';
+      if (Platform.OS === 'web') window.alert(`Error: ${errMsg}`);
+      else Alert.alert('Error', errMsg);
     } finally {
       setLoading(false);
       setUploading(false);
+      setUploadProgressText(null);
     }
   };
 
@@ -358,20 +422,109 @@ export default function FormMateriScreen({ route, navigation }: any) {
           )}
         </TouchableOpacity>
 
-        <Text style={styles.fieldLabel}>Tautan Video Edukasi (YouTube)</Text>
-        <Text style={styles.fieldHint}>🎥 Masukkan URL video YouTube (opsional). Format: https://www.youtube.com/watch?v=... atau https://youtu.be/... Video akan langsung disematkan (embed) pada modul siswa.</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="https://www.youtube.com/watch?v=..."
-          value={formVideoUrl}
-          onChangeText={setFormVideoUrl}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+        <Text style={styles.fieldLabel}>Video Pembelajaran (Opsional)</Text>
+        <Text style={styles.fieldHint}>Pilih metode penyematan: gunakan tautan YouTube atau unggah berkas video MP4 secara langsung. Video akan tampil di bagian atas materi.</Text>
+
+        {/* Tab Switcher: YouTube vs Unggah MP4 */}
+        <View style={styles.videoTabRow}>
+          <TouchableOpacity
+            style={[styles.videoTabBtn, videoSourceType === 'youtube' && styles.videoTabBtnActive]}
+            onPress={() => setVideoSourceType('youtube')}
+          >
+            <Ionicons
+              name="logo-youtube"
+              size={18}
+              color={videoSourceType === 'youtube' ? '#ef4444' : '#6b7280'}
+            />
+            <Text style={[styles.videoTabBtnText, videoSourceType === 'youtube' && styles.videoTabBtnTextActive]}>
+              Tautan YouTube
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.videoTabBtn, videoSourceType === 'upload' && styles.videoTabBtnActive]}
+            onPress={() => setVideoSourceType('upload')}
+          >
+            <Ionicons
+              name="cloud-upload-outline"
+              size={18}
+              color={videoSourceType === 'upload' ? '#38bdf8' : '#6b7280'}
+            />
+            <Text style={[styles.videoTabBtnText, videoSourceType === 'upload' && styles.videoTabBtnTextActive]}>
+              Unggah File MP4
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tab Content */}
+        {videoSourceType === 'youtube' ? (
+          <View style={styles.videoTabContent}>
+            <TextInput
+              style={styles.input}
+              placeholder="https://www.youtube.com/watch?v=... atau https://youtu.be/..."
+              value={formVideoUrl}
+              onChangeText={setFormVideoUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            {formVideoUrl.trim() !== '' && (
+              <TouchableOpacity
+                style={styles.clearVideoBtn}
+                onPress={() => setFormVideoUrl('')}
+              >
+                <Ionicons name="close-circle" size={14} color="#dc2626" />
+                <Text style={styles.clearVideoText}>Hapus Tautan YouTube</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <View style={styles.videoTabContent}>
+            {localVideoUri ? (
+              <View style={styles.videoPreviewCard}>
+                <View style={styles.videoPreviewHeader}>
+                  <View style={styles.videoPreviewIconBadge}>
+                    <Ionicons name="videocam" size={20} color="#166534" />
+                  </View>
+                  <View style={{ flex: 1, marginHorizontal: 10 }}>
+                    <Text style={styles.videoPreviewName} numberOfLines={1}>
+                      {videoFileName || 'video-edukasi.mp4'}
+                    </Text>
+                    <Text style={styles.videoPreviewStatus}>
+                      {localVideoUri.startsWith('http') ? 'Sudah tersimpan di Cloudinary' : 'Siap diunggah saat disimpan'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setLocalVideoUri(null);
+                      setVideoFileName(null);
+                    }}
+                    style={styles.deleteVideoBtn}
+                  >
+                    <Ionicons name="trash-outline" size={16} color="#dc2626" />
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity style={styles.changeVideoBtn} onPress={pickVideo}>
+                  <Ionicons name="refresh-outline" size={14} color="#166534" />
+                  <Text style={styles.changeVideoBtnText}>Ganti / Pilih Video Lain</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.videoUploadBox} onPress={pickVideo}>
+                <Ionicons name="videocam-outline" size={30} color="#2563eb" style={{ marginBottom: 6 }} />
+                <Text style={styles.videoUploadTitle}>[ Pilih Berkas Video MP4 dari Perangkat ]</Text>
+                <Text style={styles.videoUploadSubtitle}>Format MP4 didukung • Disimpan otomatis ke Cloudinary</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={uploading}>
           {uploading ? (
-            <ActivityIndicator color="#fff" />
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <ActivityIndicator color="#fff" />
+              <Text style={styles.saveBtnText}>{uploadProgressText || 'Menyimpan...'}</Text>
+            </View>
           ) : (
             <Text style={styles.saveBtnText}>Simpan (*Publish*)</Text>
           )}
@@ -457,6 +610,128 @@ const styles = StyleSheet.create({
   uploadText: { color: '#6b7280' },
   uploadSubtext: { fontSize: 11, color: '#9ca3af', marginTop: 4 },
   previewImage: { width: '100%', height: 160, borderRadius: 8, resizeMode: 'cover' },
+
+  // Video Section Styles (Tab Switcher & Upload UI)
+  videoTabRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  videoTabBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderWidth: 1.5,
+    borderColor: '#d1d5db',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  videoTabBtnActive: {
+    backgroundColor: '#1f2937',
+    borderColor: '#1f2937',
+  },
+  videoTabBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#4b5563',
+  },
+  videoTabBtnTextActive: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+  videoTabContent: {
+    marginBottom: 10,
+  },
+  clearVideoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 8,
+    alignSelf: 'flex-start',
+  },
+  clearVideoText: {
+    fontSize: 12,
+    color: '#dc2626',
+    fontWeight: '600',
+  },
+  videoPreviewCard: {
+    backgroundColor: '#f0fdf4',
+    borderWidth: 1.5,
+    borderColor: '#86efac',
+    borderRadius: 10,
+    padding: 12,
+  },
+  videoPreviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  videoPreviewIconBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 8,
+    backgroundColor: '#dcfce7',
+    borderWidth: 1,
+    borderColor: '#86efac',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  videoPreviewName: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#166534',
+  },
+  videoPreviewStatus: {
+    fontSize: 11,
+    color: '#15803d',
+    marginTop: 2,
+  },
+  deleteVideoBtn: {
+    padding: 8,
+    backgroundColor: '#fee2e2',
+    borderRadius: 8,
+  },
+  changeVideoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: 10,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#bbf7d0',
+  },
+  changeVideoBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#166534',
+  },
+  videoUploadBox: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: '#93c5fd',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+  },
+  videoUploadTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1e40af',
+  },
+  videoUploadSubtitle: {
+    fontSize: 11,
+    color: '#60a5fa',
+    marginTop: 4,
+  },
+
   saveBtn: { backgroundColor: '#374151', padding: 16, borderRadius: 12, alignItems: 'center', marginTop: 20 },
   saveBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });

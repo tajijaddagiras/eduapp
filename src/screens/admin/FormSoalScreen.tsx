@@ -228,7 +228,7 @@ export default function FormSoalScreen({ route, navigation }: any) {
             {selectedLevel ? selectedLevel.name : 'Pilih Level ▼'}
           </Text>
         </TouchableOpacity>
-        {selectedLevel && selectedLevel.durasi && selectedLevel.nilaiPerSoal && (
+        {!!(selectedLevel && selectedLevel.durasi && selectedLevel.nilaiPerSoal) && (
           <Text style={styles.fieldHint}>
             ⏱ {selectedLevel.durasi} menit • ⭐ {selectedLevel.nilaiPerSoal} poin/soal
           </Text>

@@ -131,13 +131,13 @@ export default function SimulasiScreen({ navigation }: any) {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.levelName}>{level.name}</Text>
                   <View style={styles.levelMeta}>
-                    {level.durasi && (
+                    {!!level.durasi && (
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Ionicons name="time-outline" size={14} color="#424843" style={{ marginRight: 4 }} />
                         <Text style={styles.levelMetaText}>{level.durasi} menit</Text>
                       </View>
                     )}
-                    {level.nilaiPerSoal && (
+                    {!!level.nilaiPerSoal && (
                       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Ionicons name="star-outline" size={14} color="#424843" style={{ marginRight: 4 }} />
                         <Text style={styles.levelMetaText}>{level.nilaiPerSoal} poin/soal</Text>

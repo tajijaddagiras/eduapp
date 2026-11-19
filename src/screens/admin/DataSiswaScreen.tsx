@@ -176,7 +176,7 @@ export default function DataSiswaScreen({ navigation }: any) {
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{item.name}</Text>
             <Text style={styles.userEmail}>{item.email}</Text>
-            {item.sekolah && (
+            {!!item.sekolah && (
               <Text style={styles.userSchool}>🏫 {item.sekolah}</Text>
             )}
           </View>

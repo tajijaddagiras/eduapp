@@ -101,20 +101,22 @@ export default function ManageMateriScreen({ navigation }: any) {
           contentContainerStyle={{ padding: 20, paddingBottom: 80 }}
           renderItem={({ item }) => (
             <View style={[styles.card, { borderLeftWidth: 4, borderLeftColor: item.category === 'Organik' ? '#2e7d32' : '#9ca3af' }]}>
-              {item.imageUrl && (
+              {!!item.imageUrl && (
                 <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
               )}
               <View style={styles.cardTop}>
                 <View style={{ flex: 1, paddingRight: 8 }}>
                   <Text style={styles.cardTitle}>{item.title}</Text>
-                  {item.videoUrl && (
+                  {!!item.videoUrl && (
                     <Text style={{ fontSize: 11, color: '#dc2626', fontWeight: 'bold', marginTop: 2 }}>
-                      🎥 Video Terpasang
+                      {item.videoUrl.includes('youtube.com') || item.videoUrl.includes('youtu.be')
+                        ? '🎥 Video YouTube'
+                        : '📹 Video MP4'}
                     </Text>
                   )}
                 </View>
                 <Text style={[styles.catBadge, { color: item.category === 'Organik' ? '#2e7d32' : '#6b7280' }]}>
-                  {item.category.toUpperCase()}
+                  {(item.category || '').toUpperCase()}
                 </Text>
               </View>
               <View style={styles.cardActions}>
